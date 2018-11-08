@@ -1,0 +1,13 @@
+# Always use linefeed in text files. Default on Mac and Linux
+* text eol=lf
+
+# These files are text and should be normalized (convert to linefeed)
+*.cc text
+*.cpp text
+*.h text
+*.hpp text
+
+# These files are binary. These files will be ignored.
+*.png binary
+*.jpg binary
+*.pdf binary
