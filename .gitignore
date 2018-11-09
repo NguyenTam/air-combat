@@ -1,3 +1,5 @@
+*.o
+
 # Compiled Dynamic libraries
 *.so
 *.dylib
