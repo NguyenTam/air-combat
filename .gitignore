@@ -10,3 +10,6 @@
 *.la
 *.a
 *.lib
+
+#ignore doxygen generated files
+doc/*
