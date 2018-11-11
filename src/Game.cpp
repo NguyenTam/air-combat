@@ -4,52 +4,65 @@
 #include <SFML/System.hpp>
 #include <math.h>
 #include "Entity.h"
+#include "spdlog/spdlog.h"
 
 int main()
 {
-  sf::RenderWindow window;
-  window.create(sf::VideoMode(800, 600), "SFML Moving Entity", sf::Style::Titlebar | sf::Style::Close);
-  window.setKeyRepeatEnabled(true);
-
-  Entity entity({40,40});
-  entity.setPos({50,400});
-
-  //Main loop
-  while(window.isOpen())
+  
+  try
   {
-    sf::Event event;
+    auto logger = spdlog::basic_logger_mt("basic_logger", "../data/game-log.txt");
 
-    const float moveSpeed = 0.2;
+    logger->info("Setting up window");
+    sf::RenderWindow window;
+    window.create(sf::VideoMode(800, 600), "SFML Moving Entity", sf::Style::Titlebar | sf::Style::Close);
+    window.setKeyRepeatEnabled(true);
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    logger->info("Set up player");
+    Entity entity({40,40});
+    entity.setPos({50,400});
+    
+    //Main loop
+    while(window.isOpen())
     {
-      entity.move({0,-moveSpeed});
-    }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-    {
-      entity.move({0, moveSpeed});
-    }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-    {
-      entity.move({-moveSpeed, 0});
-    }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-    {
-      entity.move({moveSpeed, 0});
-    }
+      sf::Event event;
+      
+      const float moveSpeed = 0.2;
 
-    // Event Loop:
-    while (window.pollEvent(event))
-    {
-      switch (event.type)
+      if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
       {
-        case sf::Event::Closed:
-          window.close();
+        entity.move({0,-moveSpeed});
       }
-    }
+      else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+      {
+        entity.move({0, moveSpeed});
+      }
+      else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+      {
+        entity.move({-moveSpeed, 0});
+      }
+      else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+      {
+        entity.move({moveSpeed, 0});
+      }
 
-    window.clear();
-    entity.drawTo(window);
-    window.display();
+      // Event Loop:
+      while (window.pollEvent(event))
+      {
+        switch (event.type)
+        {
+          case sf::Event::Closed:
+            window.close();
+        }
+      }
+
+      window.clear();
+      entity.drawTo(window);
+      window.display();
+    }
+  }
+  catch(const spdlog::spdlog_ex &ex)
+  {
+    std::cout << "Log init failed!" << ex.what() << std::endl;  
   }
 }
