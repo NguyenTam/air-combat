@@ -1,0 +1,3 @@
+Use make to build UI test
+Use make clean to remove the test and possible object files
+(at the moment it doesn't generate any object files)

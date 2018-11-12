@@ -13,7 +13,7 @@ default: all
 all:	$(TEST_SRC)
 
 UI_test:
-	$(CC) $(CFLAGS) ../src/UI.cpp UI_test.cpp -o UI $(LINKER)
+	$(CC) $(CFLAGS) ../src/UI.cpp ../src/button.cpp UI_test.cpp -o UI $(LINKER)
 
 
 clean:
