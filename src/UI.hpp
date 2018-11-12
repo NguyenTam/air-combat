@@ -14,6 +14,8 @@
 #include "spdlog/spdlog.h"
 #include <iostream>
 #include <vector>
+#include <memory>
+#include "button.hpp"
 
 
 
@@ -54,6 +56,8 @@ class UI
       */
     void updateUI();
 
+  protected:
+
     /**
       *   @brief Handle incoming key presses
       *   @remark Can be reimplemented in a lower class
@@ -85,10 +89,26 @@ class UI
       */
     void UpdateActiveButton(int action);
 
-  private:
+    /**
+      *   @brief Create main menu
+      *   @details Creates all the necessary Buttons
+      */
+    void CreateMainMenu();
+
+    /**
+      *   @brief Draws main menu
+      */
+    void DrawMenu();
+
+
+    /*  Variables */
+
     sf::RenderWindow *window;
     bool window_status = true; /**< Is window active (not closed) */
+
+  private:
     int current_button = 0; /**< Which button is currently active */
+    std::vector<std::shared_ptr <Button> > buttons;
 
 
 

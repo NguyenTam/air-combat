@@ -8,14 +8,18 @@
 
 
 // Assign the class variable to match the amount of buttons
-int UI::MainMenuButtons = 0;
+int UI::MainMenuButtons = 1;
+
+
+
+/*  Class UI  */
 
 
 /*  Constructor */
 
 UI::UI(sf::RenderWindow *parent_window): window(parent_window)
 {
-  
+  CreateMainMenu();
 }
 
 /*  Return window_status  */
@@ -67,6 +71,7 @@ void UI::updateUI()
 
   // Clear and display window
   window->clear();
+  DrawMenu();
   window->display();
 
 }
@@ -141,3 +146,29 @@ void UI::updateUI()
    }
 
  }
+
+
+/*  Create main menu */
+
+void UI::CreateMainMenu()
+{
+  // Create Buttons
+  std::shared_ptr<Button> button1 = std::make_shared<Button>("Test", sf::Color::Red);
+  button1->setPosition(100, 100);
+  buttons.push_back(button1);
+
+}
+
+
+/*  Draw main menu */
+
+void UI::DrawMenu()
+{
+
+  for(auto button = buttons.begin(); button != buttons.end(); button++)
+  {
+    // Draw buttons
+    window->draw(**button);
+  }
+
+}
