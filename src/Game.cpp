@@ -16,34 +16,44 @@ int main()
     logger->info("Setting up window");
     sf::RenderWindow window;
     window.create(sf::VideoMode(800, 600), "SFML Moving Entity", sf::Style::Titlebar | sf::Style::Close);
+    window.setFramerateLimit(60);
     window.setKeyRepeatEnabled(true);
 
     logger->info("Set up player");
-    Entity entity({40,40});
+    Entity entity(sf::Vector2f(80,40));
     entity.setPos({50,400});
     
     //Main loop
     while(window.isOpen())
     {
       sf::Event event;
-      
-      const float moveSpeed = 0.2;
 
       if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
       {
-        entity.move({0,-moveSpeed});
+        entity.moveUp();
       }
       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
       {
-        entity.move({0, moveSpeed});
+        entity.moveDown();
       }
       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
       {
-        entity.move({-moveSpeed, 0});
+        entity.moveLeft();
       }
       else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
       {
-        entity.move({moveSpeed, 0});
+        entity.moveRight();
+      }
+      else if(sf::Keyboard::isKeyPressed(sf::Keyboard::N))
+      {
+        entity.rotateClockWise();
+      }
+      else if(sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+      {
+        entity.rotateCounterClockWise();
+      }
+      else
+      { //does nothing
       }
 
       // Event Loop:
@@ -53,6 +63,10 @@ int main()
         {
           case sf::Event::Closed:
             window.close();
+            break;
+          default:
+            //TODO: should something be done here
+            break;
         }
       }
 
