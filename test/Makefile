@@ -1,7 +1,7 @@
 # Simple Makefile for test files
 
 CC = g++
-CFLAGS = -Wall -pedantic -g
+CFLAGS = -Wall -Wextra -pedantic -g -std=c++17
 LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system
 
 TEST_SRC = UI_test
