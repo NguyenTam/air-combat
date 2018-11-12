@@ -4,30 +4,22 @@
 
 class Entity {
 public:
-  Entity(sf::Vector2f size)
-  {
-    entity.setSize(size);
-    entity.setFillColor(sf::Color::Green);
-  }
-
-  void drawTo(sf::RenderWindow &window)
-  {
-    window.draw(entity);
-  }
-
-  void move(sf::Vector2f distance)
-  {
-    entity.move(distance);
-  }
-
-  void setPos(sf::Vector2f newPos)
-  {
-    entity.setPosition(newPos);
-  }
-
-  int getY()
-  { return entity.getPosition().y;}
+  /**
+   */
+  Entity(sf::Vector2f size, float speed = 4.f);
+  void drawTo(sf::RenderWindow &window);
+  void move(sf::Vector2f distance);
+  void setPos(sf::Vector2f newPos);
+  void rotate(float);
+  void moveUp();
+  void moveDown();
+  void moveLeft();
+  void moveRight();
+  void rotateClockWise();
+  void rotateCounterClockWise();
+  int getY();
 
 private:
   sf::RectangleShape entity;
+  float moveSpeed;
 };
