@@ -3,7 +3,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <math.h>
-#include "Entity.h"
+#include "Entity.hpp"
 #include "spdlog/spdlog.h"
 
 int main()

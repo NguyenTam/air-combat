@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "Entity.h"
+#include "Entity.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <algorithm>
