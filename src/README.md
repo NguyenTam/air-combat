@@ -1,5 +1,8 @@
-Install "libsfml-dev", "libspdlog-dev" and "doxygen" from linux package manager.
-Use "make" to build air combat game.
-Use "make clean" to remove object files and executive files.
-Use "make run" to run this game.
+Requirements: *libsfml-dev*, *libspdlog-dev* and *doxygen*.
+
+|Command | Description|
+|--------|------------|
+| `make` | build air combat game.|
+| `make clean`| remove object and executable files.|
+| `make run` | run air combat game.|
 
