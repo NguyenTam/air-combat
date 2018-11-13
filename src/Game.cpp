@@ -27,7 +27,7 @@ int main()
     while(window.isOpen())
     {
       sf::Event event;
-
+      
       if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
       {
         entity.moveUp();
