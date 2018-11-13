@@ -27,7 +27,7 @@ int main()
     while(window.isOpen())
     {
       sf::Event event;
-
+      
       if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
       {
         entity.moveUp();
@@ -63,6 +63,9 @@ int main()
         {
           case sf::Event::Closed:
             window.close();
+            break;
+          case sf::Event::KeyPressed:
+            //Update character movement here
             break;
           default:
             //TODO: should something be done here
