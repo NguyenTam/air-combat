@@ -16,6 +16,8 @@
   *   @brief World class for air combat game
   */
 
+//This class presents the game view. 
+
 class World {
 public:
 	/**
