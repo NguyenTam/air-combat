@@ -1,4 +1,4 @@
-#include "Entity.h"
+#include "Entity.hpp"
 
 Entity::Entity(sf::Vector2f size, float speed) 
 {
