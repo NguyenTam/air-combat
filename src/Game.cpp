@@ -32,28 +32,25 @@ int main()
       {
         entity.moveUp();
       }
-      else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+      if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
       {
         entity.moveDown();
       }
-      else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+      if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
       {
         entity.moveLeft();
       }
-      else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+      if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
       {
         entity.moveRight();
       }
-      else if(sf::Keyboard::isKeyPressed(sf::Keyboard::N))
+      if(sf::Keyboard::isKeyPressed(sf::Keyboard::N))
       {
         entity.rotateClockWise();
       }
-      else if(sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+      if(sf::Keyboard::isKeyPressed(sf::Keyboard::M))
       {
         entity.rotateCounterClockWise();
-      }
-      else
-      { //does nothing
       }
 
       // Event Loop:
@@ -69,9 +66,13 @@ int main()
             break;
         }
       }
+      // clear the window with black color
+      window.clear(sf::Color::Black);
 
-      window.clear();
+      // draw something.
       entity.drawTo(window);
+
+      // display current objects
       window.display();
     }
   }
