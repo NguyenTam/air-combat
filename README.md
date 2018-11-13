@@ -28,5 +28,5 @@ Requirements: *libsfml-dev*, *libspdlog-dev*, *doxygen*.
 | ```make main```     | Build `src/`                                                         |
 | ```make test```     | Build `test/`                                                        |
 | ```make run-main``` | Build `src/` and run an application                                  |
-| ```make run-test``` | Buikd `test/` and run tests                                          |
+| ```make run-test``` | Build `test/` and run tests                                          |
 | ```make clean```    | Remove compiled objects and executable files from `src/` and `test/` |
