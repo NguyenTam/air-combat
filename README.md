@@ -4,7 +4,7 @@ This is an initial git repository for your programming project.
 It contains an initial directory structure that we wish you could
 use as follows:
 
-  * `plan/' -- Here is your project plan. You may use different sources,
+  * `plan/` -- Here is your project plan. You may use different sources,
     but we hope to get the pan **also as pdf file**.
 
   * `doc/` -- here are the documentation sources related to your project.
@@ -19,3 +19,26 @@ use as follows:
 
 You may also add other new directories as needed, for example
 for testing tools.
+
+#################
+##Requirements###
+#################
+libsfml-dev, libspdlog-dev, doxygen.
+
+################
+##Usage#########
+################
+make main
+Build src/
+
+make test
+Build test/
+
+make run-main
+Build src/ and run application
+
+make run-test
+Build test/ and run tests
+
+make clean
+Remove compiled objects and executable files from src/ and test/
