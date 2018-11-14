@@ -100,6 +100,22 @@ class UI
       */
     void DrawMenu();
 
+    /**
+      *   @brief Activate current_button
+      */
+    void ActivateCurrentButton();
+
+    /**
+      *   @brief Click current_button
+      */
+    void ClickCurrentButton();
+
+    /*  Only for testing */
+    void Test1(){std::cout << "BUTTON1____________CLICKED" << std::endl;}
+    void Test2(){std::cout << "BUTTON2____________CLICKED" << std::endl;}
+    void Test3(){std::cout << "BUTTON3____________CLICKED" << std::endl;}
+    void Test4(){std::cout << "BUTTON4____________CLICKED" << std::endl;}
+
 
     /*  Variables */
 
