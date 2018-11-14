@@ -1,0 +1,51 @@
+
+int main()
+{
+
+  create window; // from stack
+  ui UI(&window);
+  while(true)
+  {
+    // Update ui until user e.g. presses start game button
+
+    while(ui.return_val == still_running){
+      ui.update();
+    }
+
+    if (ui.return_val == exit) {
+      exit;
+    }
+
+    else if(ui.return_val == start_game)
+    {
+      create world_window;
+      // get selected level from ui
+      world World(&world_window, level);
+
+      // Update world until game ends (or user exits game)
+      while(world){
+        world.update();
+      }
+
+      if (world.return_val == exit){
+        exit;
+      }
+    }
+
+    else if (ui.return_val == start_editor)
+    {
+      create editor;
+
+      // Update editor until user saves level or leaves editor
+      while(editor){
+        editor.update();
+      }
+      if (editor.return_val == exit){
+        exit;
+      }
+    }
+
+    ui.init();
+  }
+
+}
