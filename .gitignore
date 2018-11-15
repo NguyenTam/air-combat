@@ -1,5 +1,11 @@
+#compiled files
 *.o
+#hidden files
 .*
+
+
+game-log.txt
+
 # Compiled Dynamic libraries
 *.so
 *.dylib
