@@ -70,7 +70,7 @@ void UI::updateUI()
   }
 
   // Clear and display window
-  window->clear();
+  window->clear(sf::Color(BackgoundColor));
   DrawMenu();
   window->display();
 

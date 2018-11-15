@@ -125,6 +125,7 @@ class UI
   private:
     int current_button = 0; /**< Which button is currently active */
     std::vector<std::shared_ptr <Button> > buttons;
+    sf::Color BackgoundColor = sf::Color(150, 200, 255, 255);
 
 
 

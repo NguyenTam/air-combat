@@ -19,13 +19,13 @@ class ImageButton: public Button
     /**
       *   @brief Constructor for ImageButton
       *   @details Calls also basic button constructor
-      *   @param button_name Name which is shown when Imagbutton is active
+      *   @param button_name Name which is shown when Imagebutton is active
       *   @param img_path Valid path to image file
       *   @width Button (image) width
       *   @height Button (image) height
       *   @remark Make sure img_path is a valid path. width and height
-      *   define how much image is visible (probably want to match those to
-      *   image pixel size)
+      *   define how big partion of the image is visible (probably want to match
+      *   those to image pixel size)
       */
     ImageButton(std::string button_name, std::string img_path, unsigned width, unsigned height);
 
@@ -63,7 +63,7 @@ class ImageButton: public Button
 
     /**
       *   @brief Possibly sets button checked and calls click_action
-      *   @details If coordinates match button frame and button isn button is checked and
+      *   @details If coordinates match button frame and button isn't checked,
       *   click_action called
       *   @param x Mouse x coordinate
       *   @param y Mouse y coordinate
@@ -77,6 +77,13 @@ class ImageButton: public Button
       *   @remark Reimplemented from the base class Button::clickAction
       */
     virtual void clickAction();
+
+    /**
+      *   @brief Set higlight color used during when button is checked
+      *   @details Assigns color to checked_color
+      *   @param color New highlight color
+      */
+    void setHighlightColor(sf::Color color);
 
   protected:
     /**

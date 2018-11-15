@@ -175,3 +175,11 @@ void ImageButton::clickAction()
   }
 
 }
+
+/*  Set new higlight color */
+void ImageButton::setHighlightColor(sf::Color color)
+{
+  checked_color = color;
+  checked_rect.setFillColor(checked_color);
+
+}
