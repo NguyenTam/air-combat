@@ -178,12 +178,14 @@ unsigned Button::getHeight()
 
 /*  Check if object has been clicked and possibly call click_action */
 
-void Button::checkClicked(float x, float y)
+bool Button::checkClicked(float x, float y)
 {
   if (frame.contains(x, y))
   {
     click_action();
+    return true;
   }
+  return false;
 }
 
 /* Call click_action */
@@ -198,7 +200,7 @@ void Button::clickAction()
 
 bool Button::tryActivate(float x, float y)
 {
-  
+
   if (frame.contains(x, y))
   {
     button_rect.setFillColor(active_color);

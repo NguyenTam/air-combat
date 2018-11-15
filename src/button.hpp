@@ -1,5 +1,5 @@
 /**
-  *   @file Button.hpp
+  *   @file button.hpp
   *   @brief Header for Button class
   */
 
@@ -95,14 +95,14 @@ class Button: public sf::Drawable
       *   @brief Set position for Button
       *   @param new_pos Button new position as Vector2f
       */
-      void setPosition(sf::Vector2f new_pos);
+      virtual void setPosition(sf::Vector2f new_pos);
 
     /**
       *   @brief Set Position for Button
       *   @param x x coordinate
       *   @param y y coordinate
       */
-      void setPosition(float x, float y);
+      virtual void setPosition(float x, float y);
 
     /**
       *   @brief Get Button position
@@ -132,17 +132,20 @@ class Button: public sf::Drawable
         *   @brief Check if button is clicked
         *   @param x Mouse x coordinate
         *   @param y Mouse y coordinate
+        *   @return Returns true if Button was clicked
         *   @details If button is clicked calls click_action
-        *   @remark Make sure click_action has been set
+        *   @remark Make sure click_action has been set. This method can be
+        *   reimplemented in lower classes
         */
 
-      void checkClicked(float x, float y);
+      virtual bool checkClicked(float x, float y);
 
       /**
         *   @brief Call click_action
-        *   @remark click action must have been set
+        *   @remark click action must have been set. This method can be
+        *   reimplemented in lower classes
         */
-      void clickAction();
+      virtual void clickAction();
 
       /**
         *   @brief Try to activate button
@@ -151,14 +154,16 @@ class Button: public sf::Drawable
         *   @return Returns true if a Button was activated
         *   @details Activates button if x and y match to button frame,
         *   orherwise button is deactivated
+        *   @remark Can be reimplemented in lower classes
         */
-      bool tryActivate(float x, float y);
+      virtual bool tryActivate(float x, float y);
 
       /**
         *   @brief Activate Button
         *   @param activate if true, activate, else deactivate
+        *   @remark Can be reimplemented in lower classes
         */
-      void activate(bool activate);
+      virtual void activate(bool activate);
 
       /**
         *   @brief Set active_color
@@ -174,7 +179,7 @@ class Button: public sf::Drawable
       *   @param color color passed from constructor
       */
 
-      virtual void SetUp(sf::Color color);
+      void SetUp(sf::Color color);
 
     /**
       *   @brief Implementation of draw method
@@ -204,6 +209,7 @@ class Button: public sf::Drawable
     unsigned font_size = 20;
     sf::Rect<float> frame; /**< Button frame rect */
     sf::RectangleShape button_rect; /**< Draws button rectangle frames */
+    std::function<void ()> click_action; /*z UI class function */
 
   private:
 
@@ -215,7 +221,7 @@ class Button: public sf::Drawable
       */
     void CalculateSize();
 
-    std::function<void ()> click_action; /*z UI class function */
+
 
 
 };
