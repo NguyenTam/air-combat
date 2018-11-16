@@ -89,7 +89,7 @@ class Button: public sf::Drawable
       *   @remark This needs to be set directly after button is created
       */
 
-      void SetClickFunction(std::function<void()> const &function);
+      void setClickFunction(std::function<void()> const &function);
 
     /**
       *   @brief Set position for Button

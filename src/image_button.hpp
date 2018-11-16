@@ -79,7 +79,7 @@ class ImageButton: public Button
     virtual void clickAction();
 
     /**
-      *   @brief Set higlight color used during when button is checked
+      *   @brief Set higlight color used when button is checked
       *   @details Assigns color to checked_color
       *   @param color New highlight color
       */

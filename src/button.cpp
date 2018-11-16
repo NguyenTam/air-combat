@@ -37,7 +37,7 @@ Button::Button(std::string button_name, sf::Color color, unsigned width, unsigne
 
 /*  Bind an UI function as click_action */
 
-void Button::SetClickFunction(std::function<void()> const &function)
+void Button::setClickFunction(std::function<void()> const &function)
 {
   click_action = function;
 }
