@@ -38,8 +38,9 @@ class MainMenu: public UI
       *   @brief Constructor for MainMenu
       *   @details Creates MainMenu window
       *   @param parent_window RenderWindow which is used to display MainMenu
+      *   @param dialog RenderWindow for dialogs
       */
-    MainMenu(sf::RenderWindow *parent_window);
+    MainMenu(sf::RenderWindow &parent_window, sf::RenderWindow &dialog);
 
     /*  Only for testing */
     void Test1(){std::cout << "BUTTON1____________CLICKED" << std::endl;}
@@ -57,18 +58,21 @@ class MainMenu: public UI
 
     /**
       *   @brief Handle incoming key presses
+      *   @param event SFML event
       *   @remark Defined as a pure virtual method in UI
       */
     virtual void HandleKeyPress(sf::Event event);
 
     /**
       *   @brief Handle mouse movement
+      *   @param event SFML event
       *   @remark Defined as a pure virtual method in UI
       */
     virtual void HandleMouseMove(sf::Event event);
 
     /**
       *   @brief Handle mouse presses
+      *   @param event SFML event
       *   @remark Defined as a pure virtual method in UI
       */
     virtual void HandleMousePress(sf::Event event);

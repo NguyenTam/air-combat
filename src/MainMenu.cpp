@@ -17,8 +17,8 @@ int MainMenu::MainMenuButtons = 4;
 
 /*  Constructor */
 
-MainMenu::MainMenu(sf::RenderWindow *parent_window):
-UI(parent_window, sf::Color(150, 200, 255, 255))
+MainMenu::MainMenu(sf::RenderWindow &parent_window, sf::RenderWindow &dialog):
+UI(parent_window, dialog, sf::Color(150, 200, 255, 255))
 {
   CreateMainMenu();
 }
@@ -31,7 +31,7 @@ void MainMenu::DrawUI()
   for(auto button = buttons.begin(); button != buttons.end(); button++)
   {
     // Draw buttons
-    window->draw(**button);
+    window.draw(**button);
   }
 }
 
@@ -44,7 +44,7 @@ void MainMenu::DrawUI()
    if (event.key.code == sf::Keyboard::Escape)
    {
      // Close window
-     window->close();
+     window.close();
      window_status = false;
    }
    else if (event.key.code == sf::Keyboard::Up)
