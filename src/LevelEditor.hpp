@@ -33,17 +33,18 @@ class LevelEditor: public UI
 
     /**
       *   @brief Constructor for LevelEditor
-      *   @param render_window RenderWindow instance pointer
+      *   @param render_window RenderWindow instance as reference
       *   @remark Class UI constructor with render_window as an argument
       */
-    LevelEditor(sf::RenderWindow *render_window);
+    LevelEditor(sf::RenderWindow &render_window, sf::RenderWindow &dialog);
 
     /* Test functions for button click */
-    void Test1(){std::cout << "Clicked________BUTTON______1";}
-    void Test2(){std::cout << "Clicked________BUTTON______2";}
+    void Test1(){std::cout << "Clicked________BUTTON______1" << std::endl;}
+    void Test2(){std::cout << "Clicked________BUTTON______2" << std::endl;}
+
 
   protected:
-    
+
     /**
       *   @brief Draw all buttons and other UI objects
       *   @remark Defined as pure virtual method in UI
@@ -52,18 +53,21 @@ class LevelEditor: public UI
 
     /**
       *   @brief Handle incoming key presses
+      *   @param event SFML event
       *   @remark Defined as a pure virtual method in UI
       */
     virtual void HandleKeyPress(sf::Event event);
 
     /**
       *   @brief Handle mouse movement
+      *   @param event SFML event
       *   @remark Defined as a pure virtual method in UI
       */
     virtual void HandleMouseMove(sf::Event event);
 
     /**
       *   @brief Handle mouse presses
+      *   @param event SFML event
       *   @remark Defined as a pure virtual method in UI
       */
     virtual void HandleMousePress(sf::Event event);
@@ -84,9 +88,19 @@ class LevelEditor: public UI
       */
     void DrawEditorWindow();
 
+    /**
+      *   @brief Set ImageButtons unchecked
+      *   @details Calls setUnchecked for all ImageButton that don't match to
+      *   button
+      *   @param button ImageButton which isn't unchecked (probably clicked_button)
+      */
+    void UncheckImageButtons(ImageButton *button);
+
 
     /*  Variables */
 
     std::vector<std::shared_ptr <ImageButton>> buttons;
-
+    ImageButton *clicked_button = nullptr;
+    sf::Font message_font;
+    sf::Text message;
 };

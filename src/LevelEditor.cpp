@@ -11,8 +11,8 @@
 
 /*  Constructor for LevelEditor */
 
-LevelEditor::LevelEditor(sf::RenderWindow *render_window):
-UI(render_window, sf::Color::White)
+LevelEditor::LevelEditor(sf::RenderWindow &render_window, sf::RenderWindow &dialog):
+UI(render_window, dialog, sf::Color::White)
 {
   CreateEditorWindow();
 }
@@ -45,22 +45,90 @@ void LevelEditor::DrawUI()
   // Draw all buttons
   for (auto it = buttons.begin(); it != buttons.end(); it++)
   {
-    window->draw(**it);
+    window.draw(**it);
   }
 }
 
+/* Handle key presses */
 
 void LevelEditor::HandleKeyPress(sf::Event event)
 {
-  std::cout << event.type << std::endl;
+  if (event.key.code == sf::Keyboard::Escape)
+  {
+    // Close window
+    window.close();
+    window_status = false;
+  }
+
 }
 
 void LevelEditor::HandleMouseMove(sf::Event event)
 {
-  std::cout << event.type << std::endl;
+  float x = event.mouseMove.x;
+  float y = event.mouseMove.y;
+
+  // Check if mouse hovers on ImageButton
+  bool activated = false;
+  for (auto it = buttons.begin(); it != buttons.end(); it++)
+  {
+    if ((*it)->tryActivate(x, y))
+    {
+      // Skip unnecessary checks (mouse can only be at one position)
+      activated = true;
+      break;
+    }
+  }
+  if (! activated)
+  {
+    // TODO move LevelObjects
+  }
+
 }
+
+
+/*  Handle mouse movement */
 
 void LevelEditor::HandleMousePress(sf::Event event)
 {
-  std::cout << event.type << std::endl;
+  if (event.mouseButton.button == sf::Mouse::Left)
+  {
+    float x = event.mouseButton.x;
+    float y = event.mouseButton.y;
+
+    // Check if some button was clicked
+    bool clicked = false;
+    for (auto it = buttons.begin(); it != buttons.end(); it++)
+    {
+      if ( (*it)->checkClicked(x, y) )
+      {
+        clicked = true;
+        // store pointer to the clicked button
+        clicked_button = it->get();
+      }
+    }
+
+    if (clicked)
+    {
+      // Set other buttons not clicked (checked)
+      UncheckImageButtons(clicked_button);
+    }
+    else
+    {
+      // TODO place or create new LevelObjects
+    }
+  }
+}
+
+
+/*  Uncheck ImageButtons */
+
+void LevelEditor::UncheckImageButtons(ImageButton *button)
+{
+  for (auto it = buttons.begin(); it != buttons.end(); it++)
+  {
+    if (it->get() != button)
+    {
+      (*it)->setUnchecked();
+    }
+  }
 }
