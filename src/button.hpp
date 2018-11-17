@@ -51,13 +51,19 @@
   *   create first the button with longest name with standard constructor. Then
   *   use getWidth() and getHeight() to get the size of the button. Pass these
   *   values to the alternative constructor. Now the newly created button should
-  *   have same size as the first one
+  *   have same size as the first one. After creating a Button call setPosition
+  *   to set correct position for the Button.
   */
 
 class Button: public sf::Drawable
 {
   public:
 
+    /**
+      *   @brief Empty constructor for Button
+      *   @details Does all inits that are needed to crate a valid Button
+      */
+      Button();
 
     /**
       *   @brief Standard constructor for Button
@@ -67,7 +73,6 @@ class Button: public sf::Drawable
       *   @remark By default active_color is set to color, call setActiveColor to set it
       */
       Button(std::string button_name, sf::Color color);
-
 
 
     /**
@@ -81,6 +86,17 @@ class Button: public sf::Drawable
       *   @remark By default active_color is set to color, call setActiveColor to set it
       */
       Button(std::string button_name, sf::Color color, unsigned width, unsigned height);
+
+      /**
+        *   Copy constructor
+        */
+      Button(const Button& button);
+
+      /**
+        *   @brief Assignment operator
+        *   @remark Does not assign button status
+        */
+       Button& operator=(const Button& button);
 
     /**
       *   @brief Set outside class function as click_action
@@ -114,7 +130,7 @@ class Button: public sf::Drawable
       *   @brief Get Button text
       *   @return Returns text
       */
-      sf::Text getText();
+      sf::Text& getText();
 
     /**
       *   @brief Get Button width
@@ -171,6 +187,19 @@ class Button: public sf::Drawable
         *   @remark By default active color is same as normal_color
         */
       void setActiveColor(sf::Color color);
+
+      /**
+        *   @brief Set Button text color
+        *   @param color New text color
+        */
+      void setTextColor(sf::Color color);
+
+      /**
+        *   @brief Set outline for Button
+        *   @param thickness Outline thickness (recommended <= 1.0)
+        *   @param color Outline color
+        */
+      void setOutline(float thickness, sf::Color color);
 
   protected:
 

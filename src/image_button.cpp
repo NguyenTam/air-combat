@@ -7,33 +7,94 @@
 #include "image_button.hpp"
 
 
+/* Empty constructor */
+
+ImageButton::ImageButton(): Button("ImageButton", sf::Color::Transparent, 50, 50)
+{
+  image_path = STD_IMAGE_PATH;
+  ConstructImageButton();
+  setPosition(0, 0);
+}
 
 
 /* Constructor for ImageButton */
 ImageButton::ImageButton(std::string button_name, std::string img_path, unsigned width, unsigned height)
 : Button(button_name, sf::Color::Transparent, width, height)
 {
+  image_path = img_path;
+  ConstructImageButton();
+  setPosition(0, 0);
+}
+
+
+/* Basic ImageButton construction */
+
+void ImageButton::ConstructImageButton()
+{
   // Set correct text style and font size
   text.setStyle(sf::Text::Regular);
+  text.setFillColor(sf::Color::Black);
   text.setCharacterSize(text_size);
   // Set correct outline style for ImageButton
-  button_rect.setOutlineThickness(2);
+  button_rect.setOutlineThickness(1);
   button_rect.setOutlineColor(sf::Color::Black);
+
   // Create also own RectangleShape for checked mode
-  checked_color = sf::Color(100, 100, 100, 100);
+  checked_color = sf::Color(100, 100, 100, 80);
+  checked_rect.setSize(sf::Vector2f(width, height));
   checked_rect.setFillColor(checked_color);
-  checked_rect.setOutlineThickness(2);
+  checked_rect.setOutlineThickness(1);
   checked_rect.setOutlineColor(sf::Color::Black);
 
 
-  if (! image_texture.loadFromFile(img_path))
+  if (! image_texture.loadFromFile(image_path))
   {
     // use some standard image
+    image_texture.loadFromFile(STD_IMAGE_PATH);
 
   }
   // Construct image_sprite
   image_sprite.setTexture(image_texture);
 
+}
+
+/* Copy constructor */
+
+ImageButton::ImageButton(const ImageButton& button):
+Button("ImageButton", sf::Color::Transparent, 50, 50)
+{
+  name = button.name;
+  width = button.width;
+  height = button.height;
+  normal_color = button.normal_color;
+  image_path = button.image_path;
+
+  // Basic construction
+  SetUp(normal_color);
+  setPosition(button.position);
+  ConstructImageButton();
+  checked_color = button.checked_color;
+}
+
+
+/* Copy assignment */
+
+ImageButton& ImageButton::operator=(const ImageButton& button)
+{
+  name = button.name;
+  width = button.width;
+  height = button.height;
+  normal_color = button.normal_color;
+  image_path = button.image_path;
+
+  // Basic construction
+  SetUp(normal_color);
+  setPosition(button.position);
+  ConstructImageButton();
+  checked_color = button.checked_color;
+
+
+  return *this;
 }
 
 
@@ -84,8 +145,10 @@ void ImageButton::SetImagePosition()
 /*  Draw correct objects */
 void ImageButton::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
+
   // draw the sprite
   target.draw(image_sprite, states);
+
   if (checked)
   {
     target.draw(checked_rect, states);
@@ -97,6 +160,7 @@ void ImageButton::draw(sf::RenderTarget &target, sf::RenderStates states) const
     // draw text
     target.draw(text, states);
   }
+
 }
 
 /*  Activate button if coordinates match */
@@ -182,4 +246,11 @@ void ImageButton::setHighlightColor(sf::Color color)
   checked_color = color;
   checked_rect.setFillColor(checked_color);
 
+}
+
+/*  Uncheck ImageButton */
+void ImageButton::setUnchecked()
+{
+  checked = false;
+  active = false;
 }

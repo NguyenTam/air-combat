@@ -7,6 +7,10 @@
 
 #include "button.hpp"
 
+
+/*  Macros */
+#define STD_IMAGE_PATH "../data/img/std_button.png"
+
 /**
   *   @class ImageButton
   *   @brief Button inherited class which implements images as buttons
@@ -15,6 +19,12 @@
 class ImageButton: public Button
 {
   public:
+
+    /**
+      *   @brief empty constructor for ImageButton
+      *   @details Does Does all inits that are needed to crate a valid ImageButton
+      */
+    ImageButton();
 
     /**
       *   @brief Constructor for ImageButton
@@ -28,6 +38,16 @@ class ImageButton: public Button
       *   those to image pixel size)
       */
     ImageButton(std::string button_name, std::string img_path, unsigned width, unsigned height);
+
+    /**
+      *   @brief Copy constructor
+      */
+    ImageButton(const ImageButton& button);
+
+    /**
+      *   @brief Assignment operator
+      */
+     ImageButton& operator=(const ImageButton& button);
 
     /**
       *   @brif Set ImageButton position
@@ -85,6 +105,11 @@ class ImageButton: public Button
       */
     void setHighlightColor(sf::Color color);
 
+    /**
+      *   @brief Set ImageButton unchecked
+      */
+    void setUnchecked();
+
   protected:
     /**
       *   @brief Draw ImageButton to window
@@ -107,6 +132,12 @@ class ImageButton: public Button
       */
     void SetImagePosition();
 
+    /**
+      *   @brief Do basic ImageButton constructor work
+      */
+
+    void ConstructImageButton();
+
 
     /*  Variables */
     sf::Sprite image_sprite;
@@ -116,4 +147,5 @@ class ImageButton: public Button
     unsigned text_size = 10;
     bool active = false;
     bool checked = false;
+    std::string image_path;
 };

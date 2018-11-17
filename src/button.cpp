@@ -10,6 +10,22 @@
 /*  Class Button */
 
 
+/*  Empty constructor */
+
+Button::Button(): sf::Drawable()
+{
+  name = "Button";
+
+  /* CalculateSize must be called prior using width and height and name
+    must be initialized */
+  CalculateSize();
+
+  SetUp(sf::Color::White);
+  // Init some position
+  setPosition(sf::Vector2f(0, 0));
+}
+
+
 /*  Standard constructor */
 
 Button::Button(std::string button_name, sf::Color color): sf::Drawable()
@@ -21,6 +37,8 @@ Button::Button(std::string button_name, sf::Color color): sf::Drawable()
   CalculateSize();
 
   SetUp(color);
+  // Init some position
+  setPosition(sf::Vector2f(0, 0));
 }
 
 /*  Alternative constructor */
@@ -33,6 +51,36 @@ Button::Button(std::string button_name, sf::Color color, unsigned width, unsigne
   this->height = height;
   SetUp(color);
 
+}
+
+/* Copy constructor */
+
+Button::Button(const Button& button): sf::Drawable()
+{
+  name = button.name;
+  width = button.width;
+  height = button.height;
+  normal_color = button.normal_color;
+  SetUp(normal_color);
+  active_color = button.active_color;
+  setPosition(button.position);
+
+}
+
+
+/* Copy assignment */
+
+Button& Button::operator=(const Button& button)
+{
+  name = button.name;
+  width = button.width;
+  height = button.height;
+  normal_color = button.normal_color;
+  SetUp(normal_color);
+  active_color = button.active_color;
+  setPosition(button.position);
+
+  return *this;
 }
 
 /*  Bind an UI function as click_action */
@@ -121,7 +169,7 @@ void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const
 
 /*  Get text */
 
-sf::Text Button::getText()
+sf::Text& Button::getText()
 {
   return text;
 }
@@ -233,4 +281,17 @@ void Button::activate(bool activate)
 void Button::setActiveColor(sf::Color color)
 {
   active_color = color;
+}
+
+/* Set text color */
+void Button::setTextColor(sf::Color color)
+{
+  text.setFillColor(color);
+}
+
+/* Set outline for Button */
+void Button::setOutline(float thickness, sf::Color color)
+{
+  button_rect.setOutlineThickness(thickness);
+  button_rect.setOutlineColor(color);
 }
