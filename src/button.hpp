@@ -1,5 +1,5 @@
 /**
-  *   @file Button.hpp
+  *   @file button.hpp
   *   @brief Header for Button class
   */
 
@@ -51,13 +51,19 @@
   *   create first the button with longest name with standard constructor. Then
   *   use getWidth() and getHeight() to get the size of the button. Pass these
   *   values to the alternative constructor. Now the newly created button should
-  *   have same size as the first one
+  *   have same size as the first one. After creating a Button call setPosition
+  *   to set correct position for the Button.
   */
 
 class Button: public sf::Drawable
 {
   public:
 
+    /**
+      *   @brief Empty constructor for Button
+      *   @details Does all inits that are needed to crate a valid Button
+      */
+      Button();
 
     /**
       *   @brief Standard constructor for Button
@@ -69,7 +75,6 @@ class Button: public sf::Drawable
       Button(std::string button_name, sf::Color color);
 
 
-
     /**
       *   @brief Alternative constructor for Button
       *   @param button_name Button name
@@ -79,8 +84,21 @@ class Button: public sf::Drawable
       *   @details Creates Button using Courier as font and font size is font_size
       *   @remark Use this to after creating the button with longest text
       *   @remark By default active_color is set to color, call setActiveColor to set it
+      *   @remark By default Buttons are created uncheckable, call setCheckable(true)
+      *   to set Button checkable
       */
       Button(std::string button_name, sf::Color color, unsigned width, unsigned height);
+
+      /**
+        *   Copy constructor
+        */
+      Button(const Button& button);
+
+      /**
+        *   @brief Assignment operator
+        *   @remark Does not assign button status
+        */
+       Button& operator=(const Button& button);
 
     /**
       *   @brief Set outside class function as click_action
@@ -89,20 +107,20 @@ class Button: public sf::Drawable
       *   @remark This needs to be set directly after button is created
       */
 
-      void SetClickFunction(std::function<void()> const &function);
+      void setClickFunction(std::function<void()> const &function);
 
     /**
       *   @brief Set position for Button
       *   @param new_pos Button new position as Vector2f
       */
-      void setPosition(sf::Vector2f new_pos);
+      virtual void setPosition(sf::Vector2f new_pos);
 
     /**
       *   @brief Set Position for Button
       *   @param x x coordinate
       *   @param y y coordinate
       */
-      void setPosition(float x, float y);
+      virtual void setPosition(float x, float y);
 
     /**
       *   @brief Get Button position
@@ -114,7 +132,7 @@ class Button: public sf::Drawable
       *   @brief Get Button text
       *   @return Returns text
       */
-      sf::Text getText();
+      sf::Text& getText();
 
     /**
       *   @brief Get Button width
@@ -132,17 +150,20 @@ class Button: public sf::Drawable
         *   @brief Check if button is clicked
         *   @param x Mouse x coordinate
         *   @param y Mouse y coordinate
+        *   @return Returns true if Button was clicked
         *   @details If button is clicked calls click_action
-        *   @remark Make sure click_action has been set
+        *   @remark Make sure click_action has been set. This method can be
+        *   reimplemented in lower classes
         */
 
-      void checkClicked(float x, float y);
+      virtual bool checkClicked(float x, float y);
 
       /**
         *   @brief Call click_action
-        *   @remark click action must have been set
+        *   @remark click action must have been set. This method can be
+        *   reimplemented in lower classes
         */
-      void clickAction();
+      virtual void clickAction();
 
       /**
         *   @brief Try to activate button
@@ -151,14 +172,16 @@ class Button: public sf::Drawable
         *   @return Returns true if a Button was activated
         *   @details Activates button if x and y match to button frame,
         *   orherwise button is deactivated
+        *   @remark Can be reimplemented in lower classes
         */
-      bool tryActivate(float x, float y);
+      virtual bool tryActivate(float x, float y);
 
       /**
         *   @brief Activate Button
         *   @param activate if true, activate, else deactivate
+        *   @remark Can be reimplemented in lower classes
         */
-      void activate(bool activate);
+      virtual void activate(bool activate);
 
       /**
         *   @brief Set active_color
@@ -167,6 +190,50 @@ class Button: public sf::Drawable
         */
       void setActiveColor(sf::Color color);
 
+      /**
+        *   @brief Set Button text color
+        *   @param color New text color
+        */
+      void setTextColor(sf::Color color);
+
+      /**
+        *   @brief Set outline for Button
+        *   @param thickness Outline thickness (recommended <= 1.0)
+        *   @param color Outline color
+        */
+      void setOutline(float thickness, sf::Color color);
+
+      /**
+        *   @brief Set text style
+        *   @param style Text style (e.g. sf::Text::Regular)
+        *   @param font_size New font_size
+        *   @param color New text color
+        */
+      void setTextStyle(unsigned style, unsigned font_size, sf::Color text_color);
+
+      /**
+        *   @brief Set Button enabled value
+        *   @param enable true -> enable, false -> disable
+        */
+      void setEnabled(bool enable);
+
+      /**
+        *   @brief Set Button (ImageButton) checkable or uncheckable
+        *   @param checkable true -> checkable, false -> uncheckable
+        */
+      void setCheckable(bool checkable);
+
+      /**
+        *   @brief Set Button unchecked
+        *   @remark Can be reimplemented in lower classes
+        */
+      virtual void setUnchecked();
+      /**
+        *   @brief Set Button checked
+        *   @remark Use carefully, incorrect usage may break button status
+        */
+      void setChecked();
+
   protected:
 
     /**
@@ -174,7 +241,7 @@ class Button: public sf::Drawable
       *   @param color color passed from constructor
       */
 
-      virtual void SetUp(sf::Color color);
+      void SetUp(sf::Color color);
 
     /**
       *   @brief Implementation of draw method
@@ -204,6 +271,12 @@ class Button: public sf::Drawable
     unsigned font_size = 20;
     sf::Rect<float> frame; /**< Button frame rect */
     sf::RectangleShape button_rect; /**< Draws button rectangle frames */
+    std::function<void ()> click_action; /**< UI class function */
+    bool enabled = true; /**< If false, Button isn't draw + it can'be clicked nor activated */
+    bool checkable = false;
+    sf::RectangleShape checked_rect; /**< This shape is draw when button is checked */
+    sf::Color checked_color; /**< Highlight color used when button is checked */
+    bool checked = false;
 
   private:
 
@@ -215,7 +288,7 @@ class Button: public sf::Drawable
       */
     void CalculateSize();
 
-    std::function<void ()> click_action; /*z UI class function */
+
 
 
 };

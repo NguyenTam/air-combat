@@ -7,26 +7,34 @@
 #include "UI.hpp"
 
 
-// Assign the class variable to match the amount of buttons
-int UI::MainMenuButtons = 4;
-
-
 
 /*  Class UI  */
 
 
 /*  Constructor */
 
-UI::UI(sf::RenderWindow *parent_window): window(parent_window)
+UI::UI(sf::RenderWindow &render_window, sf::RenderWindow &dialog, sf::Color backgroundcolor):
+window(render_window), dialog_window(dialog), BackgoundColor(backgroundcolor)
 {
-  CreateMainMenu();
+  // TODO error checking
+  messagebox.message_font.loadFromFile(FONT_ARIAL);
 }
+
 
 /*  Return window_status  */
 
-bool UI::getStatus ()
+int UI::getStatus ()
 {
   return window_status;
+}
+
+/* Close active dialog */
+
+void UI::CloseDialog()
+{
+  dialog_window.close();
+  dialog_active = false;
+  messagebox.active = false;
 }
 
 
@@ -36,219 +44,166 @@ void UI::updateUI()
 {
   sf::Event event;
 
-  // Poll window events
+  /* Poll window events ( if events aren't polled window will freeze, so events
+    are also polled when dialog_window is active) */
 
-  while( window->pollEvent(event) )
+  while( window.pollEvent(event) )
   {
-    switch (event.type)
+    // Only update if there is no active dialog
+    if (! dialog_active)
     {
-      case sf::Event::Closed:
-        window->close();
-        window_status = false;
-        break;
+      switch (event.type)
+      {
+        case sf::Event::Closed:
+          window.close();
+          window_status = false;
+          break;
 
-      case sf::Event::KeyPressed:
-        HandleKeyPress(event);
-        break;
+        case sf::Event::KeyPressed:
+          HandleKeyPress(event);
+          break;
 
-      case sf::Event::MouseMoved:
-        HandleMouseMove(event);
-        break;
+        case sf::Event::MouseMoved:
+          HandleMouseMove(event);
+          break;
 
-      case sf::Event::MouseButtonPressed:
-        HandleMousePress(event);
-        break;
+        case sf::Event::MouseButtonPressed:
+          HandleMousePress(event);
+          break;
 
-      case sf::Event::Resized:
-        HandleResize(event);
-        break;
+        case sf::Event::Resized:
+          HandleResize(event);
+          break;
 
-      default:
-        std::cout << "Other sf::Event" << std::endl;
+        default:
+          std::cout << "Other sf::Event" << std::endl;
+      }
+
+      // Clear and display window
+      window.clear(sf::Color(BackgoundColor));
+      DrawUI();
+      window.display();
+
     }
 
   }
 
-  // Clear and display window
-  window->clear();
-  DrawMenu();
-  window->display();
+  // Handle also possible dialog_window event loop
+  if (dialog_active)
+  {
+    sf::Event event;
+    while (dialog_window.pollEvent(event))
+    {
+      if (event.type == sf::Event::Closed)
+      {
+        CloseDialog();
+      }
+      else if (event.type == sf::Event::MouseButtonPressed)
+      {
+        HandleDialogMousePress(event);
+      }
+      else if (event.type == sf::Event::MouseMoved)
+      {
+        HandleDialogMouseMove(event);
+      }
+    }
+    dialog_window.clear(sf::Color::White);
+    DrawDialog();
+    dialog_window.display();
+  }
 
 }
 
+/* Draw to dialog_window */
 
- void UI::HandleKeyPress(sf::Event event)
+void UI::DrawDialog()
+{
+  if (messagebox.active)
+  {
+    // Draw messagebox
+    dialog_window.draw(messagebox.message);
+    dialog_window.draw(messagebox.button);
+  }
+}
+
+/* Handle window resizing */
+
+void UI::HandleResize(sf::Event event)
  {
-
-   if (event.key.code == sf::Keyboard::Escape)
-   {
-     // Close window
-     window->close();
-     window_status = false;
-   }
-   else if (event.key.code == sf::Keyboard::Up)
-   {
-     UpdateActiveButton(BUTTON_PREV);
-   }
-   else if (event.key.code == sf::Keyboard::Down)
-   {
-     UpdateActiveButton(BUTTON_NEXT);
-   }
-   else if (event.key.code == sf::Keyboard::Tab)
-   {
-     UpdateActiveButton(BUTTON_NEXT);
-   }
-   else if (event.key.code == sf::Keyboard::Space)
-   {
-     UpdateActiveButton(BUTTON_PREV);
-   }
-   else if (event.key.code == sf::Keyboard::Return)
-   {
-     // Somehow it won't compile with Enter (Return is should be deprecated)
-     ClickCurrentButton();
-   }
+   // Reset view
+   sf::FloatRect new_screen = sf::FloatRect(0, 0, event.size.width, event.size.height);
+   window.setView(sf::View(new_screen));
 
  }
 
- void UI::HandleMouseMove(sf::Event event)
- {
-   float x = (float) event.mouseMove.x;
-   float y = (float) event.mouseMove.y;
+/* Handle dialog_window mouse press */
 
-   for (auto it = buttons.begin(); it != buttons.end(); it++)
-   {
-     if ( (*it)->tryActivate(x, y) )
-     {
-       // Button was activated, reset current_button
-       current_button = 0;
-     }
-   }
- }
-
-
-/*  Check if some button is pressed */
-
- void UI::HandleMousePress(sf::Event event)
+ void UI::HandleDialogMousePress(sf::Event event)
  {
    if (event.mouseButton.button == sf::Mouse::Left)
    {
      float x = (float) event.mouseButton.x;
      float y = (float) event.mouseButton.y;
-     for (auto it = buttons.begin(); it != buttons.end(); it++)
-     {
-       // Check if clicked
-       (*it)->checkClicked(x, y);
 
+     if (messagebox.active)
+     {
+       // if messagebox button is clicked, it calls UI::CloseDialog
+       messagebox.button.checkClicked(x, y);
      }
    }
-
  }
 
- void UI::HandleResize(sf::Event event)
+ /* Handle dialog_window mouse movement */
+
+ void UI::HandleDialogMouseMove(sf::Event event)
  {
-   // Reset view
-   sf::FloatRect new_screen = sf::FloatRect(0, 0, event.size.width, event.size.height);
-   window->setView(sf::View(new_screen));
+   float x = (float) event.mouseMove.x;
+   float y = (float) event.mouseMove.y;
 
+   if (messagebox.active)
+   {
+     // Check if mouse hovers on the messagebox
+     messagebox.button.tryActivate(x, y);
+   }
  }
 
- void UI::UpdateActiveButton(int action)
+
+/*  Create and start showing a messagebox */
+
+ void UI::ShowMessageBox(std::string message, sf::Vector2i position)
  {
-   if ( (action == BUTTON_NEXT) && (current_button < UI::MainMenuButtons) )
-   {
-     current_button ++;
-   }
+   float button_width = 40;
+   float button_height = 30;
+   messagebox.active = true;
+   messagebox.message = sf::Text(message, messagebox.message_font, 14);
+   messagebox.button = Button("Ok", sf::Color::White, button_width, button_height);
 
-   else if ( (action == BUTTON_PREV) && (current_button > 1) )
-   {
-     current_button --;
-   }
-   // Activate the correct button
-   ActivateCurrentButton();
+   messagebox.button.setTextColor(sf::Color::Black);
+   messagebox.button.setOutline(1, sf::Color::Black);
+   messagebox.button.setActiveColor(sf::Color(0, 0, 200, 50));
+
+   sf::Text& button_text = messagebox.button.getText();
+   button_text.setStyle(sf::Text::Regular);
+
+   // Bind CloseDialog to Button click_action
+   messagebox.button.setClickFunction( std::bind(&UI::CloseDialog, this) );
+
+   // Get Text rect size
+   float width = messagebox.message.getLocalBounds().width;
+   float height = messagebox.message.getLocalBounds().height;
+   unsigned x = (unsigned) width + button_width + 30; // Modify this if needed
+   unsigned y = (unsigned) height + button_height + 50; // Modify this if needed
+
+   // Create messagebox to the dialog_window
+   dialog_window.create(sf::VideoMode(x, y), "Information", sf::Style::Close);
+   dialog_window.setPosition(position);
+
+   messagebox.message.setPosition(30, 20);
+   messagebox.button.setPosition(x - (button_width + 30), y - (button_height + 10));
+
+   messagebox.message.setFillColor(sf::Color::Black);
+
+   // Change dialog_window status
+   dialog_active = true;
 
  }
-
-
-/*  Create main menu */
-
-void UI::CreateMainMenu()
-{
-  // Create Buttons
-  // First create the button with longest text and match other widths to it
-  std::shared_ptr<Button> button1 = std::make_shared<Button>("Start Game", sf::Color::Blue);
-  button1->setPosition(100, 100);
-  buttons.push_back(button1);
-  unsigned width = button1->getWidth();
-  unsigned height = button1->getHeight();
-  std::shared_ptr<Button> button2 = std::make_shared<Button>("Editor",
-                                    sf::Color::Blue, width, height);
-  std::shared_ptr<Button> button3 = std::make_shared<Button>("Settings",
-                                    sf::Color::Blue, width, height);
-  std::shared_ptr<Button> button4 = std::make_shared<Button>("Statistics",
-                                    sf::Color::Blue, width, height);
-  button2->setPosition(100, 200);
-  buttons.push_back(button2);
-  button3->setPosition(100, 300);
-  buttons.push_back(button3);
-  button4->setPosition(100, 400);
-  buttons.push_back(button4);
-
-  // Set click_actions IMPORTANT
-  button1->SetClickFunction(std::bind(&UI::Test1, this));
-  button2->SetClickFunction(std::bind(&UI::Test2, this));
-  button3->SetClickFunction(std::bind(&UI::Test3, this));
-  button4->SetClickFunction(std::bind(&UI::Test4, this));
-
-  // Set active colors
-  button1->setActiveColor(sf::Color(sf::Color::Yellow));
-  button2->setActiveColor(sf::Color(sf::Color::Yellow));
-  button3->setActiveColor(sf::Color(sf::Color::Yellow));
-  button4->setActiveColor(sf::Color(sf::Color::Yellow));
-
-
-
-}
-
-
-/*  Draw main menu */
-
-void UI::DrawMenu()
-{
-
-  for(auto button = buttons.begin(); button != buttons.end(); button++)
-  {
-    // Draw buttons
-    window->draw(**button);
-  }
-
-}
-
-
-void UI::ActivateCurrentButton()
-{
-  int i = 1;
-  for (auto it = buttons.begin(); it != buttons.end(); it++, i++)
-  {
-    if (i == current_button)
-    {
-      (*it)->activate(true);
-    }
-    else
-    {
-      (*it)->activate(false);
-    }
-  }
-}
-
-void UI::ClickCurrentButton()
-{
-  int i=1;
-  for (auto it = buttons.begin(); it != buttons.end(); it++, i++)
-  {
-    if (i == current_button)
-    {
-      (*it)->clickAction();
-      break;
-    }
-  }
-}

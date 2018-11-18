@@ -1,6 +1,6 @@
 /**
   *   @file UI.hpp
-  *   @brief Header for UI class
+  *   @brief Header for UI class and structs related to it
   */
 
 #pragma once
@@ -13,119 +13,141 @@
 #include <SFML/System.hpp>
 #include "spdlog/spdlog.h"
 #include <iostream>
-#include <vector>
-#include <memory>
 #include "button.hpp"
 
 
 
-/*  Macros  */
+/**
+  *   @struct MessageBox
+  *   @brief Struct used to display message boxes
+  */
 
-#define BUTTON_MOUSE 0 /**< Button tried to activate by mouse click */
-#define BUTTON_NEXT 1 /**< Tried to activate next button (button above) */
-#define BUTTON_PREV 2 /**< Tried to activate previous button (button below) */
+struct MessageBox
+{
+  bool active = false; /**< Whether MessageBox is active or not */
+  Button button; /**< Button for closing the MessageBox */
+  sf::Text message; /**< Text object drawn to MessageBox */
+  sf::Font message_font; /**< Font used to draw MessageBoxes */
+};
+
+
 
 
 /**
   *   @class UI
   *   @brief UI class for air combat game
+  *   @details An abstract class which is inherited by MainMenu and LevelEditor
   */
 
 class UI
 {
   public:
 
-    static int MainMenuButtons; /**< Tells how many buttons main menu contains */
-
     /**
       *   @brief Constructor for UI
-      *   @details Creates Main Menu window
-      *   @param parent_window RenderWindow which is used to display UI
+      *   @param render_window window for UI
+      *   @param dialog Another RenderWindow which is used to show dialogs
+      *   @param backgroundcolor UI BackgoundColor
+      **  @remark render_window should be a stack object in the main
       */
-    UI(sf::RenderWindow *parent_window);
+    UI(sf::RenderWindow &render_window, sf::RenderWindow &dialog, sf::Color backgroundcolor);
+
+    /**
+      *   @brief Update UI
+      *   @details Called from the main to update MainMenu or LevelEditor
+      *   @remark Can be reimplemented in a lower class
+      */
+    virtual void updateUI();
 
     /**
       *   @brief Get window status
-      *   @return Returns false if window is closed, else true
+      *   @return Returns 0 if window is closed
       */
-    bool getStatus();
+    int getStatus();
 
     /**
-      *   @brief Update window based on sf::Events
-      *   @details Calls window.pollEvent in a loop to update the window
+      *   Close active dialog
       */
-    void updateUI();
+    void CloseDialog();
+
 
   protected:
 
     /**
-      *   @brief Handle incoming key presses
+      *   @brief Draw all UI objects
+      *   @remark Pure virtual method, implemented in a lower class
+      */
+    virtual void DrawUI() = 0;
+
+    /**
+      *   @brief Draw current dialog to dialog_window
       *   @remark Can be reimplemented in a lower class
       */
-    virtual void HandleKeyPress(sf::Event event);
+    virtual void DrawDialog();
+
+    /**
+      *   @brief Handle incoming key presses
+      *   @param event SFML event
+      *   @remark Pure virtual method, implemented in a lower class
+      */
+    virtual void HandleKeyPress(sf::Event event) = 0;
 
     /**
       *   @brief Handle mouse movement
-      *   @remark Can be reimplemented in a lower class
+      *   @param event SFML event
+      *   @remark Pure virtual method, implemented in a lower class
       */
-    virtual void HandleMouseMove(sf::Event event);
+    virtual void HandleMouseMove(sf::Event event) = 0;
 
     /**
       *   @brief Handle mouse presses
-      *   @remark Can be reimplemented in a lower class
+      *   @param event SFML event
+      *   @remark Pure virtual method, implemented in a lower class
       */
-    virtual void HandleMousePress(sf::Event event);
+    virtual void HandleMousePress(sf::Event event) = 0;
 
     /**
       *   @brief Handle sf::Window resizing
+      *   @param event SFML event
       *   @remark Can be reimplemented in a lower class
       */
     virtual void HandleResize(sf::Event event);
 
     /**
-      *   @brief Update active button
-      *   @param action Tells by which action active button is updated
-      *   @remark action should be BUTTON_MOUSE, BUTTON_NEXT or BUTTON_PREV
+      *   @brief Handle dialog_window mouse presses
+      *   @param event SFML event
+      *   @remark Can be reimplemented in a lower class
       */
-    void UpdateActiveButton(int action);
+    virtual void HandleDialogMousePress(sf::Event event);
 
     /**
-      *   @brief Create main menu
-      *   @details Creates all the necessary Buttons
+      *   @brief Handle dialog_window mouse movement
+      *   @param event SFML event
+      *   @remark Can be reimplemented in a lower class
       */
-    void CreateMainMenu();
+    virtual void HandleDialogMouseMove(sf::Event event);
 
     /**
-      *   @brief Draws main menu
+      *   @brief Show a message box
+      *   @param message Message shown in the message box
+      *   @param position Initial position for the message box
+      *   @bug The created message box isn't locked top of the main window.
+      *   This can cause box checking to be fustrating. Fixing the issue seems
+      *   complicated and needs low level os window tuning.
+      *   @remark All positions related values used within the method are just
+      *   result of trial and error to make the box look ok
       */
-    void DrawMenu();
+    void ShowMessageBox(std::string message, sf::Vector2i position);
 
-    /**
-      *   @brief Activate current_button
-      */
-    void ActivateCurrentButton();
-
-    /**
-      *   @brief Click current_button
-      */
-    void ClickCurrentButton();
-
-    /*  Only for testing */
-    void Test1(){std::cout << "BUTTON1____________CLICKED" << std::endl;}
-    void Test2(){std::cout << "BUTTON2____________CLICKED" << std::endl;}
-    void Test3(){std::cout << "BUTTON3____________CLICKED" << std::endl;}
-    void Test4(){std::cout << "BUTTON4____________CLICKED" << std::endl;}
 
 
     /*  Variables */
 
-    sf::RenderWindow *window;
-    bool window_status = true; /**< Is window active (not closed) */
-
-  private:
-    int current_button = 0; /**< Which button is currently active */
-    std::vector<std::shared_ptr <Button> > buttons;
-
-
+    sf::RenderWindow &window; /**< Main window */
+    sf::RenderWindow &dialog_window; /**< Window used to display dialogs */
+    bool dialog_active = false; /**< Whether a dialog is active or not */
+    int window_status = 1; /**< 1 window active, 0 closed */
+    sf::Color BackgoundColor; /**< Background color */
+    struct MessageBox messagebox; /**< MessageBox instance */
 
 };
