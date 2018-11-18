@@ -113,6 +113,13 @@ void Button::SetUp(sf::Color color)
   button_rect.setSize(sf::Vector2f(width, height));
   button_rect.setFillColor(normal_color);
 
+  // Create also own RectangleShape for checked mode
+  checked_color = sf::Color(100, 100, 100, 80);
+  checked_rect.setSize(sf::Vector2f(width, height));
+  checked_rect.setFillColor(checked_color);
+  checked_rect.setOutlineThickness(1);
+  checked_rect.setOutlineColor(sf::Color::Black);
+
 }
 
 
@@ -126,8 +133,9 @@ void Button::setPosition(sf::Vector2f new_pos)
 
   // Set frame
   frame = sf::Rect<float>(x, y, width, height);
-  // Set button_rect
+  // Set button_rect and checked_rect positions
   button_rect.setPosition(position);
+  checked_rect.setPosition(position);
 
   // Correct text position
   SetTextPosition();
@@ -144,8 +152,9 @@ void Button::setPosition(float x, float y)
   // Set frame
   frame = sf::Rect<float>(x, y, width, height);
 
-  // Set button_rect
+  // Set button_rect and checked_rect positions
   button_rect.setPosition(position);
+  checked_rect.setPosition(position);
 
   // Correct text position
   SetTextPosition();
@@ -160,9 +169,17 @@ sf::Vector2f Button::getPosition()
 
 void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-  // Draw all components independently
-  target.draw(button_rect, states);
-  target.draw(text, states);
+  if (enabled && !checked)
+  {
+    // Draw all components independently
+    target.draw(button_rect, states);
+    target.draw(text, states);
+  }
+  else if (enabled)
+  {
+    target.draw(text, states);
+    target.draw(checked_rect, states);
+  }
 
 }
 
@@ -191,7 +208,7 @@ void Button::SetTextPosition()
   }
   else
   {
-    correct_x = 0.5 * width - (chars / 2 * font_size + 0.3 * font_size)  * 0.6 * font_size;
+    correct_x = 0.5 * width - ((chars / 2) * font_size * 0.6 + 0.3 * font_size);
   }
 
   text.setPosition(correct_x + position.x, correct_y + position.y);
@@ -228,10 +245,21 @@ unsigned Button::getHeight()
 
 bool Button::checkClicked(float x, float y)
 {
-  if (frame.contains(x, y))
+  if (enabled)
   {
-    click_action();
-    return true;
+    if (frame.contains(x, y))
+    {
+      if (! checked)
+      {
+        if (checkable)
+        {
+          checked = true;
+        }
+        click_action();
+        return true;
+      }
+
+    }
   }
   return false;
 }
@@ -240,7 +268,15 @@ bool Button::checkClicked(float x, float y)
 
 void Button::clickAction()
 {
-  click_action();
+  if (! checked)
+  {
+    if (checkable)
+    {
+      checked = true;
+    }
+
+    click_action();
+  }
 }
 
 
@@ -249,7 +285,7 @@ void Button::clickAction()
 bool Button::tryActivate(float x, float y)
 {
 
-  if (frame.contains(x, y))
+  if (enabled && frame.contains(x, y))
   {
     button_rect.setFillColor(active_color);
     return true;
@@ -265,7 +301,7 @@ bool Button::tryActivate(float x, float y)
 /* Activate/deactivate */
 void Button::activate(bool activate)
 {
-  if (activate)
+  if (activate && enabled)
   {
     button_rect.setFillColor(active_color);
   }
@@ -294,4 +330,43 @@ void Button::setOutline(float thickness, sf::Color color)
 {
   button_rect.setOutlineThickness(thickness);
   button_rect.setOutlineColor(color);
+}
+
+
+/*  Set text style */
+void Button::setTextStyle(unsigned style, unsigned font_size, sf::Color text_color)
+{
+  this->font_size = font_size;
+  text = sf::Text(name, font, font_size);
+  text.setFillColor(text_color);
+  text.setStyle(style);
+
+  // Correct text position
+  SetTextPosition();
+
+}
+
+/* Set Button enabled/disabled */
+void Button::setEnabled(bool enable)
+{
+  enabled = enable;
+}
+
+/* Set checkable/uncheckable */
+void Button::setCheckable(bool checkable)
+{
+  this->checkable = checkable;
+}
+
+
+/* Set unchecked */
+void Button::setUnchecked()
+{
+  checked = false;
+}
+
+/* Set checked */
+void Button::setChecked()
+{
+  checked = true;
 }

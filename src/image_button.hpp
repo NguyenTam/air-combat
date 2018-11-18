@@ -14,6 +14,8 @@
 /**
   *   @class ImageButton
   *   @brief Button inherited class which implements images as buttons
+  *   @remark ImageButtons are created as checkable. Change to uncheckable
+  *   by calling setCheckable(false)
   */
 
 class ImageButton: public Button
@@ -107,8 +109,15 @@ class ImageButton: public Button
 
     /**
       *   @brief Set ImageButton unchecked
+      *   @remark Reimplemented from base class Button::setUnchecked()
       */
-    void setUnchecked();
+    virtual void setUnchecked();
+
+    /**
+      *   @brief Scale ImageButton
+      *   @param scale Scaling factor
+      */
+    void setScale(float scale);
 
   protected:
     /**
@@ -142,10 +151,7 @@ class ImageButton: public Button
     /*  Variables */
     sf::Sprite image_sprite;
     sf::Texture image_texture;
-    sf::RectangleShape checked_rect; /**< This shape is draw when button is checked */
-    sf::Color checked_color; /**< Highlight color used when button is checked */
     unsigned text_size = 10;
     bool active = false;
-    bool checked = false;
     std::string image_path;
 };

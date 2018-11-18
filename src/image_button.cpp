@@ -11,6 +11,7 @@
 
 ImageButton::ImageButton(): Button("ImageButton", sf::Color::Transparent, 50, 50)
 {
+  checkable = true;
   image_path = STD_IMAGE_PATH;
   ConstructImageButton();
   setPosition(0, 0);
@@ -21,6 +22,7 @@ ImageButton::ImageButton(): Button("ImageButton", sf::Color::Transparent, 50, 50
 ImageButton::ImageButton(std::string button_name, std::string img_path, unsigned width, unsigned height)
 : Button(button_name, sf::Color::Transparent, width, height)
 {
+  checkable = true;
   image_path = img_path;
   ConstructImageButton();
   setPosition(0, 0);
@@ -39,23 +41,14 @@ void ImageButton::ConstructImageButton()
   button_rect.setOutlineThickness(1);
   button_rect.setOutlineColor(sf::Color::Black);
 
-  // Create also own RectangleShape for checked mode
-  checked_color = sf::Color(100, 100, 100, 80);
-  checked_rect.setSize(sf::Vector2f(width, height));
-  checked_rect.setFillColor(checked_color);
-  checked_rect.setOutlineThickness(1);
-  checked_rect.setOutlineColor(sf::Color::Black);
-
-
   if (! image_texture.loadFromFile(image_path))
   {
     // use some standard image
     image_texture.loadFromFile(STD_IMAGE_PATH);
 
   }
-  // Construct image_sprite
-  image_sprite.setTexture(image_texture);
-
+  // Construct image_sprite, cut image from top left if its bigger than the button
+  image_sprite = sf::Sprite(image_texture, sf::IntRect(0, 0, width, height));
 }
 
 /* Copy constructor */
@@ -63,6 +56,7 @@ void ImageButton::ConstructImageButton()
 ImageButton::ImageButton(const ImageButton& button):
 Button("ImageButton", sf::Color::Transparent, 50, 50)
 {
+  checkable = true;
   name = button.name;
   width = button.width;
   height = button.height;
@@ -145,20 +139,22 @@ void ImageButton::SetImagePosition()
 /*  Draw correct objects */
 void ImageButton::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-
-  // draw the sprite
-  target.draw(image_sprite, states);
-
-  if (checked)
+  if (enabled)
   {
-    target.draw(checked_rect, states);
-  }
-  else if(active)
-  {
-    // draw button_rect outline
-    target.draw(button_rect, states);
-    // draw text
-    target.draw(text, states);
+    // draw the sprite
+    target.draw(image_sprite, states);
+
+    if (checked)
+    {
+      target.draw(checked_rect, states);
+    }
+    else if(active)
+    {
+      // draw button_rect outline
+      target.draw(button_rect, states);
+      // draw text
+      target.draw(text, states);
+    }
   }
 
 }
@@ -166,7 +162,7 @@ void ImageButton::draw(sf::RenderTarget &target, sf::RenderStates states) const
 /*  Activate button if coordinates match */
 bool ImageButton::tryActivate(float x, float y)
 {
-  if (frame.contains(x, y))
+  if (enabled && frame.contains(x, y))
   {
     active = true;
     return true;
@@ -181,7 +177,7 @@ bool ImageButton::tryActivate(float x, float y)
 /*  Activate/deactivate button */
 void ImageButton::activate(bool activate)
 {
-  if (activate)
+  if (activate && enabled)
   {
     active = true;
   }
@@ -204,22 +200,30 @@ void ImageButton::SetTextPosition()
 /* Click button if coordinates match and button isn't checked */
 bool ImageButton::checkClicked(float x, float y)
 {
-  if (frame.contains(x,y))
+  if (enabled)
   {
-    // Set correct status
-    active = false;
-    if (checked)
+    if (frame.contains(x,y))
     {
-      checked = false;
-    }
-    else
-    {
-      checked = true;
-      // Call click_action
-      click_action();
-      return true;
+      // Set correct status
+      active = false;
+      if (checked)
+      {
+        checked = false;
+      }
+      else
+      {
+        if (checkable)
+        {
+          checked = true;
+        }
+
+        // Call click_action
+        click_action();
+        return true;
+      }
     }
   }
+
   return false;
 
 }
@@ -234,7 +238,11 @@ void ImageButton::clickAction()
   }
   else
   {
-    checked = true;
+    if (checkable)
+    {
+      checked = true;
+    }
+
     click_action();
   }
 
@@ -253,4 +261,19 @@ void ImageButton::setUnchecked()
 {
   checked = false;
   active = false;
+}
+
+/* Scale ImageButton */
+void ImageButton::setScale(float scale)
+{
+
+  float tmp_width = (float) width * scale;
+  float tmp_height = (float) height * scale;
+  width = (unsigned) tmp_width;
+  height = (unsigned) tmp_height;
+  button_rect.setSize(sf::Vector2f(width, height));
+  checked_rect.setSize(sf::Vector2f(width, height));
+
+  // Scale also the sprite
+  image_sprite.setScale(scale, scale);
 }

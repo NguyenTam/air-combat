@@ -84,6 +84,8 @@ class Button: public sf::Drawable
       *   @details Creates Button using Courier as font and font size is font_size
       *   @remark Use this to after creating the button with longest text
       *   @remark By default active_color is set to color, call setActiveColor to set it
+      *   @remark By default Buttons are created uncheckable, call setCheckable(true)
+      *   to set Button checkable
       */
       Button(std::string button_name, sf::Color color, unsigned width, unsigned height);
 
@@ -201,6 +203,37 @@ class Button: public sf::Drawable
         */
       void setOutline(float thickness, sf::Color color);
 
+      /**
+        *   @brief Set text style
+        *   @param style Text style (e.g. sf::Text::Regular)
+        *   @param font_size New font_size
+        *   @param color New text color
+        */
+      void setTextStyle(unsigned style, unsigned font_size, sf::Color text_color);
+
+      /**
+        *   @brief Set Button enabled value
+        *   @param enable true -> enable, false -> disable
+        */
+      void setEnabled(bool enable);
+
+      /**
+        *   @brief Set Button (ImageButton) checkable or uncheckable
+        *   @param checkable true -> checkable, false -> uncheckable
+        */
+      void setCheckable(bool checkable);
+
+      /**
+        *   @brief Set Button unchecked
+        *   @remark Can be reimplemented in lower classes
+        */
+      virtual void setUnchecked();
+      /**
+        *   @brief Set Button checked
+        *   @remark Use carefully, incorrect usage may break button status
+        */
+      void setChecked();
+
   protected:
 
     /**
@@ -238,7 +271,12 @@ class Button: public sf::Drawable
     unsigned font_size = 20;
     sf::Rect<float> frame; /**< Button frame rect */
     sf::RectangleShape button_rect; /**< Draws button rectangle frames */
-    std::function<void ()> click_action; /*z UI class function */
+    std::function<void ()> click_action; /**< UI class function */
+    bool enabled = true; /**< If false, Button isn't draw + it can'be clicked nor activated */
+    bool checkable = false;
+    sf::RectangleShape checked_rect; /**< This shape is draw when button is checked */
+    sf::Color checked_color; /**< Highlight color used when button is checked */
+    bool checked = false;
 
   private:
 
