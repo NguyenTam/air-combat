@@ -7,7 +7,7 @@ LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system
 TEST_SRC = Menu_test Editor_test
 OBJECTS =
 EXE = Menu
-ALL_EXES = Menu Editor
+ALL_EXES = Menu Editor LevelEntityTest
 
 default: all
 
@@ -21,6 +21,9 @@ Menu_test:
 
 Editor_test:
 	$(CC) $(CFLAGS) ../src/LevelEditor.cpp ../src/UI.cpp ../src/image_button.cpp ../src/button.cpp LevelEditor_test.cpp -o Editor $(LINKER)
+
+LevelEntity_test:
+	$(CC) $(CFLAGS) LevelEntity_test.cpp ../src/LevelEntity.cpp -o LevelEntityTest $(LINKER)
 
 clean:
 	$(RM) ${OBJECTS} ${ALL_EXES}
