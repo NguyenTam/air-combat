@@ -98,7 +98,7 @@ class Button: public sf::Drawable
         *   @brief Assignment operator
         *   @remark Does not assign button status
         */
-       Button& operator=(const Button& button);
+      Button& operator=(const Button& button);
 
     /**
       *   @brief Set outside class function as click_action
@@ -233,6 +233,12 @@ class Button: public sf::Drawable
         *   @remark Use carefully, incorrect usage may break button status
         */
       void setChecked();
+
+      /**
+        *   @brief Get checked value
+        *   @return Returns checked
+        */
+      bool getChecked();
 
   protected:
 

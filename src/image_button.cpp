@@ -209,6 +209,7 @@ bool ImageButton::checkClicked(float x, float y)
       if (checked)
       {
         checked = false;
+        return true;
       }
       else
       {

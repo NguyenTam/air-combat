@@ -370,3 +370,9 @@ void Button::setChecked()
 {
   checked = true;
 }
+
+/* Get checked */
+bool Button::getChecked()
+{
+  return checked;
+}
