@@ -13,6 +13,7 @@
 #include "UI.hpp"
 #include "image_button.hpp"
 #include "button.hpp"
+#include "Level.hpp"
 
 
 
@@ -22,6 +23,7 @@
 #define PLANE_IMG "../data/img/plane.png" /**< Path to plane.png */
 #define RIGHT_ARROW_IMG "../data/img/right_arrow.png" /**< Path to right_arrow.png */
 #define LEFT_ARROW_IMG "../data/img/left_arrow.png" /**< Path to left_arrow.png */
+#define ERASE_IMG "../data/img/erase.png" /**< Path to erase.png */
 #define ESSENTIALS_MODE 1 /**< HorizontalToolbar mode, essentials shown */
 #define OBJECTIVES_MODE 2  /**< HorizontalToolbar mode, objectives shown */
 
@@ -84,9 +86,23 @@ class LevelEditor: public UI
       */
     LevelEditor(sf::RenderWindow &render_window, sf::RenderWindow &dialog);
 
-    /* Test functions for button click */
-    void Test1(){std::cout << "Clicked________BUTTON______1" << std::endl;}
-    void Test2(){std::cout << "Clicked________BUTTON______2" << std::endl;}
+    /**
+      *   @brief Click action for add_infantry button (horizontal_toolbar)
+      *   @details Change current_entity_type to INFANTRY_ENTITY
+      */
+    void add_infantry_action();
+
+    /**
+      *   @brief Click action for add_plane button (horizontal_toolbar)
+      *   @details Change current_entity_type to PLANE_ENTITY
+      */
+    void add_plane_action();
+
+    /**
+      *   @brief Click action for erase_entity button (both toolbars)
+      *   @details Change current_entity_type to ERASE_ENTITY
+      */
+    void erase_entity_action();
 
     /**
       *   @brief Click action for vertical_toolbar save_button
@@ -105,21 +121,25 @@ class LevelEditor: public UI
 
     /**
       *   @brief Click action for horizontal_toolbar show_essentials button
+      *   @details Clears current_entity and switches to ESSENTIALS_MODE
       */
     void show_essentials_action();
 
     /**
       *   @brief Click action for horizontal_toolbar show_objectives button
+      *   @brief Clears current_entity and switches to OBJECTIVES_MODE
       */
     void show_objectives_action();
 
     /**
       *   @brief Click action for vertical_toolbar view_left
+      *   @details Moves view one LevelEditor::Window_Width left
       */
     void view_left_action();
 
     /**
       *   @brief Click action for vertical_toolbar view_right
+      *   @details Moves view one LevelEditor::Window_Width right
       */
     void view_right_action();
 
@@ -209,5 +229,10 @@ class LevelEditor: public UI
 
     VerticalToolbar vertical_toolbar;
     HorizontalToolbar horizontal_toolbar;
-    unsigned view = 0; /**< Tells position on the level view */
+    float view = 0; /**< Tells position on the level view */
+    sf::View ui_view;
+    sf::View level_view;
+
+    Level level; /** Level Object */
+    int current_entity_type = NO_ENTITY; /**< Used with Level::addEntity() */
 };

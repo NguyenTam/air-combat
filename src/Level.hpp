@@ -20,6 +20,7 @@
 #define NO_ENTITY 0 /**< This has to be same as LevelEntity type default value */
 #define PLANE_ENTITY 1 /**< Entity type for planes */
 #define INFANTRY_ENTITY 2 /**< Entity type for infantry */
+#define ERASE_ENTITY -1 /**< Entity type for erasing entities */
 
 
 
@@ -36,17 +37,16 @@ class Level
 
     /**
       *   @brief Standard constructor for Level
+      *   @param y_limit The lowest allowed point y position for objects
       */
     Level();
 
     /**
-      *   @brief Try to remove a LevelEntity
-      *   @param x Level x coordinate
-      *   @param y Level y coordinate
-      *   @return Returns true if an entity was removed
-      *   @remark Called from LevelEditor
+      *   @brief Set level_y_limit
+      *   @param y_limit New level_y_limit
+      *   @remark This need to be set after construction
       */
-    bool removeEntity(float x, float y);
+    void setYLimit(float y_limit);
 
     /**
       *   @brief Move current_entity
@@ -67,16 +67,33 @@ class Level
       */
     void addEntity(float x, float y, int entity_type);
 
+    /**
+      *   @brief Draw Level
+      *   @param window RenderWindow where the Level is drawn
+      */
+    void drawLevel(sf::RenderWindow &window);
+
+    /**
+      *   @brief Remove current_entity from level_entities
+      *   @details Doesn't remove current if it's positioned, in this case
+      *   assigns an empty entity to current_entity
+      */
+    void removeCurrent();
+
 
   private:
 
     /**
       *   @brief Check if position is free
+      *   @details Checks all four corners of the object
       *   @return Returns true if free
       *   @param x x coordinate
       *   @param y y coordinate
+      *   @param width New LevelEntity width
+      *   @param height New LevelEntity height
+      *   @param cmp LevelEntity which is moving and is obviously not checked
       */
-    bool CheckPosition(float x, float y);
+    bool CheckPosition(float x, float y, float width, float height, LevelEntity *cmp);
 
     /**
       *   @brief Try to add an infantry entity
@@ -99,12 +116,17 @@ class Level
     void AddPlane(float x, float y);
 
     /**
-      *   @brief Remove current_entity from level_entities
+      *   @brief Try to remove a LevelEntity
+      *   @param x Level x coordinate
+      *   @param y Level y coordinate
       */
-    void RemoveCurrent();
+    void EraseEntity(float x, float y);
+
 
     /*  Variables */
+    float level_y_limit = 0; /**< Tells level y limit (i.e. the lowest allowed point to place entities) */
     std::shared_ptr<LevelEntity> current_entity;
+    float current_entity_height = 0;
     std::vector<std::shared_ptr<LevelEntity>> level_entities; /**< All LevelEntities */
 
     /* These are just temporary */

@@ -19,6 +19,8 @@ LevelEditor::LevelEditor(sf::RenderWindow &render_window, sf::RenderWindow &dial
 UI(render_window, dialog, sf::Color::White)
 {
   CreateEditorWindow();
+  ui_view = window.getDefaultView();
+  level.setYLimit(LevelEditor::Window_Height); // This must be set
 }
 
 /*  Create LevelEditor UI */
@@ -33,6 +35,15 @@ void LevelEditor::CreateEditorWindow()
   CreateVerticalToolbar(window_height);
   CreateHorizontalToolbar(window_width);
 
+  // Create another view for level (it's crusial to make divisions with floats)
+  float level_width = (float)LevelEditor::Window_Width / (float) window_width;
+  float level_height = (float) LevelEditor::Window_Height / (float) window_height;
+  float level_x = (float) vertical_toolbar_width / (float) window_width;
+  float level_y = (float) horizontal_toolbar_height / (float) window_height;
+  level_view.setViewport(sf::FloatRect(level_x, level_y, level_width, level_height));
+  level_view.setSize(sf::Vector2f(LevelEditor::Window_Width, LevelEditor::Window_Height));
+  level_view.setCenter(sf::Vector2f(LevelEditor::Window_Width / 2, LevelEditor::Window_Height / 2));
+
 }
 
 
@@ -41,8 +52,17 @@ void LevelEditor::CreateEditorWindow()
 void LevelEditor::DrawUI()
 {
   // Draw toolbars
+
   DrawVerticalToolbar();
   DrawHorizontalToolbar();
+
+  window.setView(level_view);
+
+  // Draw Level
+  level.drawLevel(window);
+
+  window.setView(ui_view);
+
 
 }
 
@@ -64,65 +84,74 @@ void LevelEditor::HandleMouseMove(sf::Event event)
   float x = event.mouseMove.x;
   float y = event.mouseMove.y;
 
-  // Check if mouse hovers on ImageButton
-  bool activated = false;
-
-  if (horizontal_toolbar.mode == ESSENTIALS_MODE)
+  if (x < vertical_toolbar_width || y < horizontal_toolbar_height)
   {
-    // Check only essentials container
-    for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
+    // Mouse is inside the toolbars
+
+    // Check if mouse hovers on ImageButton
+    bool activated = false;
+
+    if (horizontal_toolbar.mode == ESSENTIALS_MODE)
     {
-      if ((*it)->tryActivate(x, y))
+      // Check only essentials container
+      for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
       {
-        // Skip unnecessary checks (mouse can only be at one position)
+        if ((*it)->tryActivate(x, y))
+        {
+          // Skip unnecessary checks (mouse can only be at one position)
+          activated = true;
+          break;
+        }
+      }
+    }
+    else if (horizontal_toolbar.mode == OBJECTIVES_MODE)
+    {
+      // Check only objectives container
+      for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
+      {
+        if ((*it)->tryActivate(x, y))
+        {
+          // Skip unnecessary checks (mouse can only be at one position)
+          activated = true;
+          break;
+        }
+      }
+    }
+
+    if (! activated)
+    {
+      for (auto it = vtoolbar_buttons.begin(); it != vtoolbar_buttons.end(); it++)
+      {
+        if ( (*it)->tryActivate(x, y))
+        {
+          activated = true;
+          break;
+        }
+
+      }
+    }
+
+    if (! activated)
+    {
+      // Check if mouse is over horizontal_toolbar mode select buttons
+      if (horizontal_toolbar.show_essentials->tryActivate(x, y))
+      {
         activated = true;
-        break;
+      }
+      else if (horizontal_toolbar.show_objectives->tryActivate(x, y))
+      {
+        activated = true;
       }
     }
   }
-  else if (horizontal_toolbar.mode == OBJECTIVES_MODE)
+  else
   {
-    // Check only objectives container
-    for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
-    {
-      if ((*it)->tryActivate(x, y))
-      {
-        // Skip unnecessary checks (mouse can only be at one position)
-        activated = true;
-        break;
-      }
-    }
-  }
+    // Mouse hovers on the Level
 
-  if (! activated)
-  {
-    for (auto it = vtoolbar_buttons.begin(); it != vtoolbar_buttons.end(); it++)
-    {
-      if ( (*it)->tryActivate(x, y))
-      {
-        activated = true;
-        break;
-      }
-
-    }
-  }
-
-  if (! activated)
-  {
-    // Check if mouse is over horizontal_toolbar mode select buttons
-    if (horizontal_toolbar.show_essentials->tryActivate(x, y))
-    {
-      activated = true;
-    }
-    else if (horizontal_toolbar.show_objectives->tryActivate(x, y))
-    {
-      activated = true;
-    }
-  }
-
-  if (! activated)
-  {
-    // TODO move LevelObjects
+    // Move current LevelEntity, use Level coordinates
+    float level_x = x - vertical_toolbar_width + view * (float) LevelEditor::Window_Width;
+    float level_y = y - horizontal_toolbar_height;
+    level.moveCurrentEntity(level_x, level_y);
   }
 
 }
@@ -140,78 +169,112 @@ void LevelEditor::HandleMousePress(sf::Event event)
     // Check if some button was clicked
     bool clicked = false;
 
-    if (horizontal_toolbar.mode == ESSENTIALS_MODE)
+    if (x < vertical_toolbar_width || y < horizontal_toolbar_height)
     {
-      // Check only essential buttons
+      // Cursor inside toolbars
 
-      for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
+      if (horizontal_toolbar.mode == ESSENTIALS_MODE)
       {
-        if ( (*it)->checkClicked(x, y) )
+        // Check only essential buttons
+
+        for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
         {
-          clicked = true;
-          // store pointer to the clicked button
-          clicked_button = it->get();
+          if ( (*it)->checkClicked(x, y) )
+          {
+            clicked = true;
+            if ((*it)->getChecked())
+            {
+              // User checked the button
+              // store pointer to the clicked button
+              clicked_button = it->get();
+            }
+            else
+            {
+              // User unchecked the button, set current_entity_type to none
+              current_entity_type = NO_ENTITY;
+            }
+            level.removeCurrent(); // This has to be always done
+          }
         }
       }
-    }
 
-    else if (horizontal_toolbar.mode == OBJECTIVES_MODE)
-    {
-      // Check only objectives container
-
-      for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
+      else if (horizontal_toolbar.mode == OBJECTIVES_MODE)
       {
-        if ( (*it)->checkClicked(x, y) )
+        // Check only objectives container
+
+        for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
         {
-          clicked = true;
-          // store pointer to the clicked button
-          clicked_button = it->get();
+          if ( (*it)->checkClicked(x, y) )
+          {
+            clicked = true;
+            if ((*it)->getChecked())
+            {
+              // User checked the button
+              // store pointer to the clicked button
+              clicked_button = it->get();
+            }
+            else
+            {
+              // User unchecked the button, set current_entity_type to none
+              current_entity_type = NO_ENTITY;
+            }
+            level.removeCurrent(); // This has to be always done
+          }
         }
       }
-    }
 
 
-    if (clicked)
-    {
-      // Set other buttons not clicked (checked)
-      UncheckImageButtons(clicked_button);
+      if (clicked)
+      {
+        // Set other buttons not clicked (checked)
+        // This line is also reached when checked button was unchecked and
+        // it is a bit excessive looping
+        UncheckImageButtons(clicked_button);
+      }
+
+      else
+      {
+
+        // Go through vertical_toolbar buttons
+        for (auto it = vtoolbar_buttons.begin(); it != vtoolbar_buttons.end(); it++)
+        {
+          if( (*it)->checkClicked(x, y) )
+          {
+            clicked = true;
+          }
+        }
+
+        if (! clicked)
+        {
+          // Check if horizontal_toolbar mode select buttons have been clicked
+          if (horizontal_toolbar.show_essentials->checkClicked(x, y))
+          {
+            clicked = true;
+            // Multiple buttons can't be checked at the same time
+            horizontal_toolbar.show_objectives->setUnchecked();
+          }
+          else if (horizontal_toolbar.show_objectives->checkClicked(x, y))
+          {
+            clicked = true;
+            horizontal_toolbar.show_essentials->setUnchecked();
+          }
+        }
+      }
     }
 
     else
     {
+      // Cursor inside Level
 
-      // Go through vertical_toolbar buttons
-      for (auto it = vtoolbar_buttons.begin(); it != vtoolbar_buttons.end(); it++)
-      {
-        if( (*it)->checkClicked(x, y) )
-        {
-          clicked = true;
-        }
-      }
+      // Place or create new LevelEntity
+      // Notice that coordinate system origin differs in Level realative to LevelEditor
+      float level_x = x - vertical_toolbar_width + view * (float) LevelEditor::Window_Width;
+      float level_y = y - horizontal_toolbar_height;
 
-      if (! clicked)
-      {
-        // Check if horizontal_toolbar mode select buttons have been clicked
-        if (horizontal_toolbar.show_essentials->checkClicked(x, y))
-        {
-          clicked = true;
-          // Multiple buttons can't be checked at the same time
-          horizontal_toolbar.show_objectives->setUnchecked();
-        }
-        else if (horizontal_toolbar.show_objectives->checkClicked(x, y))
-        {
-          clicked = true;
-          horizontal_toolbar.show_essentials->setUnchecked();
-        }
-      }
-
-      if (! clicked)
-      {
-        // TODO place or create new LevelObjects
-      }
-
+      level.addEntity(level_x, level_y, current_entity_type);
     }
   }
+
 }
 
 
@@ -366,20 +429,28 @@ void LevelEditor::CreateHorizontalToolbar(unsigned window_width)
 
   // Create all ESSENTIALS_MODE ImageButtons
 
-  std::shared_ptr<ImageButton> button1= std::make_shared<ImageButton>
+  std::shared_ptr<ImageButton> erase_entity = std::make_shared<ImageButton>
+                                          ("Erase", ERASE_IMG, 40, 40);
+  std::shared_ptr<ImageButton> add_infantry = std::make_shared<ImageButton>
                                         ("Add infantry", INFANTRY_IMG, 40, 40);
-  std::shared_ptr<ImageButton> button2 = std::make_shared<ImageButton>
+  std::shared_ptr<ImageButton> add_plane = std::make_shared<ImageButton>
                                         ("Add plane", PLANE_IMG, 40, 40);
-  button1->setPosition(200, 5);
-  button2->setPosition(300, 5);
-  button1->setClickFunction( std::bind(&LevelEditor::Test1, this));
-  button2->setClickFunction( std::bind(&LevelEditor::Test2, this));
+  erase_entity->setPosition(150, 5);
+  erase_entity->setHighlightColor(sf::Color(50, 50, 50, 160));
+  add_infantry->setPosition(250, 5);
+  add_plane->setPosition(350, 5);
+  erase_entity->setClickFunction( std::bind(&LevelEditor::erase_entity_action, this));
+  add_infantry->setClickFunction( std::bind(&LevelEditor::add_infantry_action, this));
+  add_plane->setClickFunction( std::bind(&LevelEditor::add_plane_action, this));
 
   // Add all buttons to the container
-  horizontal_toolbar.essentials.push_back(button1);
-  horizontal_toolbar.essentials.push_back(button2);
+  horizontal_toolbar.essentials.push_back(erase_entity);
+  horizontal_toolbar.essentials.push_back(add_infantry);
+  horizontal_toolbar.essentials.push_back(add_plane);
 
-  // Create all OBJECTIVES_MODE ImageButtons (none at the moment)
+  // Create all OBJECTIVES_MODE ImageButtons
+  // Add erase_entity also to objectives
+  horizontal_toolbar.objectives.push_back(erase_entity);
 
   // Create Buttons to change mode
   horizontal_toolbar.show_essentials = std::make_shared<Button>("Essentials",
@@ -405,7 +476,7 @@ void LevelEditor::CreateHorizontalToolbar(unsigned window_width)
   // Set checkable
   horizontal_toolbar.show_essentials->setCheckable(true);
   horizontal_toolbar.show_objectives->setCheckable(true);
-  // Set show_essentials checked to math the initial window UI
+  // Set show_essentials checked to match the initial window UI
   horizontal_toolbar.show_essentials->setChecked();
 }
 
@@ -440,23 +511,65 @@ void LevelEditor::DrawHorizontalToolbar()
   }
 }
 
+void LevelEditor::add_infantry_action()
+{
+  current_entity_type = INFANTRY_ENTITY;
+}
 
+void LevelEditor::add_plane_action()
+{
+  current_entity_type = PLANE_ENTITY;
+}
+
+void LevelEditor::erase_entity_action()
+{
+  current_entity_type = ERASE_ENTITY;
+  level.removeCurrent();
+}
+
+/*  Switch to ESSENTIALS_MODE, clear current_entity */
 void LevelEditor::show_essentials_action()
 {
-  std::cout << "SHOW _______ ESSENTIALS " << std::endl;
+  horizontal_toolbar.mode = ESSENTIALS_MODE;
+  current_entity_type = NO_ENTITY;
+  level.removeCurrent();
+  // Set all objectives buttons unchecked
+  for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
+  {
+    (*it)->setUnchecked();
+  }
 }
 
+/*  Switch to OBJECTIVES_MODE, clear current_entity */
 void LevelEditor::show_objectives_action()
 {
-  std::cout << "SHOW _______ OBJECTIVES " << std::endl;
+  horizontal_toolbar.mode = OBJECTIVES_MODE;
+  current_entity_type = NO_ENTITY;
+  level.removeCurrent();
+  // Set all essentials buttons unchecked
+  for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
+  {
+    (*it)->setUnchecked();
+  }
 }
 
+/* Move view one Window_Width left */
 void LevelEditor::view_left_action()
 {
-  std::cout << "_____________VIEW    LEFT______" << std::endl;
+  view --;
+  level_view.setCenter(sf::Vector2f((float) LevelEditor::Window_Width * (0.5 + view), (float) LevelEditor::Window_Height / 2));
+  if (view == 0.f)
+  {
+    // Disable left_arrow (inpossible to move left)
+    vertical_toolbar.view_left->setEnabled(false);
+  }
 }
 
+/* Move view one Window_Width right */
 void LevelEditor::view_right_action()
 {
-  std::cout << "_____________VIEW    RIGHT______" << std::endl;
+  // Enable left_arrow
+  vertical_toolbar.view_left->setEnabled(true);
+  view ++;
+  level_view.setCenter(sf::Vector2f((float) LevelEditor::Window_Width * (0.5 + view), (float) LevelEditor::Window_Height / 2));
 }
