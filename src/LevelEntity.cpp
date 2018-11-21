@@ -48,6 +48,7 @@ void LevelEntity::CreateSprite()
   {
     sprite = sf::Sprite(texture, sf::Rect<int>(0, 0, (int) width, (int) height));
   }
+  sprite.setPosition(x, y);
 }
 
 /* Copy constructor */
@@ -99,6 +100,7 @@ void LevelEntity::setPosition(float x, float y)
   this->y = y;
   position = sf::Vector2f(x, y);
   rect = sf::Rect<float>(x, y, width, height);
+  sprite.setPosition(x, y);
 }
 
 /* Set new positition */
@@ -108,6 +110,7 @@ void LevelEntity::setPosition(sf::Vector2f position)
   x = position.x;
   y = position.y;
   rect = sf::Rect<float>(x, y, width, height);
+  sprite.setPosition(x, y);
 }
 
 /*  Get position */
