@@ -21,7 +21,7 @@ GameEngine::GameEngine() : gameFont()
 
     try
     {     
-      gameEngineLogger = spdlog::basic_logger_mt("basic_logger","../data/game_engine_log.txt");
+      gameEngineLogger =spdlog::daily_logger_st("async_file_logger", "../data/game-engine-log.txt");
 
       if(!playerTexture.loadFromFile("../data/img/plane.png"))
       {
