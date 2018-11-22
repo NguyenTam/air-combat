@@ -35,7 +35,7 @@ void ImageButton::ConstructImageButton()
 {
   // Set correct text style and font size
   text.setStyle(sf::Text::Regular);
-  text.setFillColor(sf::Color::Black);
+  text.setColor(sf::Color::Black);
   text.setCharacterSize(text_size);
   // Set correct outline style for ImageButton
   button_rect.setOutlineThickness(1);
@@ -191,7 +191,7 @@ void ImageButton::activate(bool activate)
 /* Set text below button and centered in x dimension */
 void ImageButton::SetTextPosition()
 {
-  float x = position.x + (float) width / 2;
+  float x = position.x;//+ (float) width / 2;
   float y = position.y + (float) height;
   text.setPosition(x, y);
 }

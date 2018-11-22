@@ -201,7 +201,7 @@ void UI::HandleResize(sf::Event event)
    messagebox.message.setPosition(30, 20);
    messagebox.button.setPosition(x - (button_width + 30), y - (button_height + 10));
 
-   messagebox.message.setFillColor(sf::Color::Black);
+   messagebox.message.setColor(sf::Color::Black);
 
    // Change dialog_window status
    dialog_active = true;

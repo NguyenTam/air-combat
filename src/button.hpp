@@ -5,6 +5,9 @@
 
 #pragma once
 
+/* To get rid of sf::setColor deprecated warnings uncomment:
+#define SFML_NO_DEPRECATED_WARNINGS */
+
 /*  Includes */
 
 #include <SFML/Graphics.hpp>
@@ -207,7 +210,7 @@ class Button: public sf::Drawable
         *   @brief Set text style
         *   @param style Text style (e.g. sf::Text::Regular)
         *   @param font_size New font_size
-        *   @param color New text color
+        *   @param text_color New text color
         */
       void setTextStyle(unsigned style, unsigned font_size, sf::Color text_color);
 

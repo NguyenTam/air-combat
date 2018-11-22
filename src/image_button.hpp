@@ -33,8 +33,8 @@ class ImageButton: public Button
       *   @details Calls also basic button constructor
       *   @param button_name Name which is shown when Imagebutton is active
       *   @param img_path Valid path to image file
-      *   @width Button (image) width
-      *   @height Button (image) height
+      *   @param width Button (image) width
+      *   @param height Button (image) height
       *   @remark Make sure img_path is a valid path. width and height
       *   define how big partion of the image is visible (probably want to match
       *   those to image pixel size)
@@ -52,7 +52,7 @@ class ImageButton: public Button
      ImageButton& operator=(const ImageButton& button);
 
     /**
-      *   @brif Set ImageButton position
+      *   @brief Set ImageButton position
       *   @details Reimplemented from the base class Button::setPosition
       *   @param new_pos Position vector
       *   @remark Position must be set just after constructor
@@ -60,7 +60,7 @@ class ImageButton: public Button
     virtual void setPosition(sf::Vector2f new_pos);
 
     /**
-      *   @brif Set ImageButton position
+      *   @brief Set ImageButton position
       *   @details Reimplemented from the base class Button::setPosition
       *   @param x x coordinate (the left most point)
       *   @param y y coordinate (the top coordinate)

@@ -5,13 +5,14 @@
 
 #pragma once
 
+/* To get rid of sf::setColor deprecated warnings uncomment:
+#define SFML_NO_DEPRECATED_WARNINGS */
 
 /*  Includes  */
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
-#include "spdlog/spdlog.h"
 #include <iostream>
 #include "button.hpp"
 
