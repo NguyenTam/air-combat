@@ -17,7 +17,7 @@ const float GameEngine::PLAYER_ROTATION_DEGREE = 5.f;
 GameEngine::GameEngine() : gameFont()
 {
   renderWindow.create(sf::VideoMode(WIDTH,HEIGHT), "Air Combat 1", sf::Style::Titlebar | sf::Style::Close);
-  isMovingUp = isMovingDown = isMovingLeft = isMovingRight = isRotatingClockWise = isRotatedCounterClockWise = false;
+  isMovingUp = isMovingDown = isMovingLeft = isMovingRight = isRotatingClockWise = isRotatingCounterClockWise = false;
 
     try
     {     
@@ -117,7 +117,7 @@ void GameEngine::update(sf::Time elapsedTime)
     moveTo.x += PLAYER_SPEED;
   if(isRotatingClockWise)
     rotated += PLAYER_ROTATION_DEGREE;
-  if(isRotatedCounterClockWise)
+  if(isRotatingCounterClockWise)
     rotated -= PLAYER_ROTATION_DEGREE;
 
   std::cout << "Speed:" << moveTo.x << ", " << moveTo.y << std::endl;
@@ -154,7 +154,7 @@ void GameEngine::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
       std::cout << "Right" << std::endl;
       break;
     case sf::Keyboard::Z:
-      isRotatedCounterClockWise = isPressed;
+      isRotatingCounterClockWise = isPressed;
       std::cout << "Rotate CCW" << std::endl;
       break;
     case sf::Keyboard::X:

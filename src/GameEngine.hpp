@@ -29,11 +29,11 @@ class GameEngine : private sf::NonCopyable
   sf::Font gameFont;
   sf::Text gameInfo;
   bool isMovingUp;
-  bool isMoviongDown;
+  bool isMovingDown;
   bool isMovingLeft;
   bool isMovingRight;
   bool isRotatingClockWise;
-  bool isRotatedCounterClockWise;
+  bool isRotatingCounterClockWise;
 
   bool isGameEngineReady;
   std::shared_ptr<spdlog::logger> gameEngineLogger;
