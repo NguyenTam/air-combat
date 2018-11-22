@@ -11,7 +11,8 @@ int main()
   
   try
   {
-    auto logger = spdlog::basic_logger_mt("basic_logger", "../data/game-log.txt");
+    //auto logger = spdlog::stdout_logger_mt("basic_logger", "../data/game-log.txt");
+    auto logger = spdlog::daily_logger_st("async_file_logger", "../data/game-log.txt");
 
     logger->info("Setting up window");
     sf::RenderWindow window;
