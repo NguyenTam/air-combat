@@ -8,7 +8,7 @@ EXECUTABLE=game
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	g++ $(SFMLFLAGS) $(OBJECTS) -o $(EXECUTABLE) 
+	g++ $(OBJECTS) $(SFMLFLAGS) -o $(EXECUTABLE) 
 %.o: %.cpp
 	$(CC) $(CPPFLAGS) -c $< -o $@
 run: $(EXECUTABLE)
