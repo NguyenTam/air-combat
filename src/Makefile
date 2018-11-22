@@ -10,7 +10,7 @@ all: $(SOURCES) $(EXECUTABLE)
 $(EXECUTABLE): $(OBJECTS)
 	g++ $(SFMLFLAGS) $(OBJECTS) -o $(EXECUTABLE) 
 %.o: %.cpp
-	$(CC) $(CPPFLAGS) -c $< -o $@
+	$(CC) $(CPPFLAGS) $< -o $@
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
 clean:
