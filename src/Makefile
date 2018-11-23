@@ -3,9 +3,9 @@ CPPFLAGS=-c -g -std=c++17 -Wall -Wextra -pedantic
 SFMLFLAGS=-pthread -lsfml-graphics -lsfml-window -lsfml-system
 SOURCES=$(wildcard *.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=game
+#EXECUTABLE=game
 
-all: $(SOURCES) $(EXECUTABLE)
+all: $(SOURCES) $(OBJECTS) 
 
 $(EXECUTABLE): $(OBJECTS)
 	g++ $(OBJECTS) $(SFMLFLAGS) -o $(EXECUTABLE) 
