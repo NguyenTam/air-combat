@@ -1,3 +1,7 @@
+/**
+  *   @file Gameengine.cpp
+  *   @brief Contains class GameEngine source
+  */
 #include "Entity.hpp"
 #include "GameEngine.hpp"
 #include <iostream>
@@ -8,6 +12,8 @@
 #include <math.h>
 #include <cstdlib>
 #include <sstream>
+
+/* Initialize members*/
 const float GameEngine::METERS_PER_PIXEL = 60.f;
 const float GameEngine::PIXELS_PER_METER = 1/METERS_PER_PIXEL;
 const sf::Time GameEngine::TIME_PER_FRAME = sf::seconds(1.f/FPS);
@@ -16,20 +22,26 @@ const float GameEngine::PLAYER_ROTATION_DEGREE = 5.f;
 
 GameEngine::GameEngine() : gameFont()
 {
+  /* Construct a render window.*/
   renderWindow.create(sf::VideoMode(WIDTH,HEIGHT), "Air Combat 1", sf::Style::Titlebar | sf::Style::Close);
+
+  /* Initialize directions*/
   isMovingUp = isMovingDown = isMovingLeft = isMovingRight = isRotatingClockWise = isRotatingCounterClockWise = false;
 
+  /* Try spdlogger */
     try
-    {     
+    {
+      /*Construct spdlogger*/
       gameEngineLogger =spdlog::daily_logger_st("async_file_logger", "../data/game-engine-log.txt");
 
+      /*Try to load texture from file*/
       if(!playerTexture.loadFromFile("../data/img/plane.png"))
       {
         isGameEngineReady = false;
         return;    
       }
+      /*If loading is success, then load font and set game info position on render window*/
       else {
-        std::cout << "Success" << std::endl;
         playerSprite.setTexture(playerTexture);
         playerSprite.setPosition(100.f,100.f);
         
@@ -41,6 +53,7 @@ GameEngine::GameEngine() : gameFont()
         isGameEngineReady = true;
       }
     }
+    /* spdlog constructor threw an exception.*/
     catch(const spdlog::spdlog_ex &ex)
     {
       std::cout << "Log init failed!" << ex.what() << std::endl;
@@ -50,15 +63,18 @@ GameEngine::GameEngine() : gameFont()
 
 void GameEngine::run()
 {
+
   sf::Clock clock;
   sf::Time lastUpdateTime = sf::Time::Zero;
 
+  /* While render window = game is on.*/
   while(renderWindow.isOpen())
   {
+    /*restart function returns elapsed time and reset the clock to zero to get elapsed time of next iteration.*/
     sf::Time elapsedTime = clock.restart();
     lastUpdateTime += elapsedTime;
     
-    // Time to handle events and update
+    /* Time to handle events, update world and display. */
     while(lastUpdateTime > TIME_PER_FRAME)      
     {
       lastUpdateTime -= TIME_PER_FRAME;
@@ -103,8 +119,10 @@ void GameEngine::render()
   renderWindow.display();
 }
 
+/* Sum all inputs (movements and rotations) and set new position and orientation in two function call: move and rotate. */
 void GameEngine::update(sf::Time elapsedTime)
 {
+
   sf::Vector2f moveTo(0.f,0.f);
   float rotated = 0.f;
   if(isMovingUp)
@@ -120,46 +138,40 @@ void GameEngine::update(sf::Time elapsedTime)
   if(isRotatingCounterClockWise)
     rotated -= PLAYER_ROTATION_DEGREE;
 
-  std::cout << "Speed:" << moveTo.x << ", " << moveTo.y << std::endl;
-  std::cout << "Elapsed time:" << elapsedTime.asSeconds() << std::endl;
   playerSprite.move(moveTo * elapsedTime.asSeconds());
   playerSprite.rotate(rotated);  
 }
 
 void GameEngine::updateGameInfo()
 {
+  /*Game info to display*/
   std::ostringstream convert;
   convert << rand() % 10000;
   gameInfo.setString("Entities Left: " + convert.str() + "\n" + "AAAAAAAAA");
 }
 
+/*Set which inputs are pressed.*/
 void GameEngine::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 {
   switch(key)
   {
-    case sf::Keyboard::W:
+    case sf::Keyboard::Up:
       isMovingUp = isPressed;
-      std::cout << "Up" << std::endl;
       break;
-    case sf::Keyboard::S:
+    case sf::Keyboard::Down:
       isMovingDown = isPressed;
-      std::cout << "Down" << std::endl;
       break;
-    case sf::Keyboard::A:
+    case sf::Keyboard::Left:
       isMovingLeft = isPressed;
-      std::cout << "Left" << std::endl;
       break;
-    case sf::Keyboard::D:
+    case sf::Keyboard::Right:
       isMovingRight = isPressed;
-      std::cout << "Right" << std::endl;
       break;
-    case sf::Keyboard::Z:
+    case sf::Keyboard::N:
       isRotatingCounterClockWise = isPressed;
-      std::cout << "Rotate CCW" << std::endl;
       break;
-    case sf::Keyboard::X:
+    case sf::Keyboard::M:
       isRotatingClockWise = isPressed;
-      std::cout << "Rotate CW" << std::endl;
       break;
     default:
       gameEngineLogger->info("invalid input");
