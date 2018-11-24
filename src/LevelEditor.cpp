@@ -76,6 +76,19 @@ void LevelEditor::HandleKeyPress(sf::Event event)
     window.close();
     window_status = false;
   }
+  else if (event.key.code == sf::Keyboard::Right)
+  {
+    view_right_action();
+  }
+  else if (event.key.code == sf::Keyboard::Left)
+  {
+    view_left_action();
+  }
+  else if (event.key.code == sf::Keyboard::BackSpace)
+  {
+    // Clear current_entity
+    level.removeCurrent();
+  }
 
 }
 
@@ -117,6 +130,19 @@ void LevelEditor::HandleMouseMove(sf::Event event)
         }
       }
     }
+    else if (horizontal_toolbar.mode == BARRIERS_MODE)
+    {
+      // Check only barriers container
+      for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
+      {
+        if ((*it)->tryActivate(x, y))
+        {
+          // Skip unnecessary checks (mouse can only be at one position)
+          activated = true;
+          break;
+        }
+      }
+    }
 
     if (! activated)
     {
@@ -142,6 +168,10 @@ void LevelEditor::HandleMouseMove(sf::Event event)
       {
         activated = true;
       }
+      else if (horizontal_toolbar.show_barriers->tryActivate(x, y))
+      {
+        activated = true;
+      }
     }
   }
   else
@@ -161,11 +191,11 @@ void LevelEditor::HandleMouseMove(sf::Event event)
 
 void LevelEditor::HandleMousePress(sf::Event event)
 {
+  float x = event.mouseButton.x;
+  float y = event.mouseButton.y;
+
   if (event.mouseButton.button == sf::Mouse::Left)
   {
-    float x = event.mouseButton.x;
-    float y = event.mouseButton.y;
-
     // Check if some button was clicked
     bool clicked = false;
 
@@ -223,6 +253,31 @@ void LevelEditor::HandleMousePress(sf::Event event)
         }
       }
 
+      else if (horizontal_toolbar.mode == BARRIERS_MODE)
+      {
+
+        // Check only barries container
+        for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
+        {
+          if ( (*it)->checkClicked(x, y) )
+          {
+            clicked = true;
+            if ((*it)->getChecked())
+            {
+              // User checked the button
+              // store pointer to the clicked button
+              clicked_button = it->get();
+            }
+            else
+            {
+              // User unchecked the button, set current_entity_type to none
+              current_entity_type = NO_ENTITY;
+            }
+            level.removeCurrent(); // This has to be always done
+          }
+        }
+      }
+
 
       if (clicked)
       {
@@ -252,11 +307,19 @@ void LevelEditor::HandleMousePress(sf::Event event)
             clicked = true;
             // Multiple buttons can't be checked at the same time
             horizontal_toolbar.show_objectives->setUnchecked();
+            horizontal_toolbar.show_barriers->setUnchecked();
           }
           else if (horizontal_toolbar.show_objectives->checkClicked(x, y))
           {
             clicked = true;
             horizontal_toolbar.show_essentials->setUnchecked();
+            horizontal_toolbar.show_barriers->setUnchecked();
+          }
+          else if (horizontal_toolbar.show_barriers->checkClicked(x, y))
+          {
+            clicked = true;
+            horizontal_toolbar.show_essentials->setUnchecked();
+            horizontal_toolbar.show_objectives->setUnchecked();
           }
         }
       }
@@ -272,6 +335,20 @@ void LevelEditor::HandleMousePress(sf::Event event)
       float level_y = y - horizontal_toolbar_height;
 
       level.addEntity(level_x, level_y, current_entity_type);
+    }
+  }
+
+  else
+  {
+    // Right mouse pressed
+    if (x >= vertical_toolbar_width || y >= horizontal_toolbar_height)
+    {
+      // Try to flip LevelEntity
+      // Notice that coordinate system origin differs in Level realative to LevelEditor
+      float level_x = x - vertical_toolbar_width + view * (float) LevelEditor::Window_Width;
+      float level_y = y - horizontal_toolbar_height;
+
+      level.flipEntity(level_x, level_y);
     }
   }
 
@@ -298,6 +375,18 @@ void LevelEditor::UncheckImageButtons(ImageButton *button)
   {
     // Go through only objectives container
     for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
+    {
+      if (it->get() != button)
+      {
+        (*it)->setUnchecked();
+      }
+    }
+  }
+
+  else if (horizontal_toolbar.mode == BARRIERS_MODE)
+  {
+    // Go through only barriers container
+    for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
     {
       if (it->get() != button)
       {
@@ -350,12 +439,12 @@ void LevelEditor::CreateVerticalToolbar(unsigned window_height)
   vtoolbar_buttons.push_back(vertical_toolbar.help_button);
 
   // Create view related buttons
-  vertical_toolbar.view_right = std::make_shared<ImageButton>("", RIGHT_ARROW_IMG,
+  vertical_toolbar.view_right = std::make_shared<ImageButton>("", "../data/img/right_arrow.png",
                                 100, 100);
   vertical_toolbar.view_right->setScale(0.2);
   float right_arrow_x = 5 + width / 2;
   vertical_toolbar.view_right->setPosition(right_arrow_x, window_height - 80);
-  vertical_toolbar.view_left = std::make_shared<ImageButton>("", LEFT_ARROW_IMG,
+  vertical_toolbar.view_left = std::make_shared<ImageButton>("", "../data/img/left_arrow.png",
                                 100, 100);
   vertical_toolbar.view_left->setScale(0.2);
   vertical_toolbar.view_left->setPosition(right_arrow_x - 30, window_height - 80);
@@ -430,52 +519,124 @@ void LevelEditor::CreateHorizontalToolbar(unsigned window_width)
   // Create all ESSENTIALS_MODE ImageButtons
 
   std::shared_ptr<ImageButton> erase_entity = std::make_shared<ImageButton>
-                                          ("Erase", ERASE_IMG, 40, 40);
-  std::shared_ptr<ImageButton> add_infantry = std::make_shared<ImageButton>
-                                        ("Add infantry", INFANTRY_IMG, 40, 40);
-  std::shared_ptr<ImageButton> add_plane = std::make_shared<ImageButton>
-                                        ("Add plane", PLANE_IMG, 40, 40);
+                                          ("Erase", "../data/img/erase.png", 40, 40);
+  std::shared_ptr<ImageButton> add_friendly_infantry = std::make_shared<ImageButton>
+                                        ("Friendly infantry", "../data/img/finfantry.png", 40, 40);
+  std::shared_ptr<ImageButton> add_hostile_infantry = std::make_shared<ImageButton>
+                                        ("Hostile infantry", "../data/img/hinfantry.png", 40, 40);
+  std::shared_ptr<ImageButton> add_friendly_plane = std::make_shared<ImageButton>
+                                        ("Friendly plane", "../data/img/fplane.png", 40, 40);
+  std::shared_ptr<ImageButton> add_hostile_plane = std::make_shared<ImageButton>
+                                        ("Hostile plane", "../data/img/hplane.png", 40, 40);
+  std::shared_ptr<ImageButton> add_friendly_AA = std::make_shared<ImageButton>
+                                        ("Friendly AA", "../data/img/fAA.png", 40, 40);
+  std::shared_ptr<ImageButton> add_hostile_AA = std::make_shared<ImageButton>
+                                        ("Hostile AA", "../data/img/hAA.png", 40, 40);
+  std::shared_ptr<ImageButton> add_friendly_hangar = std::make_shared<ImageButton>
+                                        ("Friendly hangar", "../data/img/fhangar.png", 40, 40);
+  std::shared_ptr<ImageButton> add_hostile_hangar = std::make_shared<ImageButton>
+                                        ("Hostile hangar", "../data/img/hhangar.png", 40, 40);
+
+  // Set positions
   erase_entity->setPosition(150, 5);
   erase_entity->setHighlightColor(sf::Color(50, 50, 50, 160));
-  add_infantry->setPosition(250, 5);
-  add_plane->setPosition(350, 5);
-  erase_entity->setClickFunction( std::bind(&LevelEditor::erase_entity_action, this));
-  add_infantry->setClickFunction( std::bind(&LevelEditor::add_infantry_action, this));
-  add_plane->setClickFunction( std::bind(&LevelEditor::add_plane_action, this));
+  add_friendly_infantry->setPosition(250, 5);
+  add_hostile_infantry->setPosition(300, 5);
+  add_friendly_plane->setPosition(360, 5);
+  add_hostile_plane->setPosition(410, 5);
+  add_friendly_AA->setPosition(470, 5);
+  add_hostile_AA->setPosition(520, 5);
+  add_friendly_hangar->setPosition(580, 5);
+  add_hostile_hangar->setPosition(630, 5);
+
+  // Set click_actions
+  erase_entity->setClickFunction( std::bind(&LevelEditor::erase_entity_action, this) );
+  add_friendly_infantry->setClickFunction( std::bind(&LevelEditor::add_friendly_infantry_action, this) );
+  add_hostile_infantry->setClickFunction( std::bind(&LevelEditor::add_hostile_infantry_action, this) );
+  add_friendly_plane->setClickFunction( std::bind(&LevelEditor::add_friendly_plane_action, this) );
+  add_hostile_plane->setClickFunction( std::bind(&LevelEditor::add_hostile_plane_action, this) );
+  add_friendly_AA->setClickFunction( std::bind(&LevelEditor::add_friendly_AA_action, this) );
+  add_hostile_AA->setClickFunction( std::bind(&LevelEditor::add_hostile_AA_action, this) );
+  add_friendly_hangar->setClickFunction( std::bind(&LevelEditor::add_friendly_hangar_action, this) );
+  add_hostile_hangar->setClickFunction( std::bind(&LevelEditor::add_hostile_hangar_action, this) );
 
   // Add all buttons to the container
   horizontal_toolbar.essentials.push_back(erase_entity);
-  horizontal_toolbar.essentials.push_back(add_infantry);
-  horizontal_toolbar.essentials.push_back(add_plane);
+  horizontal_toolbar.essentials.push_back(add_friendly_infantry);
+  horizontal_toolbar.essentials.push_back(add_hostile_infantry);
+  horizontal_toolbar.essentials.push_back(add_hostile_plane);
+  horizontal_toolbar.essentials.push_back(add_friendly_plane);
+  horizontal_toolbar.essentials.push_back(add_friendly_AA);
+  horizontal_toolbar.essentials.push_back(add_hostile_AA);
+  horizontal_toolbar.essentials.push_back(add_friendly_hangar);
+  horizontal_toolbar.essentials.push_back(add_hostile_hangar);
 
   // Create all OBJECTIVES_MODE ImageButtons
-  // Add erase_entity also to objectives
+  std::shared_ptr<ImageButton> add_friendly_base = std::make_shared<ImageButton>
+                              ("Friendly base", "../data/img/fbase.png", 40, 40);
+  std::shared_ptr<ImageButton> add_hostile_base = std::make_shared<ImageButton>
+                              ("Hostile base", "../data/img/hbase.png", 40, 40);
+
+  // Set positions and add click functions
+  add_friendly_base->setPosition(250, 5);
+  add_hostile_base->setPosition(300, 5);
+  add_friendly_base->setClickFunction(std::bind(&LevelEditor::add_friendly_base_action, this));
+  add_hostile_base->setClickFunction(std::bind(&LevelEditor::add_hostile_base_action, this));
+
+  // Add to objectives container, add erase_entity also to objectives
   horizontal_toolbar.objectives.push_back(erase_entity);
+  horizontal_toolbar.objectives.push_back(add_friendly_base);
+  horizontal_toolbar.objectives.push_back(add_hostile_base);
+
+  // Create all BARRIERS_MODE ImageButtons
+  std::shared_ptr<ImageButton> add_tree = std::make_shared<ImageButton>
+                              ("Tree", "../data/img/tree.png", 40, 40);
+  std::shared_ptr<ImageButton> add_rock = std::make_shared<ImageButton>
+                              ("Rock", "../data/img/rock.png", 40, 40);
+  // Set positions and click functions
+  add_tree->setPosition(250, 5);
+  add_rock->setPosition(300, 5);
+  add_tree->setClickFunction(std::bind(&LevelEditor::add_tree_action, this));
+  add_rock->setClickFunction(std::bind(&LevelEditor::add_rock_action, this));
+
+  // Add to barriers container, add erase_entity also to barriers
+  horizontal_toolbar.barriers.push_back(erase_entity);
+  horizontal_toolbar.barriers.push_back(add_tree);
+  horizontal_toolbar.barriers.push_back(add_rock);
+
 
   // Create Buttons to change mode
   horizontal_toolbar.show_essentials = std::make_shared<Button>("Essentials",
                                   sf::Color::Transparent, 140, 20);
   horizontal_toolbar.show_objectives = std::make_shared<Button>("Objectives",
                                   sf::Color::Transparent, 140, 20);
+  horizontal_toolbar.show_barriers = std::make_shared<Button>("Barriers",
+                                  sf::Color::Transparent, 140, 20);
+
   //Tune text size and style
   horizontal_toolbar.show_essentials->setTextStyle(sf::Text::Regular, 12, sf::Color::Black);
   horizontal_toolbar.show_objectives->setTextStyle(sf::Text::Regular, 12, sf::Color::Black);
+  horizontal_toolbar.show_barriers->setTextStyle(sf::Text::Regular, 12, sf::Color::Black);
 
   // Set active_color
   horizontal_toolbar.show_essentials->setActiveColor(sf::Color(50, 50, 50, 200));
   horizontal_toolbar.show_objectives->setActiveColor(sf::Color(50, 50, 50, 200));
+  horizontal_toolbar.show_barriers->setActiveColor(sf::Color(50, 50, 50, 200));
 
   // Set positions
   horizontal_toolbar.show_essentials->setPosition(window_width - 170, 5);
   horizontal_toolbar.show_objectives->setPosition(window_width - 170, 35);
+  horizontal_toolbar.show_barriers->setPosition(window_width - 170, 65);
 
   // Set click_actions
   horizontal_toolbar.show_essentials->setClickFunction( std::bind(&LevelEditor::show_essentials_action, this));
   horizontal_toolbar.show_objectives->setClickFunction( std::bind(&LevelEditor::show_objectives_action, this));
+  horizontal_toolbar.show_barriers->setClickFunction( std::bind(&LevelEditor::show_barriers_action, this));
 
   // Set checkable
   horizontal_toolbar.show_essentials->setCheckable(true);
   horizontal_toolbar.show_objectives->setCheckable(true);
+  horizontal_toolbar.show_barriers->setCheckable(true);
   // Set show_essentials checked to match the initial window UI
   horizontal_toolbar.show_essentials->setChecked();
 }
@@ -490,6 +651,7 @@ void LevelEditor::DrawHorizontalToolbar()
   // Draw mode select related buttons
   window.draw( *horizontal_toolbar.show_essentials);
   window.draw( *horizontal_toolbar.show_objectives);
+  window.draw( *horizontal_toolbar.show_barriers);
 
   // Draw correct ImageButtons
 
@@ -509,16 +671,76 @@ void LevelEditor::DrawHorizontalToolbar()
       window.draw(** it);
     }
   }
+  else if (horizontal_toolbar.mode == BARRIERS_MODE)
+  {
+    // Draw buttons in barriers container
+    for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
+    {
+      window.draw(** it);
+    }
+  }
 }
 
-void LevelEditor::add_infantry_action()
+
+/*  Simple Toolbar ImageButton actions to change entity_type */
+void LevelEditor::add_friendly_infantry_action()
 {
-  current_entity_type = INFANTRY_ENTITY;
+  current_entity_type = FRIENDLY_INFANTRY;
 }
 
-void LevelEditor::add_plane_action()
+void LevelEditor::add_hostile_infantry_action()
 {
-  current_entity_type = PLANE_ENTITY;
+  current_entity_type = HOSTILE_INFANTRY;
+}
+
+void LevelEditor::add_friendly_plane_action()
+{
+  current_entity_type = FRIENDLY_PLANE;
+}
+
+void LevelEditor::add_hostile_plane_action()
+{
+  current_entity_type = HOSTILE_PLANE;
+}
+
+void LevelEditor::add_friendly_AA_action()
+{
+  current_entity_type = FRIENDLY_AA;
+}
+
+void LevelEditor::add_hostile_AA_action()
+{
+  current_entity_type = HOSTILE_AA;
+}
+
+void LevelEditor::add_friendly_hangar_action()
+{
+  current_entity_type = FRIENDLY_HANGAR;
+}
+
+void LevelEditor::add_hostile_hangar_action()
+{
+  current_entity_type = HOSTILE_HANGAR;
+}
+
+void LevelEditor::add_friendly_base_action()
+{
+  current_entity_type = FRIENDLY_BASE;
+}
+
+void LevelEditor::add_hostile_base_action()
+{
+  current_entity_type = HOSTILE_BASE;
+}
+
+void LevelEditor::add_tree_action()
+{
+  current_entity_type = TREE_ENTITY;
+}
+
+void LevelEditor::add_rock_action()
+{
+  current_entity_type = ROCK_ENTITY;
 }
 
 void LevelEditor::erase_entity_action()
@@ -533,8 +755,12 @@ void LevelEditor::show_essentials_action()
   horizontal_toolbar.mode = ESSENTIALS_MODE;
   current_entity_type = NO_ENTITY;
   level.removeCurrent();
-  // Set all objectives buttons unchecked
+  // Set all objectives and barriers buttons unchecked
   for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
+  {
+    (*it)->setUnchecked();
+  }
+  for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
   {
     (*it)->setUnchecked();
   }
@@ -546,8 +772,30 @@ void LevelEditor::show_objectives_action()
   horizontal_toolbar.mode = OBJECTIVES_MODE;
   current_entity_type = NO_ENTITY;
   level.removeCurrent();
-  // Set all essentials buttons unchecked
+  // Set all essentials and barriers buttons unchecked
   for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
+  {
+    (*it)->setUnchecked();
+  }
+  for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
+  {
+    (*it)->setUnchecked();
+  }
+
+}
+
+/* Switch to BARRIERS_MODE, clear current_entity */
+void LevelEditor::show_barriers_action()
+{
+  horizontal_toolbar.mode = BARRIERS_MODE;
+  current_entity_type = NO_ENTITY;
+  level.removeCurrent();
+  // Set all essentials and objectives buttons unchecked
+  for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
+  {
+    (*it)->setUnchecked();
+  }
+  for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
   {
     (*it)->setUnchecked();
   }
@@ -556,12 +804,15 @@ void LevelEditor::show_objectives_action()
 /* Move view one Window_Width left */
 void LevelEditor::view_left_action()
 {
-  view --;
-  level_view.setCenter(sf::Vector2f((float) LevelEditor::Window_Width * (0.5 + view), (float) LevelEditor::Window_Height / 2));
-  if (view == 0.f)
+  if (view > 0)
   {
-    // Disable left_arrow (inpossible to move left)
-    vertical_toolbar.view_left->setEnabled(false);
+    view --;
+    level_view.setCenter(sf::Vector2f((float) LevelEditor::Window_Width * (0.5 + view), (float) LevelEditor::Window_Height / 2));
+    if (view == 0.f)
+    {
+      // Disable left_arrow (inpossible to move left)
+      vertical_toolbar.view_left->setEnabled(false);
+    }
   }
 }
 

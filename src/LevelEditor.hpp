@@ -19,13 +19,9 @@
 
 /*  Macros */
 
-#define INFANTRY_IMG "../data/img/infantry.png" /**< Path to infantry.png */
-#define PLANE_IMG "../data/img/plane.png" /**< Path to plane.png */
-#define RIGHT_ARROW_IMG "../data/img/right_arrow.png" /**< Path to right_arrow.png */
-#define LEFT_ARROW_IMG "../data/img/left_arrow.png" /**< Path to left_arrow.png */
-#define ERASE_IMG "../data/img/erase.png" /**< Path to erase.png */
 #define ESSENTIALS_MODE 1 /**< HorizontalToolbar mode, essentials shown */
 #define OBJECTIVES_MODE 2  /**< HorizontalToolbar mode, objectives shown */
+#define BARRIERS_MODE 3 /**< HorizontalToolbar mode, barriers shown */
 
 
 /**
@@ -56,9 +52,11 @@ struct HorizontalToolbar
 
   std::shared_ptr <Button> show_essentials; /**< Clicking changes to ESSENTIALS_MODE */
   std::shared_ptr <Button> show_objectives; /**< Clicking changes to OBJECTIVES_MODE */
+  std::shared_ptr <Button> show_barriers; /**< Clicking changes to BARRIERS_MODE */
 
   std::vector<std::shared_ptr <ImageButton>> essentials; /**< Buttons matching essential entities */
   std::vector<std::shared_ptr <ImageButton>> objectives; /**< Buttons matching objective entities */
+  std::vector<std::shared_ptr <ImageButton>> barriers; /**< Buttons matching barrier entities */
 
 };
 
@@ -82,21 +80,83 @@ class LevelEditor: public UI
     /**
       *   @brief Constructor for LevelEditor
       *   @param render_window RenderWindow instance as reference
+      *   @param dialog Another RenderWindow used for dialogs
       *   @remark Class UI constructor with render_window as an argument
       */
     LevelEditor(sf::RenderWindow &render_window, sf::RenderWindow &dialog);
 
     /**
-      *   @brief Click action for add_infantry button (horizontal_toolbar)
-      *   @details Change current_entity_type to INFANTRY_ENTITY
+      *   @brief Click action for add_friendly_infantry button (horizontal_toolbar)
+      *   @details Change current_entity_type to FRIENDLY_INFANTRY
       */
-    void add_infantry_action();
+    void add_friendly_infantry_action();
 
     /**
-      *   @brief Click action for add_plane button (horizontal_toolbar)
-      *   @details Change current_entity_type to PLANE_ENTITY
+      *   @brief Click action for add_hostile_infantry button (horizontal_toolbar)
+      *   @details Change current_entity_type to HOSTILE_INFANTRY
       */
-    void add_plane_action();
+    void add_hostile_infantry_action();
+
+    /**
+      *   @brief Click action for add_friendly_plane button (horizontal_toolbar)
+      *   @details Change current_entity_type to FRIENDLY_PLANE
+      */
+    void add_friendly_plane_action();
+
+    /**
+      *   @brief Click action for add_hostile_plane button (horizontal_toolbar)
+      *   @details Change current_entity_type to HOSTILE_PLANE
+      */
+    void add_hostile_plane_action();
+
+    /**
+      *   @brief Click action for add_friendly_AA button (horizontal_toolbar)
+      *   @details Change current_entity_type to FRIENDLY_AA
+      */
+    void add_friendly_AA_action();
+
+    /**
+      *   @brief Click action for add_hostile_AA button (horizontal_toolbar)
+      *   @details Change current_entity_type to HOSTILE_AA
+      */
+    void add_hostile_AA_action();
+
+    /**
+      *   @brief Click action for add_friendly_hangar button (horizontal_toolbar)
+      *   @details Change current_entity_type to FRIENDLY_HANGAR
+      */
+    void add_friendly_hangar_action();
+
+    /**
+      *   @brief Click action for add_hostile_hangar button (horizontal_toolbar)
+      *   @details Change current_entity_type to HOSTILE_HANGAR
+      */
+    void add_hostile_hangar_action();
+
+    /**
+      *   @brief Click action for add_friendly_base button (horizontal_toolbar)
+      *   @details Change current_entity_type to FRIENDLY_BASE
+      */
+    void add_friendly_base_action();
+
+    /**
+      *   @brief Click action for add_hostile_base button (horizontal_toolbar)
+      *   @details Change current_entity_type to HOSTILE_BASE
+      */
+    void add_hostile_base_action();
+
+    /**
+      *   @brief Click action for add_tree button (horizontal_toolbar)
+      *   @details Change current_entity_type to TREE_ENTITY
+      */
+    void add_tree_action();
+
+    /**
+      *   @brief Click action for add_rock button (horizontal_toolbar)
+      *   @details Change current_entity_type to ROCK_ENTITY
+      */
+    void add_rock_action();
+
 
     /**
       *   @brief Click action for erase_entity button (both toolbars)
@@ -130,6 +190,13 @@ class LevelEditor: public UI
       *   @brief Clears current_entity and switches to OBJECTIVES_MODE
       */
     void show_objectives_action();
+
+    /**
+      *   @brief Click action for horizontal_toolbar show_barriers button
+      *   @brief Clears current_entity and switches to BARRIERS_MODE
+      */
+    void show_barriers_action();
+
 
     /**
       *   @brief Click action for vertical_toolbar view_left
@@ -225,7 +292,7 @@ class LevelEditor: public UI
     std::vector<std::shared_ptr <Button>> vtoolbar_buttons;
     ImageButton *clicked_button = nullptr;
     unsigned vertical_toolbar_width = 120;
-    unsigned horizontal_toolbar_height = 70;
+    unsigned horizontal_toolbar_height = 100;
 
     VerticalToolbar vertical_toolbar;
     HorizontalToolbar horizontal_toolbar;
