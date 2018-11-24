@@ -40,6 +40,7 @@ class LevelEntity: public sf::Drawable
       *   @param width LevelEntity width
       *   @param height LevelEntity height
       *   @param image_path img_path, path to image representing the entity
+      *   @param type LevelEntity type, defined in Level.hpp
       */
     LevelEntity(float x, float y, float width, float height, std::string image_path, int type = 0);
 
@@ -105,6 +106,22 @@ class LevelEntity: public sf::Drawable
       */
     int getType();
 
+    /**
+      *   @brief Flip LevelEntity around y-axis
+      */
+    void flipLevelEntity();
+
+    /**
+      *   @brief Get LevelEntity width
+      *   @return Returns width
+      */
+    float getWidth();
+    /**
+      *   @brief Get LevelEntity height
+      *   @return Returns height
+      */
+    float getHeight();
+    
   protected:
     /**
       *   @brief Draw LevelEntity
@@ -137,6 +154,7 @@ class LevelEntity: public sf::Drawable
     std::string img_path;
     sf::Texture texture;
     sf::Sprite sprite;
+    bool flipped = false;
 
 
 };

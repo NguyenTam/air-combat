@@ -148,3 +148,30 @@ void LevelEntity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
   target.draw(sprite, states);
 }
+
+/* Flip / unflip LevelEntity */
+void LevelEntity::flipLevelEntity()
+{
+  if (flipped)
+  {
+    sprite.setTextureRect(sf::IntRect(0, 0, width, height));
+    flipped = false;
+  }
+  else
+  {
+    sprite.setTextureRect(sf::IntRect(width, 0, -width, height));
+    flipped = true;
+  }
+}
+
+/*  Return width */
+float LevelEntity::getWidth()
+{
+  return width;
+}
+
+/*  Return height */
+float LevelEntity::getHeight()
+{
+  return height;
+}
