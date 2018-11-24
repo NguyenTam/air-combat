@@ -18,9 +18,19 @@
 /*  Macros */
 
 #define NO_ENTITY 0 /**< This has to be same as LevelEntity type default value */
-#define PLANE_ENTITY 1 /**< Entity type for planes */
-#define INFANTRY_ENTITY 2 /**< Entity type for infantry */
+#define FRIENDLY_PLANE 1 /**< Entity type for friendly planes */
+#define FRIENDLY_INFANTRY 2 /**< Entity type for friendly infantry */
 #define ERASE_ENTITY -1 /**< Entity type for erasing entities */
+#define HOSTILE_PLANE 3 /**< Entity type for hostile planes */
+#define HOSTILE_INFANTRY 4 /**< Entity type for hostile infantry */
+#define FRIENDLY_AA 5 /**< Entity type for frindly AA */
+#define HOSTILE_AA 6 /**< Entity type for hostile AA */
+#define FRIENDLY_HANGAR 7 /**< Entity type for friendly hangar */
+#define HOSTILE_HANGAR 8 /**< Entity type for hostile hangar */
+#define FRIENDLY_BASE 9 /**< Entity type for friendly base */
+#define HOSTILE_BASE 10 /**< Entity type for hostile base */
+#define TREE_ENTITY 11 /**< Entity type for tree */
+#define ROCK_ENTITY 12 /**< Entity type for rock */
 
 
 
@@ -37,7 +47,6 @@ class Level
 
     /**
       *   @brief Standard constructor for Level
-      *   @param y_limit The lowest allowed point y position for objects
       */
     Level();
 
@@ -80,6 +89,15 @@ class Level
       */
     void removeCurrent();
 
+    /**
+      *   @brief Flip / unflip LevelEntity
+      *   @details Calls LevelEntity flipLevelEntity for LevelEntity matching
+      *   x and y coordinates. Does nothing if no entity matches the coordinates
+      *   @param x Level x coordinate
+      *   @param y Level y coordinate
+      */
+    void flipEntity(float x, float y);
+
 
   private:
 
@@ -96,24 +114,16 @@ class Level
     bool CheckPosition(float x, float y, float width, float height, LevelEntity *cmp);
 
     /**
-      *   @brief Try to add an infantry entity
-      *   @details If current_entity is positioned or not an infantry entity
-      *   creates new infantry entity. Otherwise, tries to fully position
-      *   current_entity
+      *   @brief Try to add LevelEntity
+      *   @details Called from addEntity to do the adding task itself
       *   @param x Level x coordinate
       *   @param y Level y coordinate
+      *   @param entity_type LevelEntity type (see Macros)
+      *   @param entity_width Type matching width
+      *   @param entity_height Type matching height
+      *   @param entity_img Path to image file for matching entity_type
       */
-    void AddInfantry(float x, float y);
-
-    /**
-      *   @brief Try to add a plane entity
-      *   @details If current_entity is positioned or not a plane entity
-      *   creates new plane entity. Otherwise, tries to fully position
-      *   current_entity
-      *   @param x Level x coordinate
-      *   @param y Level y coordinate
-      */
-    void AddPlane(float x, float y);
+    void AddEntity(float x, float y, int entity_type, float entity_width, float entity_height, std::string entity_img);
 
     /**
       *   @brief Try to remove a LevelEntity
@@ -129,12 +139,38 @@ class Level
     float current_entity_height = 0;
     std::vector<std::shared_ptr<LevelEntity>> level_entities; /**< All LevelEntities */
 
-    /* These are just temporary */
-    float infantry_width = 40;
-    float infantry_height = 40;
-    const std::string infantry_path = "../data/img/infantry.png";
+    /* Every entity width, height and path */
+    float infantry_width = 19;
+    float infantry_height = 32;
+    const std::string friendly_infantry_path = "../data/img/finfantry_alpha.png";
+    const std::string hostile_infantry_path = "../data/img/hinfantry_alpha.png";
 
-    float plane_width = 40;
-    float plane_height = 40;
-    const std::string plane_path = "../data/img/plane.png";
+    float plane_width = 38;
+    float plane_height = 18;
+    const std::string friendly_plane_path = "../data/img/fplane_alpha.png";
+    const std::string hostile_plane_path = "../data/img/hplane_alpha.png";
+
+    float AA_width = 36;
+    float AA_height = 31;
+    const std::string friendly_AA_path = "../data/img/fAA_alpha.png";
+    const std::string hostile_AA_path = "../data/img/hAA_alpha.png";
+
+    float hangar_width = 28;
+    float hangar_height = 26;
+    const std::string friendly_hangar_path = "../data/img/fhangar_alpha.png";
+    const std::string hostile_hangar_path = "../data/img/hhangar_alpha.png";
+
+    float base_width = 76;
+    float base_height = 63;
+    const std::string friendly_base_path = "../data/img/fbase_alpha.png";
+    const std::string hostile_base_path = "../data/img/hbase_alpha.png";
+
+    float tree_width = 27;
+    float tree_height = 36;
+    const std::string tree_path = "../data/img/tree_alpha.png";
+
+    float rock_width = 25;
+    float rock_height = 20;
+    const std::string rock_path = "../data/img/rock_alpha.png";
+
 };

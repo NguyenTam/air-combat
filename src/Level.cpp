@@ -24,12 +24,46 @@ void Level::setYLimit(float y_limit)
 /* Check if position free */
 bool Level::CheckPosition(float x, float y, float width, float height, LevelEntity *cmp)
 {
+  sf::Rect<float> cmp_rect = sf::Rect<float>(x, y, width, height);
   // Go through LevelEntities and check all four corners
   for (auto it = level_entities.begin(); it != level_entities.end(); it++)
   {
+    // Remark many check are needed bacause entity sizes can be anything
+    // Thus, entites can be partially or complitely inside each other
+
     if ( it->get() != cmp)
     {
-      if ( (*it)->isInside(x, y) )
+      float entity_width = (*it)->getWidth();
+      float entity_height = (*it)->getHeight();
+      sf::Vector2f entity_pos = (*it)->getPosition();
+
+      // Check whether enity is inside cmp_rect
+      if (cmp_rect.contains(entity_pos.x, entity_pos.y))
+      {
+        // Entity top left corner inside
+        return false;
+      }
+      else if (cmp_rect.contains(entity_pos.x + entity_width, entity_pos.y))
+      {
+        // Top right corner inside
+        return false;
+      }
+      else if (cmp_rect.contains(entity_pos.x, entity_pos.y + height))
+      {
+        // Bottom left corner inside
+        return false;
+      }
+      else if (cmp_rect.contains(entity_pos.x + entity_width, entity_pos.y + entity_height))
+      {
+        // Botton right inside
+        return false;
+      }
+      else if (cmp_rect.contains(entity_pos.x + entity_width/2, entity_pos.y + entity_height/2))
+      {
+        // Center inside (complitely inside cmp_rect)
+        return false;
+      }
+      else if ( (*it)->isInside(x, y) )
       {
         // Top left corner inside some other LevelEntity
         return false;
@@ -51,6 +85,7 @@ bool Level::CheckPosition(float x, float y, float width, float height, LevelEnti
         return false;
 
       }
+
     }
   }
 
@@ -89,13 +124,54 @@ void Level::addEntity(float x, float y, int entity_type)
     y = 0;
   }
 
-  if (entity_type == INFANTRY_ENTITY)
+  // Go through all entity_type and try to create correct LevelEntity
+  if (entity_type == FRIENDLY_INFANTRY)
   {
-    AddInfantry(x, y);
+    AddEntity(x, y, FRIENDLY_INFANTRY, infantry_width, infantry_height, friendly_infantry_path);
   }
-  else if (entity_type == PLANE_ENTITY)
+  else if (entity_type == HOSTILE_INFANTRY)
   {
-    AddPlane(x, y);
+    AddEntity(x, y, HOSTILE_INFANTRY, infantry_width, infantry_height, hostile_infantry_path);
+  }
+  else if (entity_type == FRIENDLY_PLANE)
+  {
+    AddEntity(x, y, FRIENDLY_PLANE, plane_width, plane_height, friendly_plane_path);
+  }
+  else if (entity_type == HOSTILE_PLANE)
+  {
+    AddEntity(x, y, HOSTILE_PLANE, plane_width, plane_height, hostile_plane_path);
+  }
+  else if (entity_type == FRIENDLY_AA)
+  {
+    AddEntity(x, y, FRIENDLY_AA, AA_width, AA_height, friendly_AA_path);
+  }
+  else if (entity_type == HOSTILE_AA)
+  {
+    AddEntity(x, y, HOSTILE_AA, AA_width, AA_height, hostile_AA_path);
+  }
+  else if (entity_type == FRIENDLY_HANGAR)
+  {
+    AddEntity(x, y, FRIENDLY_HANGAR, hangar_width, hangar_height, friendly_hangar_path);
+  }
+  else if (entity_type == HOSTILE_HANGAR)
+  {
+    AddEntity(x, y, HOSTILE_HANGAR, hangar_width, hangar_height, hostile_hangar_path);
+  }
+  else if (entity_type == FRIENDLY_BASE)
+  {
+    AddEntity(x, y, FRIENDLY_BASE, base_width, base_height, friendly_base_path);
+  }
+  else if (entity_type == HOSTILE_BASE)
+  {
+    AddEntity(x, y, HOSTILE_BASE, base_width, base_height, hostile_base_path);
+  }
+  else if (entity_type == TREE_ENTITY)
+  {
+    AddEntity(x, y, TREE_ENTITY, tree_width, tree_height, tree_path);
+  }
+  else if (entity_type == ROCK_ENTITY)
+  {
+    AddEntity(x, y, ROCK_ENTITY, rock_width, rock_height, rock_path);
   }
   else if( entity_type == ERASE_ENTITY )
   {
@@ -103,20 +179,23 @@ void Level::addEntity(float x, float y, int entity_type)
   }
 }
 
+
+
+
 /* Try to add an infantry entity */
-void Level::AddInfantry(float x, float y)
+void Level::AddEntity(float x, float y, int entity_type, float entity_width, float entity_height, std::string entity_img)
 {
-  current_entity_height = infantry_height;
+  current_entity_height = entity_height;
   // Check the level lower y limit
-  if (y + infantry_height > level_y_limit)
+  if (y + entity_height > level_y_limit)
   {
-    y = level_y_limit - infantry_height;
+    y = level_y_limit - entity_height;
   }
 
-  if ( current_entity->getType() == INFANTRY_ENTITY && current_entity->getPositioned() == false )
+  if ( current_entity->getType() == entity_type && current_entity->getPositioned() == false )
   {
     // Try to position current_entity
-    if ( CheckPosition(x, y, infantry_width, infantry_height, current_entity.get()) )
+    if ( CheckPosition(x, y, entity_width, entity_height, current_entity.get()) )
     {
       // position ok
       current_entity->setPosition(x, y);
@@ -124,11 +203,11 @@ void Level::AddInfantry(float x, float y)
 
     }
   }
-  else if (current_entity->getType() == INFANTRY_ENTITY || current_entity->getType() == NO_ENTITY)
+  else if (current_entity->getType() == entity_type || current_entity->getType() == NO_ENTITY)
   {
-    // Construct new infantry entity
-    current_entity = std::make_shared<LevelEntity>(x, y, infantry_width, infantry_height,
-                    infantry_path, INFANTRY_ENTITY);
+    // Construct new entity_type LevelEntity
+    current_entity = std::make_shared<LevelEntity>(x, y, entity_width, entity_height,
+                    entity_img, entity_type);
     level_entities.push_back(current_entity);
 
   }
@@ -136,53 +215,10 @@ void Level::AddInfantry(float x, float y)
   {
     // Remove current_entity from level_entities
     removeCurrent();
-    // Construct new infantry entity
+    // Construct new entity_type LevelEntity
 
-    current_entity = std::make_shared<LevelEntity>(x, y, infantry_width, infantry_height,
-                    infantry_path, INFANTRY_ENTITY);
-    level_entities.push_back(current_entity);
-
-  }
-}
-
-
-/* Add a plane entity */
-void Level::AddPlane(float x, float y)
-{
-  current_entity_height = plane_height;
-  // Check the level lower y limit
-  if (y + plane_height > level_y_limit)
-  {
-    y = level_y_limit - plane_height;
-  }
-
-  if ( current_entity->getType() == PLANE_ENTITY && current_entity->getPositioned() == false )
-  {
-    // Try to position current_entity
-    if ( CheckPosition(x, y, plane_width, plane_height, current_entity.get()) )
-    {
-      // position ok
-      current_entity->setPosition(x, y);
-      current_entity->setPositioned(true);
-
-    }
-  }
-  else if (current_entity->getType() == PLANE_ENTITY || current_entity->getType() == NO_ENTITY)
-  {
-    // Construct new plane entity
-    current_entity = std::make_shared<LevelEntity>(x, y, plane_width, plane_height,
-                    plane_path, PLANE_ENTITY);
-    level_entities.push_back(current_entity);
-
-  }
-  else
-  {
-    // Remove current_entity from level_entities
-    removeCurrent();
-    // Construct new plane entity
-
-    current_entity = std::make_shared<LevelEntity>(x, y, plane_width, plane_height,
-                    plane_path, PLANE_ENTITY);
+    current_entity = std::make_shared<LevelEntity>(x, y, entity_width, entity_height,
+                    entity_img, entity_type);
     level_entities.push_back(current_entity);
 
   }
@@ -260,5 +296,18 @@ void Level::drawLevel(sf::RenderWindow &window)
   for (auto it = level_entities.begin(); it != level_entities.end(); it++)
   {
     window.draw( (**it) );
+  }
+}
+
+/* Try to flip LevelEntity */
+void Level::flipEntity(float x, float y)
+{
+  for (auto it = level_entities.begin(); it != level_entities.end(); it++)
+  {
+    if ((*it)->isInside(x, y))
+    {
+      (*it)->flipLevelEntity();
+      break;
+    }
   }
 }
