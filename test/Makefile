@@ -5,7 +5,7 @@ CFLAGS = -Wall -Wextra -pedantic -g -std=c++17
 LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system
 
 TEST_SRC = Menu_test Editor_test LevelEntity_test
-OBJECTS = button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o
+OBJECTS = button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o TextInput.o
 EXE_OBJECTS = MainMenu_test.o LevelEditor_test.o LevelEntity_test.o
 EXE = Menu
 ALL_EXES = Menu Editor LevelEntityTest
@@ -30,25 +30,28 @@ LevelEntity_test:	$(LevelEntity.o)
 # Objects
 
 LevelEntity.o:
-	$(CC) $(CFLAGS) -c $(SRC)LevelEntity.cpp $(LINKER)
+	$(CC) $(CFLAGS) -c $(SRC)LevelEntity.cpp
 
 LevelEditor.o:
-	$(CC) $(CFLAGS) -c $(SRC)LevelEditor.cpp $(LINKER)
+	$(CC) $(CFLAGS) -c $(SRC)LevelEditor.cpp
 
 button.o:
-	$(CC) $(CFLAGS) -c $(SRC)button.cpp $(LINKER)
+	$(CC) $(CFLAGS) -c $(SRC)button.cpp
 
 image_button.o:
-	$(CC) $(CFLAGS) -c $(SRC)image_button.cpp $(LINKER)
+	$(CC) $(CFLAGS) -c $(SRC)image_button.cpp
 
 Level.o:
-	$(CC) $(CFLAGS) -c $(SRC)Level.cpp $(LINKER)
+	$(CC) $(CFLAGS) -c $(SRC)Level.cpp
 
 UI.o:
-	$(CC) $(CFLAGS) -c $(SRC)UI.cpp $(LINKER)
+	$(CC) $(CFLAGS) -c $(SRC)UI.cpp
 
 MainMenu.o:
-	$(CC) $(CFLAGS) -c $(SRC)MainMenu.cpp $(LINKER)
+	$(CC) $(CFLAGS) -c $(SRC)MainMenu.cpp
+
+TextInput.o:
+	$(CC) $(CFLAGS) -c $(SRC)TextInput.cpp
 
 
 # Clean
