@@ -140,6 +140,17 @@ class UI
       */
     void ShowMessageBox(std::string message, sf::Vector2i position);
 
+    /**
+      *   @brief Handle sf::TextEntered event
+      *   @remark Virtual method, can be redefined in lower classes
+      */
+    virtual void HandleDialogTextEnter(sf::Event event) {std::cout << event.type << std::endl;}
+
+    /**
+      *   @brief Handle dialog_window sf::KeyPress event
+      *   @remark Virtual method, can be redefined in lower classes
+      */
+    virtual void HandleDialogKeyPress(sf::Event event) {std::cout << event.type << std::endl;}
 
 
     /*  Variables */

@@ -106,6 +106,14 @@ void UI::updateUI()
       {
         HandleDialogMouseMove(event);
       }
+      else if (event.type == sf::Event::TextEntered)
+      {
+        HandleDialogTextEnter(event);
+      }
+      else if (event.type == sf::Event::KeyPressed)
+      {
+        HandleDialogKeyPress(event);
+      }
     }
     dialog_window.clear(sf::Color::White);
     DrawDialog();
