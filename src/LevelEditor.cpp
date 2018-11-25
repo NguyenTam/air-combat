@@ -413,30 +413,36 @@ void LevelEditor::CreateVerticalToolbar(unsigned window_height)
   float height = vertical_toolbar.save_button->getHeight();
   vertical_toolbar.open_button = std::make_shared<Button>("Open", sf::Color(50, 50, 50, 100), width, height);
   vertical_toolbar.help_button = std::make_shared<Button>("Help", sf::Color(50, 50, 50, 100), width, height);
+  vertical_toolbar.quit_button = std::make_shared<Button>("Quit", sf::Color(50, 50, 50, 100), width, height);
 
   // Set text colors
   vertical_toolbar.save_button->setTextColor(sf::Color::White);
   vertical_toolbar.open_button->setTextColor(sf::Color::White);
   vertical_toolbar.help_button->setTextColor(sf::Color::White);
+  vertical_toolbar.quit_button->setTextColor(sf::Color::White);
   // Set active colors
   vertical_toolbar.save_button->setActiveColor(sf::Color(50, 50, 50, 255));
   vertical_toolbar.open_button->setActiveColor(sf::Color(50, 50, 50, 255));
   vertical_toolbar.help_button->setActiveColor(sf::Color(50, 50, 50, 255));
+  vertical_toolbar.quit_button->setActiveColor(sf::Color(50, 50, 50, 255));
 
   // Set actions
   vertical_toolbar.save_button->setClickFunction( std::bind(&LevelEditor::save_button_action, this));
   vertical_toolbar.open_button->setClickFunction( std::bind(&LevelEditor::open_button_action, this));
   vertical_toolbar.help_button->setClickFunction( std::bind(&LevelEditor::help_button_action, this));
+  vertical_toolbar.quit_button->setClickFunction( std::bind(&LevelEditor::quit_button_action, this));
 
   // Set positions
   vertical_toolbar.save_button->setPosition(5, 110);
   vertical_toolbar.open_button->setPosition(5, 10);
+  vertical_toolbar.quit_button->setPosition(5, 210);
   vertical_toolbar.help_button->setPosition(5, window_height - 200 );
 
   // Add to the container
   vtoolbar_buttons.push_back(vertical_toolbar.save_button);
   vtoolbar_buttons.push_back(vertical_toolbar.open_button);
   vtoolbar_buttons.push_back(vertical_toolbar.help_button);
+  vtoolbar_buttons.push_back(vertical_toolbar.quit_button);
 
   // Create view related buttons
   vertical_toolbar.view_right = std::make_shared<ImageButton>("", "../data/img/right_arrow.png",
@@ -470,7 +476,7 @@ void LevelEditor::CreateVerticalToolbar(unsigned window_height)
 
 void LevelEditor::save_button_action()
 {
-  std::cout << "Save button pressed " << std::endl;
+  SaveLevel();
 }
 
 void LevelEditor::open_button_action()
@@ -481,6 +487,11 @@ void LevelEditor::open_button_action()
 void LevelEditor::help_button_action()
 {
   std::cout << "Help button pressed" << std::endl;
+}
+
+void LevelEditor::quit_button_action()
+{
+  std::cout << "Quit buttons pressed" << std::endl;
 }
 
 
@@ -823,4 +834,209 @@ void LevelEditor::view_right_action()
   vertical_toolbar.view_left->setEnabled(true);
   view ++;
   level_view.setCenter(sf::Vector2f((float) LevelEditor::Window_Width * (0.5 + view), (float) LevelEditor::Window_Height / 2));
+}
+
+
+/*  Save Level, create dialog window */
+void LevelEditor::SaveLevel()
+{
+  dialog_window.create(sf::VideoMode(500, 400), "Save level", sf::Style::Close);
+
+  saveUI.font.loadFromFile(FONT_ARIAL);
+  saveUI.name = sf::Text("Level Name:", saveUI.font, 24);
+  saveUI.name.setColor(sf::Color::Blue);
+  saveUI.name.setStyle(sf::Text::Bold);
+  saveUI.name.setPosition(50, 50);
+  saveUI.fail_text = sf::Text("Level saving failed: incorrect level name", saveUI.font, 16);
+  saveUI.fail_text.setColor(sf::Color::Red);
+  saveUI.fail_text.setPosition(50, 20);
+
+  saveUI.name_input = TextInput(250, 60, 150, 20);
+  saveUI.name_input.setOutline(sf::Color::Black, 1);
+  saveUI.name_input.enableStrictSanitization(true);
+
+  saveUI.description = sf::Text("Description:", saveUI.font, 24);
+  saveUI.description.setColor(sf::Color::Blue);
+  saveUI.description.setStyle(sf::Text::Bold);
+  saveUI.description.setPosition(50, 160);
+
+  saveUI.description_input = TextInput(50, 200, 200, 100);
+  saveUI.description_input.setOutline(sf::Color::Black, 1);
+
+  // Construct Buttons
+  saveUI.cancel = std::make_shared<Button>("Cancel", sf::Color(50, 50, 50, 100),
+                  150, 60);
+  saveUI.save = std::make_shared<Button>("Save", sf::Color(50, 50, 50, 100),
+                  150, 60);
+  saveUI.cancel->setPosition(50, 320);
+  saveUI.save->setPosition(300, 320);
+  saveUI.save->setActiveColor(sf::Color(50, 50, 50, 180));
+  saveUI.cancel->setActiveColor(sf::Color(50, 50, 50, 180));
+  saveUI.save->setClickFunction(std::bind(&LevelEditor::writeLevel, this));
+  saveUI.cancel->setClickFunction(std::bind(&LevelEditor::cancelSaving, this));
+  saveUI.save->setTextColor(sf::Color::Blue);
+  saveUI.cancel->setTextColor(sf::Color::Blue);
+  saveUI.buttons.push_back(saveUI.cancel);
+  saveUI.buttons.push_back(saveUI.save);
+
+  // Construct also use existing Buttons
+  saveUI.use_old_name = std::make_shared<Button>("Existing name", sf::Color(50, 50, 50, 100),
+                        200, 20);
+  saveUI.use_old_description = std::make_shared<Button>("Existing description", sf::Color(50, 50, 50, 100),
+                        200, 20);
+  saveUI.use_old_name->setTextStyle(sf::Text::Regular, 14, sf::Color::Blue);
+  saveUI.use_old_description->setTextStyle(sf::Text::Regular, 14, sf::Color::Blue);
+
+  saveUI.use_old_name->setPosition(50, 90);
+  saveUI.use_old_description->setPosition(50, 130);
+  saveUI.use_old_name->setActiveColor(sf::Color(50, 50, 50, 180));
+  saveUI.use_old_description->setActiveColor(sf::Color(50, 50, 50, 180));
+
+  // Deactivate by default
+  saveUI.use_old_name->setEnabled(false);
+  saveUI.use_old_description->setEnabled(false);
+
+  saveUI.buttons.push_back(saveUI.use_old_name);
+  saveUI.buttons.push_back(saveUI.use_old_description);
+
+  // Reset possible old failed text
+  saveUI.saving_failed = false;
+  dialog_active = true;
+}
+
+/* Handle sf::TextEntered event */
+void LevelEditor::HandleDialogTextEnter(sf::Event event)
+{
+  if (dialog_active)
+  {
+    saveUI.name_input.addChar(event.text.unicode);
+    saveUI.description_input.addChar(event.text.unicode);
+  }
+}
+
+/* Handle dialog mouse presses */
+void LevelEditor::HandleDialogMousePress(sf::Event event)
+{
+  if (event.mouseButton.button == sf::Mouse::Left)
+  {
+    float x = (float) event.mouseButton.x;
+    float y = (float) event.mouseButton.y;
+
+    if (messagebox.active)
+    {
+      // if messagebox button is clicked, it calls UI::CloseDialog
+      messagebox.button.checkClicked(x, y);
+    }
+    else
+    {
+      // Save level active
+      if (saveUI.name_input.tryActivate(x, y))
+      {
+        saveUI.description_input.deactivate();
+        // Also get rid of the error text
+        saveUI.saving_failed = false;
+      }
+      else if (saveUI.description_input.tryActivate(x, y))
+      {
+        saveUI.name_input.deactivate();
+      }
+      else
+      {
+        // Check buttons
+        for (auto it = saveUI.buttons.begin(); it != saveUI.buttons.end(); it++)
+        {
+          if ((*it)->checkClicked(x, y))
+          {
+            break;
+          }
+        }
+      }
+
+    }
+  }
+}
+
+
+/*  Handle dialog_window mouse movement */
+void LevelEditor::HandleDialogMouseMove(sf::Event event)
+{
+  float x = (float) event.mouseMove.x;
+  float y = (float) event.mouseMove.y;
+
+  if (messagebox.active)
+  {
+    // Check if mouse hovers on the messagebox
+    messagebox.button.tryActivate(x, y);
+  }
+  else
+  {
+    // Handle mouse move in level save
+    for (auto it = saveUI.buttons.begin(); it != saveUI.buttons.end(); it++)
+    {
+      if ((*it)->tryActivate(x, y))
+      {
+        break;
+      }
+    }
+  }
+}
+
+
+/*  Handle dialog_window KeyPresses */
+void LevelEditor::HandleDialogKeyPress(sf::Event event)
+{
+  if (event.key.code == sf::Keyboard::Escape)
+  {
+    // Close the dialog
+    cancelSaving();
+  }
+}
+
+/*  Draw dialog_window */
+void LevelEditor::DrawDialog()
+{
+  if (messagebox.active)
+  {
+    // Draw messagebox
+    dialog_window.draw(messagebox.message);
+    dialog_window.draw(messagebox.button);
+  }
+  else
+  {
+    dialog_window.draw(saveUI.name);
+    dialog_window.draw(saveUI.name_input);
+    dialog_window.draw(saveUI.description);
+    dialog_window.draw(saveUI.description_input);
+    if (saveUI.saving_failed)
+    {
+      // Draw only when level saving has failed
+      dialog_window.draw(saveUI.fail_text);
+    }
+    // Draw all buttons
+    for (auto it = saveUI.buttons.begin(); it != saveUI.buttons.end(); it++)
+    {
+      dialog_window.draw(**it);
+    }
+
+  }
+
+}
+
+/*  Cancel level saving */
+void LevelEditor::cancelSaving()
+{
+  dialog_window.close();
+  dialog_active = false;
+  // Clear all buttons from the level UI container
+  saveUI.buttons.clear();
+}
+
+/*  Save Level to file */
+void LevelEditor::writeLevel()
+{
+  // Set TextInputs deactivated
+  saveUI.name_input.deactivate();
+  saveUI.description_input.deactivate();
+  saveUI.saving_failed = true;
+
 }

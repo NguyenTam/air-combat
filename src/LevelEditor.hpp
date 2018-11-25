@@ -14,6 +14,7 @@
 #include "image_button.hpp"
 #include "button.hpp"
 #include "Level.hpp"
+#include "TextInput.hpp"
 
 
 
@@ -32,6 +33,7 @@ struct VerticalToolbar
 {
   std::shared_ptr <Button> save_button; /**< Save Button */
   std::shared_ptr <Button> open_button; /**< Open Button */
+  std::shared_ptr <Button> quit_button; /**< Quit Button */
   std::shared_ptr <Button> help_button; /**< Help Button */
   sf::RectangleShape rect; /**< Toolbar rect */
 
@@ -57,6 +59,27 @@ struct HorizontalToolbar
   std::vector<std::shared_ptr <ImageButton>> essentials; /**< Buttons matching essential entities */
   std::vector<std::shared_ptr <ImageButton>> objectives; /**< Buttons matching objective entities */
   std::vector<std::shared_ptr <ImageButton>> barriers; /**< Buttons matching barrier entities */
+
+};
+
+/**
+  *   @struct SaveLevel
+  *   @brief Defines UI for save level
+  */
+struct SaveLevelUI
+{
+  sf::Text name; /**< Level name text */
+  sf::Font font; /**< Font used with name */
+  TextInput name_input; /**< Strict TextInput for level name */
+  TextInput description_input; /**< TextInput for level description */
+  sf::Text description; /**< Description text */
+  sf::Text fail_text; /**< Saving failed text */
+  std::shared_ptr<Button> save; /**< Button to save level */
+  std::shared_ptr<Button> cancel; /**< Button to cancel from save level */
+  std::shared_ptr<Button> use_old_name; /**< Button to use old level name */
+  std::shared_ptr<Button> use_old_description; /**< Button to use old description */
+  std::vector<std::shared_ptr <Button>> buttons; /**< Container for Buttons */
+  bool saving_failed = false; /**< Whether level saving has failed */
 
 };
 
@@ -180,6 +203,11 @@ class LevelEditor: public UI
     void help_button_action();
 
     /**
+      *   @brief Click action for vertical_toolbar quit_button
+      */
+    void quit_button_action();
+
+    /**
       *   @brief Click action for horizontal_toolbar show_essentials button
       *   @details Clears current_entity and switches to ESSENTIALS_MODE
       */
@@ -209,6 +237,19 @@ class LevelEditor: public UI
       *   @details Moves view one LevelEditor::Window_Width right
       */
     void view_right_action();
+
+    /**
+      *   @brief Cancel from level saving
+      *   @details Closes dialog_window
+      */
+    void cancelSaving();
+
+    /**
+      *   @brief Write Level to file
+      *   @details On success returns to main level editor window. Otherwise,
+      *   remains in the save dialog (and shows error text to user)
+      */
+    void writeLevel();
 
 
   protected:
@@ -240,6 +281,38 @@ class LevelEditor: public UI
       */
     virtual void HandleMousePress(sf::Event event);
 
+    /**
+      *   @brief Handle sf::TextEntered event
+      *   @remark Redefined from UI::HandleTextEnter
+      */
+    virtual void HandleDialogTextEnter(sf::Event event);
+
+    /**
+      *   @brief Handle dialog_window mouse presses
+      *   @remark Redefined from UI::HandleDialogMousePress
+      *   @param event sf::Event
+      */
+    virtual void HandleDialogMousePress(sf::Event event);
+
+    /**
+      *   @brief Handle dialog_window mouse movement
+      *   @remark reimplemented from UI::HandleDialogMouseMove
+      *   @param event Mouse move sf::Event
+      */
+    virtual void HandleDialogMouseMove(sf::Event event);
+
+    /**
+      *   @brief Handle dialog_window key presses
+      *   @remark Redefined from UI::HandleDialogKeyPress
+      *   @param event sf::Event
+      */
+    virtual void HandleDialogKeyPress(sf::Event event);
+
+    /**
+      *   @brief Draw dialog_window
+      *   @remark reimplemented from UI, used while user is saving level
+      */
+    virtual void DrawDialog();
 
   private:
 
@@ -286,6 +359,10 @@ class LevelEditor: public UI
       */
     void DrawHorizontalToolbar();
 
+    /**
+      */
+    void SaveLevel();
+
 
     /*  Variables */
 
@@ -302,4 +379,6 @@ class LevelEditor: public UI
 
     Level level; /** Level Object */
     int current_entity_type = NO_ENTITY; /**< Used with Level::addEntity() */
+    struct SaveLevelUI saveUI;
+
 };
