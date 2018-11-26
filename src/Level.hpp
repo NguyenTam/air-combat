@@ -12,6 +12,9 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <iostream>
+#include <fstream>
+#include <experimental/filesystem>
 #include "LevelEntity.hpp"
 
 
@@ -98,6 +101,24 @@ class Level
       */
     void flipEntity(float x, float y);
 
+    /**
+      *   @brief Output level to ostream
+      *   @details Used to write Level to file
+      *   @param os Output stream
+      *   @param level Level to be written to the stream
+      */
+    friend std::ostream& operator<<(std::ostream &os, const Level &level);
+
+    /**
+      *   @brief Save Level to file
+      *   @details If file is opened in non-truncate mode and it exits,
+      *   returns false
+      *   @param level_name is filename (.txt added by Level)
+      *   @param description Level description (saved to the file)
+      *   @param truncate Whether file is truncated or not if it exists
+      *   @return On success, returns true. Otherwise false
+      */
+    bool saveToFile(std::string level_name, std::string description, bool truncate);
 
   private:
 
@@ -142,28 +163,28 @@ class Level
     /* Every entity width, height and path */
     float infantry_width = 19;
     float infantry_height = 32;
-    const std::string friendly_infantry_path = "../data/img/finfantry_alpha.png";
-    const std::string hostile_infantry_path = "../data/img/hinfantry_alpha.png";
+    const std::string friendly_infantry_path = "../data/img/BlueInfantry_alpha.png";
+    const std::string hostile_infantry_path = "../data/img/RedInfantry_alpha.png";
 
     float plane_width = 38;
     float plane_height = 18;
-    const std::string friendly_plane_path = "../data/img/fplane_alpha.png";
-    const std::string hostile_plane_path = "../data/img/hplane_alpha.png";
+    const std::string friendly_plane_path = "../data/img/BlueAirplane_alpha.png";
+    const std::string hostile_plane_path = "../data/img/RedAirplane_alpha.png";
 
     float AA_width = 36;
     float AA_height = 31;
-    const std::string friendly_AA_path = "../data/img/fAA_alpha.png";
-    const std::string hostile_AA_path = "../data/img/hAA_alpha.png";
+    const std::string friendly_AA_path = "../data/img/BlueAntiAircraft_alpha.png";
+    const std::string hostile_AA_path = "../data/img/RedAntiAircraft_alpha.png";
 
     float hangar_width = 28;
     float hangar_height = 26;
-    const std::string friendly_hangar_path = "../data/img/fhangar_alpha.png";
-    const std::string hostile_hangar_path = "../data/img/hhangar_alpha.png";
+    const std::string friendly_hangar_path = "../data/img/BlueHangar_alpha.png";
+    const std::string hostile_hangar_path = "../data/img/RedHangar_alpha.png";
 
     float base_width = 76;
     float base_height = 63;
-    const std::string friendly_base_path = "../data/img/fbase_alpha.png";
-    const std::string hostile_base_path = "../data/img/hbase_alpha.png";
+    const std::string friendly_base_path = "../data/img/BlueBase_alpha.png";
+    const std::string hostile_base_path = "../data/img/RedBase_alpha.png";
 
     float tree_width = 27;
     float tree_height = 36;

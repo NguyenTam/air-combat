@@ -311,3 +311,107 @@ void Level::flipEntity(float x, float y)
     }
   }
 }
+
+/*  Level print, friend operation */
+std::ostream& operator<<(std::ostream &os, const Level &level)
+{
+  // Output all LevelEntities in order
+  for (auto it = level.level_entities.begin(); it != level.level_entities.end(); it++)
+  {
+    int type = (*it)->getType();
+    // First write entity type code
+    switch (type)
+    {
+      case FRIENDLY_PLANE:
+        os << "BlueAirplane";
+        break;
+      case HOSTILE_PLANE:
+        os << "RedAirplane";
+        break;
+      case FRIENDLY_INFANTRY:
+        os << "BlueInfantry";
+        break;
+      case HOSTILE_INFANTRY:
+        os << "RedInfantry";
+        break;
+      case FRIENDLY_AA:
+        os << "BlueAntiAircraft";
+        break;
+      case HOSTILE_AA:
+        os << "RedAntiAircraft";
+        break;
+      case FRIENDLY_HANGAR:
+        os << "BlueHangar";
+        break;
+      case HOSTILE_HANGAR:
+        os << "RedHangar";
+        break;
+      case FRIENDLY_BASE:
+        os << "BlueBase";
+        break;
+      case HOSTILE_BASE:
+        os << "RedBase";
+        break;
+      case TREE_ENTITY:
+        os << "Tree";
+        break;
+      case ROCK_ENTITY:
+        os << "Rock";
+        break;
+    }
+    if (type != NO_ENTITY)
+    {
+      // Add separator
+      os << ";";
+      // Write entity x and y positons with separator
+      sf::Vector2f pos = (*it)->getPosition();
+      os << pos.x << ";" << pos.y << ";";
+      // Write orientation and add line feed
+      os << (*it)->getOrientation() << std::endl;
+    }
+  }
+
+  return os;
+}
+
+/*  Save Level to file */
+bool Level::saveToFile(std::string level_name, std::string description, bool truncate)
+{
+  std::ofstream file;
+  std::string filename = "../data/level_files/" + level_name + ".txt";
+  if (truncate)
+  {
+    // Delete possible old content
+    file.open(filename,  std::ios::out | std::ios::trunc);
+  }
+  else
+  {
+    // Check if file exists
+
+    if (std::experimental::filesystem::exists(filename))
+    {
+      // File already exists
+      return false;
+    }
+    file.open(filename,  std::ios::out);
+  }
+
+  if (file.is_open())
+  {
+    // First write level_name
+    file << level_name << std::endl;
+    // Second write description with /* start tag and */ end tag
+    file << "/* " << description << " */" << std::endl;
+
+    // Now write Level to file
+    file << *this;
+    file.close();
+    std::cout << filename << std::endl;
+    return true;
+  }
+
+  // File opening failed
+  return false;
+
+
+}

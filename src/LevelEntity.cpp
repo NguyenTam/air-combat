@@ -175,3 +175,13 @@ float LevelEntity::getHeight()
 {
   return height;
 }
+
+/*  Get orientation */
+int LevelEntity::getOrientation()
+{
+  if (flipped)
+  {
+    return 0;
+  }
+  return 1;
+}

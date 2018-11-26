@@ -1,0 +1,24 @@
+test
+/* Used to test level       
+writing */
+RedInfantry;94;199;1
+RedInfantry;235;93;1
+BlueInfantry;204;293;1
+BlueAirplane;348;254;1
+RedAirplane;421;190;1
+BlueAntiAircraft;270;470;1
+RedAntiAircraft;429;414;1
+BlueHangar;558;269;1
+RedHangar;576;111;1
+RedBase;113;483;1
+RedBase;498;509;1
+BlueBase;360;533;1
+BlueBase;641;379;1
+Tree;101;359;1
+Tree;374;83;1
+Rock;423;319;1
+Rock;322;354;1
+RedAirplane;1097;218;0
+RedAirplane;985;141;0
+RedAirplane;987;336;0
+RedInfantry;935;526;0

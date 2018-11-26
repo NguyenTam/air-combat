@@ -62,6 +62,7 @@ TextInput::TextInput(const TextInput &text_input)
   CreateTextInput();
   // Copy chars_on_lines
   int i = 0;
+  chars_on_lines.clear();
   for (auto it = text_input.chars_on_lines.begin(); it != text_input.chars_on_lines.end(); it++)
   {
     chars_on_lines[i] = *it;
@@ -89,6 +90,7 @@ TextInput& TextInput::operator=(const TextInput &text_input)
   CreateTextInput();
   // Copy chars_on_lines
   int i = 0;
+  chars_on_lines.clear();
   for (auto it = text_input.chars_on_lines.begin(); it != text_input.chars_on_lines.end(); it ++)
   {
     chars_on_lines[i] = *it;
@@ -308,4 +310,10 @@ void TextInput::CreateTextInput()
     chars_on_lines.push_back(0);
     i ++;
   }
+}
+
+/*  Get input text */
+std::string TextInput::getInputText()
+{
+  return input;
 }

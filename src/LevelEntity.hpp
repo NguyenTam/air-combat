@@ -121,7 +121,14 @@ class LevelEntity: public sf::Drawable
       *   @return Returns height
       */
     float getHeight();
-    
+
+    /**
+      *   @brief Get LevelEntity orientation
+      *   @return Returns 1 if flipped == false, otherwise returns 0
+      */
+    int getOrientation();
+
+
   protected:
     /**
       *   @brief Draw LevelEntity

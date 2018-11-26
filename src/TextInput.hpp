@@ -102,6 +102,12 @@ class TextInput: public sf::Drawable
       */
       void enableStrictSanitization(bool activate);
 
+    /**
+      *   @brief Get input text
+      *   @return Returns input string
+      */
+      std::string getInputText();
+
 
   protected:
 

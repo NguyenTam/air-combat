@@ -532,21 +532,21 @@ void LevelEditor::CreateHorizontalToolbar(unsigned window_width)
   std::shared_ptr<ImageButton> erase_entity = std::make_shared<ImageButton>
                                           ("Erase", "../data/img/erase.png", 40, 40);
   std::shared_ptr<ImageButton> add_friendly_infantry = std::make_shared<ImageButton>
-                                        ("Friendly infantry", "../data/img/finfantry.png", 40, 40);
+                                        ("Friendly infantry", "../data/img/BlueInfantry.png", 40, 40);
   std::shared_ptr<ImageButton> add_hostile_infantry = std::make_shared<ImageButton>
-                                        ("Hostile infantry", "../data/img/hinfantry.png", 40, 40);
+                                        ("Hostile infantry", "../data/img/RedInfantry.png", 40, 40);
   std::shared_ptr<ImageButton> add_friendly_plane = std::make_shared<ImageButton>
-                                        ("Friendly plane", "../data/img/fplane.png", 40, 40);
+                                        ("Friendly plane", "../data/img/BlueAirplane.png", 40, 40);
   std::shared_ptr<ImageButton> add_hostile_plane = std::make_shared<ImageButton>
-                                        ("Hostile plane", "../data/img/hplane.png", 40, 40);
+                                        ("Hostile plane", "../data/img/RedAirplane.png", 40, 40);
   std::shared_ptr<ImageButton> add_friendly_AA = std::make_shared<ImageButton>
-                                        ("Friendly AA", "../data/img/fAA.png", 40, 40);
+                                        ("Friendly AA", "../data/img/BlueAntiAircraft.png", 40, 40);
   std::shared_ptr<ImageButton> add_hostile_AA = std::make_shared<ImageButton>
-                                        ("Hostile AA", "../data/img/hAA.png", 40, 40);
+                                        ("Hostile AA", "../data/img/RedAntiAircraft.png", 40, 40);
   std::shared_ptr<ImageButton> add_friendly_hangar = std::make_shared<ImageButton>
-                                        ("Friendly hangar", "../data/img/fhangar.png", 40, 40);
+                                        ("Friendly hangar", "../data/img/BlueHangar.png", 40, 40);
   std::shared_ptr<ImageButton> add_hostile_hangar = std::make_shared<ImageButton>
-                                        ("Hostile hangar", "../data/img/hhangar.png", 40, 40);
+                                        ("Hostile hangar", "../data/img/RedHangar.png", 40, 40);
 
   // Set positions
   erase_entity->setPosition(150, 5);
@@ -584,9 +584,9 @@ void LevelEditor::CreateHorizontalToolbar(unsigned window_width)
 
   // Create all OBJECTIVES_MODE ImageButtons
   std::shared_ptr<ImageButton> add_friendly_base = std::make_shared<ImageButton>
-                              ("Friendly base", "../data/img/fbase.png", 40, 40);
+                              ("Friendly base", "../data/img/BlueBase.png", 40, 40);
   std::shared_ptr<ImageButton> add_hostile_base = std::make_shared<ImageButton>
-                              ("Hostile base", "../data/img/hbase.png", 40, 40);
+                              ("Hostile base", "../data/img/RedBase.png", 40, 40);
 
   // Set positions and add click functions
   add_friendly_base->setPosition(250, 5);
@@ -1025,6 +1025,9 @@ void LevelEditor::DrawDialog()
 /*  Cancel level saving */
 void LevelEditor::cancelSaving()
 {
+  // Set TextInputs deactivated
+  saveUI.name_input.deactivate();
+  saveUI.description_input.deactivate();
   dialog_window.close();
   dialog_active = false;
   // Clear all buttons from the level UI container
@@ -1037,6 +1040,15 @@ void LevelEditor::writeLevel()
   // Set TextInputs deactivated
   saveUI.name_input.deactivate();
   saveUI.description_input.deactivate();
-  saveUI.saving_failed = true;
+  if (level.saveToFile(saveUI.name_input.getInputText(), saveUI.description_input.getInputText(), false))
+  {
+    // Successfully saved
+    cancelSaving();
+  }
+  else
+  {
+    // Saving failed
+    saveUI.saving_failed = true;
+  }
 
 }
