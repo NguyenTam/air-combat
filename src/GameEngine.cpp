@@ -61,6 +61,11 @@ GameEngine::GameEngine() : gameFont()
     }
 }
 
+/**
+ * Handle inputs and draw textures to the screen.
+ * This function passes constant TIME_PER_FRAME to update function to achieve fixed time steps.
+ * Otherwise the game can be laggy and players can pass through a wall + easier to debug.
+ */
 void GameEngine::run()
 {
 
