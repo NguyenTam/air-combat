@@ -1007,6 +1007,10 @@ void LevelEditor::DrawDialog()
     dialog_window.draw(saveUI.name_input);
     dialog_window.draw(saveUI.description);
     dialog_window.draw(saveUI.description_input);
+    // Also effects for TextInputs
+    saveUI.name_input.highlightEffect();
+    saveUI.description_input.highlightEffect();
+    
     if (saveUI.saving_failed)
     {
       // Draw only when level saving has failed
