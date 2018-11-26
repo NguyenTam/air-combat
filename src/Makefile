@@ -8,7 +8,7 @@ OBJECTS=$(SOURCES:.cpp=.o)
 all: $(SOURCES) $(OBJECTS) 
 
 $(EXECUTABLE): $(OBJECTS)
-	g++ $(OBJECTS) $(SFMLFLAGS) -o $(EXECUTABLE) 
+	$(CC) $(OBJECTS) $(SFMLFLAGS) -o $(EXECUTABLE) 
 %.o: %.cpp
 	$(CC) $(CPPFLAGS) $< -o $@
 run: $(EXECUTABLE)
