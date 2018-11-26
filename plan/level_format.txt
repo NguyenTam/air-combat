@@ -11,7 +11,8 @@ Entity type:
   e.g. BlueAntiAircraft, RedAirPlane
 
 Coordinates:
-  Absolute coordinates in Level (and World) coordinate system
+  Absolute coordinates in Level (and World) coordinate system.
+  Upper left corner of the entity
 
 Orientation:
   1 (standard, left -> right)
