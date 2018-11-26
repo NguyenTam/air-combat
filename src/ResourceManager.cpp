@@ -1,5 +1,6 @@
 #include "ResourceManager.hpp"
 #include <iostream>
+
 bool ResourceManager::init()
 {
   //TODO: More resources, after we have decided image names
@@ -15,6 +16,7 @@ bool ResourceManager::init()
       return false;
     }   
 }
+
 void ResourceManager::load(Textures::ID id, const std::string& filename)
 {
   std::unique_ptr<sf::Texture> resource(new sf::Texture());
@@ -40,6 +42,9 @@ sf::Texture & ResourceManager::get(Textures::ID id)
   
 }
 
+/**
+ * New textures will be actually inserted here. std::move is used to move the ownership of resource to std::make_pair.
+ */
 void ResourceManager::insertResource(Textures::ID id, std::unique_ptr<sf::Texture> &resource)
 {
   // Insert and check success
