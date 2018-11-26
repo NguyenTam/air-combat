@@ -45,5 +45,7 @@ bool World::remove_entity(Entity *entity) {
 /*  Update the world  */
 
 void World::update() {
-
+	for (auto& it : objects) {
+		it->drawTo(*window);
+	}
 }
