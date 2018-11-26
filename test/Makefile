@@ -8,7 +8,7 @@ OBJECTS = button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainM
 
 SRC = ../src/
 
-all:	Menu_test Editor_test LevelEntity_test ResourceManager_test
+all:	Menu_test Editor_test LevelEntity_test ResourceManager_test GameEngine_test
 
 run: Menu_test
 	./Menu_test
@@ -23,6 +23,9 @@ LevelEntity_test: LevelEntity.o LevelEntity_test.cpp
 	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
 ResourceManager_test: ResourceManager.o ResourceManager_test.cpp
+	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
+
+GameEngine_test: GameEngine.o GameEngine_test.cpp
 	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
 # Objects
