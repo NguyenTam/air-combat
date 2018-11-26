@@ -4,60 +4,37 @@ CC = g++
 CFLAGS = -Wall -Wextra -pedantic -g -std=c++17
 LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system
 
-TEST_SRC = Menu_test Editor_test LevelEntity_test
 OBJECTS = button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o TextInput.o
 EXE_OBJECTS = MainMenu_test.o LevelEditor_test.o LevelEntity_test.o
 EXE = Menu
-ALL_EXES = Menu Editor LevelEntityTest
+
 SRC = ../src/
 
-default: all
-
-all:	$(TEST_SRC)
+all:	Menu_test Editor_test LevelEntity_test ResourceManager_test
 
 run: Menu_test
 	./$(EXE)
 
-Menu_test:	$(OBJECTS)
-	$(CC) $(CFLAGS)  ${OBJECTS} MainMenu_test.cpp $(LINKER) -o Menu
+Menu_test: $(OBJECTS) MainMenu_test.cpp
+	$(CC) $(CFLAGS)  $^  $(LINKER) -o $@
 
-Editor_test: $(OBJECTS)
-	$(CC) $(CFLAGS) ${OBJECTS} LevelEditor_test.cpp $(LINKER) -o Editor
+Editor_test: $(OBJECTS) LevelEditor_test.cpp
+	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
-LevelEntity_test:	$(LevelEntity.o)
-	$(CC) $(CFLAGS) LevelEntity.o LevelEntity_test.cpp $(LINKER) -o LevelEntityTest
+LevelEntity_test: LevelEntity.o LevelEntity_test.cpp
+	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
+
+ResourceManager_test: ResourceManager.o ResourceManager_test.cpp
+	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
 # Objects
-
-LevelEntity.o:
-	$(CC) $(CFLAGS) -c $(SRC)LevelEntity.cpp
-
-LevelEditor.o:
-	$(CC) $(CFLAGS) -c $(SRC)LevelEditor.cpp
-
-button.o:
-	$(CC) $(CFLAGS) -c $(SRC)button.cpp
-
-image_button.o:
-	$(CC) $(CFLAGS) -c $(SRC)image_button.cpp
-
-Level.o:
-	$(CC) $(CFLAGS) -c $(SRC)Level.cpp
-
-UI.o:
-	$(CC) $(CFLAGS) -c $(SRC)UI.cpp
-
-MainMenu.o:
-	$(CC) $(CFLAGS) -c $(SRC)MainMenu.cpp
-
-TextInput.o:
-	$(CC) $(CFLAGS) -c $(SRC)TextInput.cpp
-
+%.o:	$(SRC)%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
 # Clean
-
 clean:
-	$(RM) ${OBJECTS} $(EXE_OBJECTS) ${ALL_EXES}
+	$(RM) *.o *_test
 
 clean-objects:
-	$(RM) ${OBJECTS} $(EXE_OBJECTS)
+	$(RM) *.o
+
