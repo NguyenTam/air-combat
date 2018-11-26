@@ -13,7 +13,7 @@ SRC = ../src/
 all:	Menu_test Editor_test LevelEntity_test ResourceManager_test
 
 run: Menu_test
-	./$(EXE)
+	./Menu_test
 
 Menu_test: $(OBJECTS) MainMenu_test.cpp
 	$(CC) $(CFLAGS)  $^  $(LINKER) -o $@
