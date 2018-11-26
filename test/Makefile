@@ -5,8 +5,6 @@ CFLAGS = -Wall -Wextra -pedantic -g -std=c++17
 LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system
 
 OBJECTS = button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o TextInput.o
-EXE_OBJECTS = MainMenu_test.o LevelEditor_test.o LevelEntity_test.o
-EXE = Menu
 
 SRC = ../src/
 
