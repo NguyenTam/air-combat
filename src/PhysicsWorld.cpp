@@ -24,5 +24,17 @@ b2Body* PhysicsWorld::create_body() {
 	boxFixtureDef.density = 1; //mass of the body is AREA x density, here (4*1)
 	Body->CreateFixture(&boxFixtureDef);
 
-	return Body;
+	return Body; 
+}
+
+void PhysicsWorld::remove_body(b2Body* body) {
+	World->DestroyBody(body);
+}
+
+b2World* PhysicsWorld::get_world() {
+	return World;
+}
+
+PhysicsWorld::~PhysicsWorld() {
+	delete World;
 }
