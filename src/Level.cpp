@@ -200,6 +200,15 @@ void Level::AddEntity(float x, float y, int entity_type, float entity_width, flo
   {
     y = correct_y;
   }
+  else if (y + entity_height > level_y_limit)
+  {
+    // This makes sure that planes are not placed 'under' level
+    y = level_y_limit - entity_height;
+  }
+  else if (y < 0)
+  {
+    y = 0;
+  }
 
   if ( current_entity->getType() == entity_type && current_entity->getPositioned() == false )
   {
@@ -423,6 +432,7 @@ bool Level::saveToFile(std::string level_name, std::string description, bool tru
     // Now write Level to file
     file << *this;
     file.close();
+
     return true;
   }
 
@@ -516,14 +526,27 @@ unsigned Level::GetGroundLevel(float entity_x, float entity_width, float entity_
     auto it = ground_level.find(x);
     if (it != ground_level.end())
     {
-      if (it->second -1 < min_y)
+      if (it->second != 0)
       {
-        // -1 places objects one pixel apart so that they arent on top of each other
-        min_y = it->second -1;
+        if (it->second -1 < min_y)
+        {
+          // -1 places objects one pixel apart so that they arent on top of each other
+          min_y = it->second -1;
+        }
       }
+
     }
   }
-  return min_y - entity_height;
+  if ((unsigned)entity_height < min_y)
+  {
+    return min_y - entity_height;
+  }
+  else
+  {
+    // Entity cannot be placed correctly on the screen, just draw entity
+    // on level low corner (probably best of the bad options)
+    return level_y_limit - entity_height;
+  }
 
 }
 
@@ -634,4 +657,19 @@ void Level::RemoveSpecificEntities(int type, std::shared_ptr<LevelEntity> not_re
       it++;
     }
   }
+}
+
+/*  Get Level width */
+float Level::getLevelWidth()
+{
+  float x_max = 0;
+  for (auto it = level_entities.begin(); it != level_entities.end(); it++)
+  {
+    float x_tmp = (*it)->getX() + (*it)->getWidth();
+    if (x_tmp > x_max)
+    {
+      x_max = x_tmp;
+    }
+  }
+  return x_max;
 }

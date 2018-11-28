@@ -129,6 +129,14 @@ class Level
       */
     bool finishAddingGround();
 
+    /**
+      *   @brief Get Level width
+      *   @details Goes through all level_entities and returns the right most
+      *   point of the level
+      *   @return Returns the right most x coordinate
+      */
+    float getLevelWidth();
+
   private:
 
     /**
