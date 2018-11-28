@@ -63,7 +63,7 @@ bool Level::CheckPosition(float x, float y, float width, float height, LevelEnti
         // Center inside (complitely inside cmp_rect)
         return false;
       }
-      else if ( (*it)->isInside(x, y) )
+      if ( (*it)->isInside(x, y) )
       {
         // Top left corner inside some other LevelEntity
         return false;
@@ -74,7 +74,7 @@ bool Level::CheckPosition(float x, float y, float width, float height, LevelEnti
         return false;
 
       }
-      else if ( (*it)->isInside(x, y + width) )
+      else if ( (*it)->isInside(x, y + height) )
       {
         // Left bottom corner inside some other LevelEntity
         return false;
@@ -102,6 +102,10 @@ void Level::EraseEntity(float x, float y)
   {
     if ( (*it)->isInside(x, y) )
     {
+      if ((*it)->getType() == GROUND_ENTITY)
+      {
+        RemoveGround(*it);
+      }
       // Remove this entity
       level_entities.erase(it);
       break;
@@ -173,9 +177,13 @@ void Level::addEntity(float x, float y, int entity_type)
   {
     AddEntity(x, y, ROCK_ENTITY, rock_width, rock_height, rock_path);
   }
-  else if( entity_type == ERASE_ENTITY )
+  else if(entity_type == ERASE_ENTITY )
   {
     EraseEntity(x, y);
+  }
+  else if (entity_type == GROUND_ENTITY)
+  {
+    AddGround(x, y);
   }
 }
 
@@ -186,10 +194,11 @@ void Level::addEntity(float x, float y, int entity_type)
 void Level::AddEntity(float x, float y, int entity_type, float entity_width, float entity_height, std::string entity_img)
 {
   current_entity_height = entity_height;
-  // Check the level lower y limit
-  if (y + entity_height > level_y_limit)
+
+  unsigned correct_y = GetGroundLevel(x, entity_width, entity_height);
+  if ((entity_type != FRIENDLY_PLANE) && (entity_type != HOSTILE_PLANE))
   {
-    y = level_y_limit - entity_height;
+    y = correct_y;
   }
 
   if ( current_entity->getType() == entity_type && current_entity->getPositioned() == false )
@@ -200,6 +209,12 @@ void Level::AddEntity(float x, float y, int entity_type, float entity_width, flo
       // position ok
       current_entity->setPosition(x, y);
       current_entity->setPositioned(true);
+      current_entity->setFullyConstructed();
+      if (current_entity->getType() == FRIENDLY_PLANE)
+      {
+        // Only one allowed per level
+        RemoveSpecificEntities(FRIENDLY_PLANE, current_entity);
+      }
 
     }
   }
@@ -228,46 +243,43 @@ void Level::AddEntity(float x, float y, int entity_type, float entity_width, flo
 /* Try to move current_entity */
 void Level::moveCurrentEntity(float x, float y)
 {
-  if (! current_entity->getPositioned())
+  if (current_entity->getType() == GROUND_ENTITY && current_entity->getStretchable())
+  {
+    // Stretch Ground entity
+    current_entity->stretch(x, y);
+  }
+  else if (! current_entity->getPositioned())
   {
     // Don't move entity outside level area
-    if (x < 0)
+    if (x >= 0)
     {
-      if ( y < 0)
+      unsigned correct_y = GetGroundLevel(x, current_entity->getWidth(), current_entity_height);
+      if ((current_entity->getType() == (FRIENDLY_PLANE)) || (current_entity->getType() ==  HOSTILE_PLANE))
       {
-        current_entity->setPosition(0, 0);
-      }
-      else if (y + current_entity_height > level_y_limit)
-      {
-        current_entity->setPosition(0, level_y_limit - current_entity_height);
+        if (y < 0)
+        {
+          y = 0;
+        }
+        else if (y + current_entity_height > level_y_limit)
+        {
+          y = level_y_limit - current_entity_height;
+        }
+        current_entity->setPosition(x, y);
       }
       else
       {
-        // Only x incorrect
-        current_entity->setPosition(0, y);
+        // Other entities cannot be moved freely
+        current_entity->setPosition(x, correct_y);
       }
-    }
-    else if (y < 0)
-    {
-      current_entity->setPosition(x, 0);
-    }
-    else if (y + current_entity_height > level_y_limit)
-    {
-      current_entity->setPosition(x, level_y_limit - current_entity_height);
-    }
-    else
-    {
-      // Standard situation
-      current_entity->setPosition(x, y);
-    }
 
-  }
+    }
+ }
 }
 
 /*  Remove current_entity from level_entities */
 void Level::removeCurrent()
 {
-  if (current_entity->getPositioned() && current_entity->getType() != NO_ENTITY)
+  if (current_entity->getFullyConstructed() && current_entity->getType() != NO_ENTITY)
   {
     // Don't remove just assign an empty entity
     current_entity = std::make_shared<LevelEntity>();
@@ -358,16 +370,21 @@ std::ostream& operator<<(std::ostream &os, const Level &level)
       case ROCK_ENTITY:
         os << "Rock";
         break;
+      case GROUND_ENTITY:
+        os << "Ground";
+        break;
     }
     if (type != NO_ENTITY)
     {
       // Add separator
       os << ";";
-      // Write entity x and y positons with separator
+      // Write entity x and y positions with separator
       sf::Vector2f pos = (*it)->getPosition();
       os << pos.x << ";" << pos.y << ";";
       // Write orientation and add line feed
-      os << (*it)->getOrientation() << std::endl;
+      os << (*it)->getOrientation() << ";";
+      // Write width and height (only needed for Ground)
+      os << (*it)->getWidth() << ";" << (*it)->getHeight() << std::endl;
     }
   }
 
@@ -406,12 +423,215 @@ bool Level::saveToFile(std::string level_name, std::string description, bool tru
     // Now write Level to file
     file << *this;
     file.close();
-    std::cout << filename << std::endl;
     return true;
   }
 
   // File opening failed
   return false;
 
+}
 
+/*  Add Ground entities */
+void Level::AddGround(float x, float y)
+{
+  // Basic checks
+  if (x < 0)
+  {
+    x = 0;
+  }
+
+  if (current_entity->getType() == NO_ENTITY)
+  {
+    unsigned correct_y = GetGroundLevel(x, ground_width, ground_height);
+
+    // Construct new Ground LevelEntity
+    current_entity = std::make_shared<LevelEntity> (x, correct_y, ground_width, ground_height,
+                      ground_path, GROUND_ENTITY);
+    current_entity->setNonFlippable();
+    level_entities.push_back(current_entity);
+    current_entity_height = ground_height;
+  }
+  else if (!current_entity->getPositioned())
+  {
+    unsigned correct_y = GetGroundLevel(x, ground_width, ground_height);
+    current_entity->setPosition(x, correct_y);
+    current_entity->setPositioned(true);
+  }
+  else if (current_entity->getStretchable())
+  {
+   // Deactivate stretching
+   current_entity->setStretchable(false);
+  }
+  else
+  {
+    // Try to activate stretching
+    current_entity->activateStretching(x, y);
+  }
+}
+
+/*  Set ground fully_constructed and update ground_level */
+bool Level::finishAddingGround()
+{
+  if (current_entity->getType() == GROUND_ENTITY)
+  {
+    current_entity->setFullyConstructed();
+    // Update ground_level
+    unsigned x = (unsigned) current_entity->getX();
+    unsigned max_x = x + (unsigned) current_entity->getWidth();
+    unsigned y = (unsigned) current_entity->getY();
+    for (; x < max_x; x++)
+    {
+      auto it = ground_level.find(x);
+      if (it == ground_level.end())
+      {
+        // No ground below
+        ground_level[x] = y;
+      }
+      else
+      {
+        if (y < it->second)
+        {
+          ground_level[x] = y;
+        }
+      }
+
+    }
+    // Add to grounds
+    grounds.push_back(current_entity);
+    RemoveEntitiesBelow(current_entity->getX(), current_entity->getY(),
+                        current_entity->getWidth(), current_entity->getHeight());
+    removeCurrent(); // assigns NO_ENTITY to current_entity
+    return true;
+  }
+  return false;
+}
+
+/*  Get ground level below entity */
+unsigned Level::GetGroundLevel(float entity_x, float entity_width, float entity_height)
+{
+  unsigned min_y = level_y_limit;
+  for (unsigned x = (unsigned) entity_x; x <= (unsigned) entity_x + entity_width; x++)
+  {
+    // Get ground level
+    auto it = ground_level.find(x);
+    if (it != ground_level.end())
+    {
+      if (it->second -1 < min_y)
+      {
+        // -1 places objects one pixel apart so that they arent on top of each other
+        min_y = it->second -1;
+      }
+    }
+  }
+  return min_y - entity_height;
+
+}
+
+
+/*  Remove LevelEntities below Ground */
+void Level::RemoveEntitiesBelow(float x, float y, float width, float height)
+{
+  float x_max = x + width;
+  float y_max = y + height;
+  bool erased = false;
+  for (auto it = level_entities.begin(); it != level_entities.end();)
+  {
+    erased = false;
+    if ((*it)->getType() != GROUND_ENTITY)
+    {
+      float cmp_x = (*it)->getX();
+      float cmp_y = (*it)->getY();
+      float cmp_x_max = cmp_x + (*it)->getWidth();
+      float cmp_y_max = cmp_y + (*it)->getHeight();
+
+      if ( (x <= cmp_x && cmp_x <= x_max) || (cmp_x < x && cmp_x_max > x) ||
+            (cmp_x_max > x_max && cmp_x < x_max) )
+      {
+        // 1. complitely inside; 2. right corner inside; 3. left corner inside
+        if ( (y <= cmp_y && cmp_y <= y_max) || (cmp_y < y && cmp_y_max > y) ||
+            (cmp_y_max > y_max && cmp_y < y_max) )
+        {
+          // 1. complitely inside; 2. top corner inside; 3. lower corner inside
+          it = level_entities.erase(it);
+          erased = true;
+        }
+      }
+    }
+    if (! erased)
+    {
+      it ++;
+    }
+  }
+}
+
+/*  Update ground_level */
+void Level::RemoveGround(std::shared_ptr<LevelEntity> ground)
+{
+  unsigned x = (unsigned) ground->getX();
+  unsigned y = (unsigned) ground->getY();
+  unsigned x_max = x + (unsigned) ground->getWidth();
+  for (; x < x_max; x++)
+  {
+    auto it = ground_level.find(x);
+
+    if (it != ground_level.end())
+    {
+      if (y == it->second)
+      {
+        // This is the current ground level defining entity
+        ground_level[x] = GetNewGroundLevel(x, ground);
+      }
+    }
+  }
+  // Remove from grounds
+  for (auto it = grounds.begin(); it != grounds.end(); it++)
+  {
+    if ((*it) == ground)
+    {
+      grounds.erase(it);
+      break;
+    }
+  }
+
+}
+
+/* Get new ground level */
+unsigned Level::GetNewGroundLevel(unsigned x, std::shared_ptr<LevelEntity> ground)
+{
+  unsigned y_max = level_y_limit;
+  for (auto it = grounds.begin(); it != grounds.end(); it++)
+  {
+    if ((*it) != ground)
+    {
+      unsigned cmp_x = (unsigned) (*it)->getX();
+      unsigned cmp_x_max =  cmp_x + (unsigned) (*it)->getWidth();
+      if ( cmp_x <= x && cmp_x_max > x)
+      {
+        if ((*it)->getY() < y_max)
+        {
+          // New y_max
+          y_max = (*it)->getY();
+        }
+      }
+    }
+
+  }
+  return y_max;
+}
+
+
+/*  Remove specific LevelEntities */
+void Level::RemoveSpecificEntities(int type, std::shared_ptr<LevelEntity> not_removed)
+{
+  for (auto it = level_entities.begin(); it != level_entities.end();)
+  {
+    if ((*it)->getType() == type && (*it) != not_removed)
+    {
+      it = level_entities.erase(it);
+    }
+    else
+    {
+      it++;
+    }
+  }
 }
