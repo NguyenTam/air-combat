@@ -6,6 +6,7 @@
 #include <spdlog/spdlog.h>
 #include <SFML/Graphics.hpp>
 #include "World.hpp"
+#include "ResourceManager.hpp"
 class GameEngine : private sf::NonCopyable
 {
  public:
@@ -68,4 +69,7 @@ class GameEngine : private sf::NonCopyable
 
   bool isGameEngineReady; /**< Is the game ended*/
   std::shared_ptr<spdlog::logger> gameEngineLogger; /**< Game engine logger. Logs are written to data folder.*/
+  ResourceManager resources;
+
+  
 };

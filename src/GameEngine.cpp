@@ -4,6 +4,8 @@
   */
 #include "Entity.hpp"
 #include "GameEngine.hpp"
+#include "CommonDefinitions.hpp"
+#include "ResourceManager.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -23,7 +25,7 @@ const float GameEngine::PLAYER_ROTATION_DEGREE = 5.f;
 GameEngine::GameEngine() : gameFont()
 {
   /* Construct a render window.*/
-  renderWindow.create(sf::VideoMode(WIDTH,HEIGHT), "Air Combat 1", sf::Style::Titlebar | sf::Style::Close);
+  renderWindow.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Air Combat 1", sf::Style::Titlebar | sf::Style::Close);
 
   /* Initialize directions*/
   isMovingUp = isMovingDown = isMovingLeft = isMovingRight = isRotatingClockWise = isRotatingCounterClockWise = false;
@@ -33,16 +35,16 @@ GameEngine::GameEngine() : gameFont()
     {
       /*Construct spdlogger*/
       gameEngineLogger =spdlog::daily_logger_st("async_file_logger", "../data/game-engine-log.txt");
-
+      
       /*Try to load texture from file*/
-      if(!playerTexture.loadFromFile("../data/img/plane.png"))
+      if(!resources.init())
       {
         isGameEngineReady = false;
         return;    
       }
       /*If loading is success, then load font and set game info position on render window*/
       else {
-        playerSprite.setTexture(playerTexture);
+        playerSprite.setTexture(resources.get(Textures::ID::BlueAirplane_alpha));
         playerSprite.setPosition(100.f,100.f);
         
         gameFont.loadFromFile("../data/fonts/Sansation.ttf");
