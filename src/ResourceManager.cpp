@@ -6,8 +6,10 @@ bool ResourceManager::init()
   //TODO: More resources, after we have decided image names
   try
     {
-      load(Textures::BlueAirplane,   "../data/img/fplane_alpha.png");
-      load(Textures::BlueAntiAircraft,  "../data/img/fAA_alpha.png");      
+      for (int enum_value = 0; enum_value != Textures::ID::end; enum_value++)
+	{
+	  load(static_cast<Textures::ID>(enum_value),  "../data/img/"+Textures::TextureFiles[enum_value]);
+	}
       return true;
     }
   catch (std::runtime_error& e)

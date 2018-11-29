@@ -9,25 +9,11 @@
 #include <stdexcept>
 #include <cassert>
 #include <SFML/Graphics.hpp>
-namespace Textures
-{
-  enum ID
-    {
-      BlueAirplane,
-      BlueAntiAircraft,
-      BlueBase,
-      BlueHangar,
-      BlueInfantry,
-      RedAirplane,
-      RedAntiAircraft,
-      RedBase,
-      RedHangar,
-      RedInfantry
-    };
-}
+#include "CommonDefinitions.hpp"
 
 class ResourceManager{
 public:
+  ResourceManager() =default;
   /**
    * @brief Load resources.
    * @return true if all resources are loaded to resource map, a member variable. Otherwise return false.
@@ -44,7 +30,7 @@ public:
    * @param id, resource enum id.
    * @return a texture reference from the resource map.
    */
-  const sf::Texture & get(Textures::ID id) const;  
+  const sf::Texture & get(Textures::ID id) const;
 private:
   /**
    * @brief insert a resource to resource map.
