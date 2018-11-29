@@ -6,10 +6,11 @@ class Entity {
 public:
   /**
    */
-  Entity(sf::Vector2f size, float speed = 4.f);
+  Entity(sf::Vector2f size, float speed, int bullets, int bombs, int firerate);
   void drawTo(sf::RenderWindow &window);
   void move(sf::Vector2f distance);
   void setPos(sf::Vector2f newPos);
+  sf::Vector2f getPosition();
   void rotate(float);
   void moveUp();
   void moveDown();
@@ -18,8 +19,16 @@ public:
   void rotateClockWise();
   void rotateCounterClockWise();
   int getY();
+  void setSpeed(float speed);
+  float getSpeed();
+  bool shoot();
 
-private:
+protected:
   sf::RectangleShape entity;
+  sf::Vector2f position;
   float moveSpeed;
+  int numberOfBullets;
+  int numberOfBombs;
+  int rateOfFire;
+  int fireCountDown;
 };

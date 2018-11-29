@@ -1,11 +1,15 @@
 #include "Entity.hpp"
 
-Entity::Entity(sf::Vector2f size, float speed) 
+Entity::Entity(sf::Vector2f size, float speed, int bullets, int bombs, int firerate) 
 {
   entity.setSize(size);
   entity.setOrigin(size.x/2.f, size.y/2.f);
   entity.setFillColor(sf::Color::Green);
   moveSpeed = speed;
+  numberOfBullets = bullets;
+  numberOfBombs = bombs;
+  rateOfFire = firerate;
+  fireCountDown = 0;
 }
 
 void Entity::drawTo(sf::RenderWindow &window)
@@ -43,6 +47,10 @@ void Entity::rotateCounterClockWise()
   entity.rotate(-5.f);
 }
 
+sf::Vector2f Entity::getPosition(){
+  return position;
+}
+
 void Entity::setPos(sf::Vector2f newPos)
 {
   entity.setPosition(newPos);
@@ -51,3 +59,20 @@ void Entity::setPos(sf::Vector2f newPos)
 void Entity::rotate(float degree) {entity.rotate(degree);}
 
 int Entity::getY() {return entity.getPosition().y;}
+
+float Entity::getSpeed()
+{
+  return moveSpeed;
+}
+
+void Entity::move(sf::Vector2f direction){
+  setPos(position + moveSpeed*direction);  
+}
+
+bool Entity::shoot() {
+  if(numberOfBullets>0){
+    numberOfBullets-=1;
+    return true;
+  } else {return false;}
+}
+
