@@ -51,11 +51,8 @@ void LevelEditor::CreateEditorWindow()
 
 void LevelEditor::DrawUI()
 {
-  // Draw toolbars
-
-  DrawVerticalToolbar();
-  DrawHorizontalToolbar();
-
+  // Draw level first because otherwise wide entities could be drawn on top of
+  // the toolbars
   window.setView(level_view);
 
   // Draw Level
@@ -63,7 +60,9 @@ void LevelEditor::DrawUI()
 
   window.setView(ui_view);
 
-
+  // Draw toolbars
+  DrawVerticalToolbar();
+  DrawHorizontalToolbar();
 }
 
 /* Handle key presses */
@@ -140,6 +139,18 @@ void LevelEditor::HandleMouseMove(sf::Event event)
           // Skip unnecessary checks (mouse can only be at one position)
           activated = true;
           break;
+        }
+      }
+      if (! activated)
+      {
+        // Check also ground related Buttons
+        if ( horizontal_toolbar.place_ground->tryActivate(x, y))
+        {
+          activated = true;
+        }
+        else if (horizontal_toolbar.cancel_ground->tryActivate(x, y))
+        {
+          activated = true;
         }
       }
     }
@@ -275,6 +286,12 @@ void LevelEditor::HandleMousePress(sf::Event event)
             }
             level.removeCurrent(); // This has to be always done
           }
+        }
+        if (! clicked )
+        {
+          // Check also ground related Buttons
+          horizontal_toolbar.place_ground->checkClicked(x, y);
+          horizontal_toolbar.cancel_ground->checkClicked(x, y);
         }
       }
 
@@ -600,21 +617,41 @@ void LevelEditor::CreateHorizontalToolbar(unsigned window_width)
   horizontal_toolbar.objectives.push_back(add_hostile_base);
 
   // Create all BARRIERS_MODE ImageButtons
+  horizontal_toolbar.add_ground = std::make_shared<ImageButton>
+                              ("Ground", "../data/img/grass_small.png", 40, 40);
   std::shared_ptr<ImageButton> add_tree = std::make_shared<ImageButton>
                               ("Tree", "../data/img/tree.png", 40, 40);
   std::shared_ptr<ImageButton> add_rock = std::make_shared<ImageButton>
                               ("Rock", "../data/img/rock.png", 40, 40);
   // Set positions and click functions
-  add_tree->setPosition(250, 5);
-  add_rock->setPosition(300, 5);
+  horizontal_toolbar.add_ground->setPosition(250, 5);
+  add_tree->setPosition(300, 5);
+  add_rock->setPosition(350, 5);
+  horizontal_toolbar.add_ground->setClickFunction( std::bind(&LevelEditor::add_ground_action, this));
   add_tree->setClickFunction(std::bind(&LevelEditor::add_tree_action, this));
   add_rock->setClickFunction(std::bind(&LevelEditor::add_rock_action, this));
 
   // Add to barriers container, add erase_entity also to barriers
   horizontal_toolbar.barriers.push_back(erase_entity);
+  horizontal_toolbar.barriers.push_back(horizontal_toolbar.add_ground);
   horizontal_toolbar.barriers.push_back(add_tree);
   horizontal_toolbar.barriers.push_back(add_rock);
 
+  // Create Buttons related to add_ground
+  horizontal_toolbar.place_ground = std::make_shared<Button>("Place", sf::Color(50, 50, 50, 100),
+                                  60, 20);
+  horizontal_toolbar.cancel_ground = std::make_shared<Button>("Cancel", sf::Color(50, 50, 50, 100),
+                                  60, 20);
+  horizontal_toolbar.place_ground->setTextStyle(sf::Text::Regular, 14, sf::Color::Blue);
+  horizontal_toolbar.cancel_ground->setTextStyle(sf::Text::Regular, 14, sf::Color::Blue);
+  horizontal_toolbar.place_ground->setActiveColor(sf::Color(50, 50, 50, 170));
+  horizontal_toolbar.cancel_ground->setActiveColor(sf::Color(50, 50, 50, 170));
+  horizontal_toolbar.place_ground->setPosition(200, 60);
+  horizontal_toolbar.cancel_ground->setPosition(280, 60);
+  horizontal_toolbar.place_ground->setEnabled(false);
+  horizontal_toolbar.cancel_ground->setEnabled(false);
+  horizontal_toolbar.place_ground->setClickFunction(std::bind(&LevelEditor::place_ground_action, this));
+  horizontal_toolbar.cancel_ground->setClickFunction(std::bind(&LevelEditor::cancel_ground_action, this));
 
   // Create Buttons to change mode
   horizontal_toolbar.show_essentials = std::make_shared<Button>("Essentials",
@@ -650,6 +687,13 @@ void LevelEditor::CreateHorizontalToolbar(unsigned window_width)
   horizontal_toolbar.show_barriers->setCheckable(true);
   // Set show_essentials checked to match the initial window UI
   horizontal_toolbar.show_essentials->setChecked();
+
+  // Create info text
+  horizontal_toolbar.info_text.setPosition(380, 60);
+  horizontal_toolbar.info_font.loadFromFile(FONT_ARIAL);
+  horizontal_toolbar.info_text.setFont(horizontal_toolbar.info_font);
+  horizontal_toolbar.info_text.setCharacterSize(14);
+  horizontal_toolbar.info_text.setColor(sf::Color(50, 50, 50, 180));
 }
 
 void LevelEditor::DrawHorizontalToolbar()
@@ -663,6 +707,14 @@ void LevelEditor::DrawHorizontalToolbar()
   window.draw( *horizontal_toolbar.show_essentials);
   window.draw( *horizontal_toolbar.show_objectives);
   window.draw( *horizontal_toolbar.show_barriers);
+
+  // Draw info text if counter below 10000
+  if (horizontal_toolbar.info_counter < 100)
+  {
+    horizontal_toolbar.info_counter ++;
+    window.draw(horizontal_toolbar.info_text);
+    // Info counter is reseted when text needs to be shown
+  }
 
   // Draw correct ImageButtons
 
@@ -689,6 +741,9 @@ void LevelEditor::DrawHorizontalToolbar()
     {
       window.draw(** it);
     }
+    // Draw ground realated Buttons
+    window.draw(* horizontal_toolbar.place_ground);
+    window.draw(* horizontal_toolbar.cancel_ground);
   }
 }
 
@@ -759,6 +814,56 @@ void LevelEditor::erase_entity_action()
   current_entity_type = ERASE_ENTITY;
   level.removeCurrent();
 }
+
+void LevelEditor::add_ground_action()
+{
+  // Disable clicking from all visible toolbar buttons except place_ground and
+  // cancel_ground
+  for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
+  {
+    (*it)->enableClicking(false);
+  }
+  horizontal_toolbar.show_essentials->enableClicking(false);
+  horizontal_toolbar.show_objectives->enableClicking(false);
+  // Enable clicking of the correct Buttons
+  horizontal_toolbar.place_ground->enableClicking(true);
+  horizontal_toolbar.place_ground->setEnabled(true);
+  horizontal_toolbar.cancel_ground->enableClicking(true);
+  horizontal_toolbar.cancel_ground->setEnabled(true);
+  // Set correct LevelEntity type
+  level.removeCurrent();
+  current_entity_type = GROUND_ENTITY;
+}
+
+void LevelEditor::place_ground_action()
+{
+  if (level.finishAddingGround())
+  {
+    // Show info_text
+    horizontal_toolbar.info_text.setString("Ground placed");
+    horizontal_toolbar.info_counter = 0;
+  }
+}
+
+void LevelEditor::cancel_ground_action()
+{
+  // Enable clicking for all buttons which clikcing was disabled
+  for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
+  {
+    (*it)->enableClicking(true);
+  }
+  horizontal_toolbar.show_essentials->enableClicking(true);
+  horizontal_toolbar.show_objectives->enableClicking(true);
+  horizontal_toolbar.cancel_ground->setEnabled(false);
+  horizontal_toolbar.place_ground->setEnabled(false);
+
+  // Set add_ground unchecked
+  horizontal_toolbar.add_ground->setUnchecked();
+  // Clear current_entity and current_entity_type
+  level.removeCurrent();
+  current_entity_type = NO_ENTITY;
+}
+
 
 /*  Switch to ESSENTIALS_MODE, clear current_entity */
 void LevelEditor::show_essentials_action()
@@ -1007,6 +1112,10 @@ void LevelEditor::DrawDialog()
     dialog_window.draw(saveUI.name_input);
     dialog_window.draw(saveUI.description);
     dialog_window.draw(saveUI.description_input);
+    // Also effects for TextInputs
+    saveUI.name_input.highlightEffect();
+    saveUI.description_input.highlightEffect();
+
     if (saveUI.saving_failed)
     {
       // Draw only when level saving has failed
@@ -1044,6 +1153,8 @@ void LevelEditor::writeLevel()
   {
     // Successfully saved
     cancelSaving();
+    horizontal_toolbar.info_text.setString("Level succesfully saved");
+    horizontal_toolbar.info_counter = 0;
   }
   else
   {

@@ -128,6 +128,62 @@ class LevelEntity: public sf::Drawable
       */
     int getOrientation();
 
+    /**
+      *   @brief Set stretchable / unstretchable
+      *   @param enable true-> stretchable
+      */
+    void setStretchable(bool enable);
+
+    /**
+      *   @brief Get stretchable
+      *   @return Returns stretchable
+      */
+    bool getStretchable();
+
+    /**
+      *   @brief Set LevelEntity fully_constructed
+      */
+    void setFullyConstructed();
+
+    /**
+      *   @brief Get LevelEntity fully_constructed
+      *   @return Returns fully_constructed
+      */
+    bool getFullyConstructed();
+
+    /**
+      *   @brief Try to activate LevelEntity stretching
+      *   @param x Level x coordinate
+      *   @param y Level y coordinate
+      */
+    void activateStretching(float x, float y);
+
+    /**
+      *   @brief Stretch LevelEntity
+      *   @param float x Level x coordinate
+      *   @param float y Level y coordinate
+      *   @remark Does nothing if LevelEntity isn't stretchable
+      */
+    void stretch(float x, float y);
+
+    /**
+      *   @brief Set LevelEntity flippable to false
+      *   @remark Call this when creating GROUND LevelEntity
+      */
+    void setNonFlippable();
+
+    /**
+      *   @brief Get LevelEntity left corner x coordinate
+      *   @return Returns x
+      */
+    float getX();
+
+    /**
+      *   @brief Get LevelEntity top corner y coordinate
+      *   @return Returns y
+      */
+    float getY();
+
 
   protected:
     /**
@@ -147,12 +203,21 @@ class LevelEntity: public sf::Drawable
       */
     void CreateSprite();
 
+    /**
+      *   @brief Store original values for x, y, width and height
+      */
+    void StoreOriginalValues();
+
     /*  Variables */
 
     float x; /**< Left corner */
     float y; /**< Top corner */
     float width;
     float height;
+    float orig_x; // Original values
+    float orig_y;
+    float orig_width;
+    float orig_height;
     sf::Vector2f position;
     sf::Rect<float> rect;
     bool positioned = false;
@@ -162,6 +227,9 @@ class LevelEntity: public sf::Drawable
     sf::Texture texture;
     sf::Sprite sprite;
     bool flipped = false;
+    bool stretchable = false; /**< Used with Ground */
+    bool fully_constructed = false; /**< Used with Ground */
+    bool flippable = true;
 
 
 };

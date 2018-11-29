@@ -22,6 +22,8 @@ for testing tools.
 
 
 Requirements: *libsfml-dev*, *libspdlog-dev*, *doxygen*.
+These libraries are in Maari A, B and in CS-building Panic
+
 
 | Command             | Description                                                          |
 |---------------------|----------------------------------------------------------------------|

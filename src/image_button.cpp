@@ -200,7 +200,7 @@ void ImageButton::SetTextPosition()
 /* Click button if coordinates match and button isn't checked */
 bool ImageButton::checkClicked(float x, float y)
 {
-  if (enabled)
+  if (enabled && clicking_enabled)
   {
     if (frame.contains(x,y))
     {

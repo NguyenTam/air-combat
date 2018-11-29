@@ -6,10 +6,18 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "PhysicsWorld.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <vector>
+#include <Box2D/Box2D.h>
+
+#define DEGTORAD 0.0174532925199432957f
+#define RADTODEG 57.295779513082320876f
+#define TOPIXELS 60f
+#define TOMETERS 1/TOPIXELS
+
 
 /**
   *   @class World
@@ -48,6 +56,7 @@ public:
 	void update();
 
 private:
+  PhysicsWorld pworld;
 	sf::RenderWindow *window; /**< Window that is being used */
-	std::vector<Entity*> objects; /**< Contains all the entities added */
+	std::map<Entity*, b2Body*> objects; /**< Contains all the entities added */
 };

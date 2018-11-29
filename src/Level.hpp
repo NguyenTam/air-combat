@@ -34,6 +34,7 @@
 #define HOSTILE_BASE 10 /**< Entity type for hostile base */
 #define TREE_ENTITY 11 /**< Entity type for tree */
 #define ROCK_ENTITY 12 /**< Entity type for rock */
+#define GROUND_ENTITY 13 /**< Entity type for ground */
 
 
 
@@ -120,6 +121,22 @@ class Level
       */
     bool saveToFile(std::string level_name, std::string description, bool truncate);
 
+    /**
+      *   @brief Finish adding ground entity
+      *   @details Locks current ground entity into place. This should be called
+      *   from LevelEditor::place_ground_action()
+      *   @return Returns true if ground was added
+      */
+    bool finishAddingGround();
+
+    /**
+      *   @brief Get Level width
+      *   @details Goes through all level_entities and returns the right most
+      *   point of the level
+      *   @return Returns the right most x coordinate
+      */
+    float getLevelWidth();
+
   private:
 
     /**
@@ -153,12 +170,66 @@ class Level
       */
     void EraseEntity(float x, float y);
 
+    /**
+      *   @brief Add ground entity
+      *   @param x Level x coordinate
+      *   @param y Level y coordinate
+      *   @remark Ground entities are special so they require own add function
+      */
+    void AddGround(float x, float y);
+
+    /**
+      *   @brief Get ground level below entity
+      *   @param entity_x LevelEntity x coordinate
+      *   @param entity_width LevelEntity width
+      *   @param entity_height LevelEntity height
+      *   @remark LevelEntities are allowed to be added 1 pixel above ground
+      */
+    unsigned GetGroundLevel(float entity_x, float entity_width, float entity_height);
+
+    /**
+      *   @brief Remove LevelEntities below position
+      *   @details Doesn't remove Ground entities. This is used when Ground is
+      *   fully_constructed to remove entities below the Ground
+      *   @param x Level x coordinate
+      *   @param y Level y coordinate
+      *   @param width LevelEntity width
+      *   @param height LevelEntity height
+      *   @remark Somewhat heavy operation
+      */
+    void RemoveEntitiesBelow(float x, float y, float width, float height);
+
+    /**
+      *   @brief Remove Ground entity related ground_level entries
+      *   @param ground Ground object pointer (entity must still exist)
+      */
+    void RemoveGround(std::shared_ptr<LevelEntity> ground);
+
+    /**
+      *   @brief Get new ground level
+      *   @details This should be called when ground entity is removed
+      *   @param x LevelEntity x coordinate on Level
+      *   @param ground Ground enitity which isn't compared
+      *   @remark Quite heavy operation, use sparingly
+      */
+    unsigned GetNewGroundLevel(unsigned x, std::shared_ptr<LevelEntity> ground);
+
+    /**
+      *   @brief Remove specific type entities from level_entities
+      *   @details Used to remove previously placed friendly planes (1 allowed at the time)
+      *   @param entity_type LevelEntity type which are removed
+      *   @not_removed LevelEntity which isn't removed
+      */
+    void RemoveSpecificEntities(int entity_type, std::shared_ptr<LevelEntity> not_removed);
+
 
     /*  Variables */
     float level_y_limit = 0; /**< Tells level y limit (i.e. the lowest allowed point to place entities) */
     std::shared_ptr<LevelEntity> current_entity;
     float current_entity_height = 0;
     std::vector<std::shared_ptr<LevelEntity>> level_entities; /**< All LevelEntities */
+    std::vector<std::shared_ptr<LevelEntity>> grounds; /**< All ground entities are also added here */
+    std::map <unsigned, unsigned> ground_level; /**< Stores the ground level below */
 
     /* Every entity width, height and path */
     float infantry_width = 19;
@@ -194,4 +265,7 @@ class Level
     float rock_height = 20;
     const std::string rock_path = "../data/img/rock_alpha.png";
 
+    float ground_width = 100;
+    float ground_height = 100;
+    const std::string ground_path = "../data/img/grass.png";
 };
