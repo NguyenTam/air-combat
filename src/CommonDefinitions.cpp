@@ -5,6 +5,16 @@ namespace Game
   const int HEIGHT = 600;
 }
 
+namespace Paths
+{
+  std::vector<std::string> Paths
+  {
+    "../data/fonts/",
+    "../data/img/",
+    "../data/level_files/"      
+  };
+}
+
 namespace Textures
 {
 

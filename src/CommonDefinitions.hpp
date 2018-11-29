@@ -7,6 +7,18 @@ namespace Game
   extern const int HEIGHT;
 }
 
+namespace Paths
+{
+  enum PATHS
+    {
+      fonts,
+      img,
+      level_files
+    };
+  extern std::vector<std::string> Paths; /**< Use this command in data/img "ls -1 | sort | sed -e 's/$/",/' | sed -e 's/^/"/'" to get this output. */
+  
+}
+
 namespace Textures
 {
   enum ID
