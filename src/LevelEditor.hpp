@@ -60,6 +60,12 @@ struct HorizontalToolbar
   std::vector<std::shared_ptr <ImageButton>> objectives; /**< Buttons matching objective entities */
   std::vector<std::shared_ptr <ImageButton>> barriers; /**< Buttons matching barrier entities */
 
+  std::shared_ptr <ImageButton> add_ground; /**< Start placing ground */
+  std::shared_ptr <Button> place_ground; /**< Place ground entity */
+  std::shared_ptr <Button> cancel_ground; /**< Cancel placing ground */
+  sf::Text info_text; /**< Text used to display information */
+  sf::Font info_font; /**< Font for info_text */
+  int info_counter = 10000; /**< Used to determine if info_text should be drawn or not */
 };
 
 /**
@@ -182,10 +188,26 @@ class LevelEditor: public UI
 
 
     /**
-      *   @brief Click action for erase_entity button (both toolbars)
+      *   @brief Click action for erase_entity button (horizontal_toolbars)
       *   @details Change current_entity_type to ERASE_ENTITY
       */
     void erase_entity_action();
+
+    /**
+      *   @brief Click action for add_ground button (horizontal_toolbar)
+      *   @details Change current_entity_type to GROUND_ENTITY
+      */
+    void add_ground_action();
+
+    /**
+      *   @brief Click action for place_ground button (horizontal_toolbar)
+      */
+    void place_ground_action();
+
+    /**
+      *   @brief Click action for cancel_ground button (horizontal_toolbar)
+      */
+    void cancel_ground_action();
 
     /**
       *   @brief Click action for vertical_toolbar save_button

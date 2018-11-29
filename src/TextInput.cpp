@@ -59,9 +59,11 @@ TextInput::TextInput(const TextInput &text_input)
   font = text_input.font;
   font_size = text_input.font_size;
   input = text_input.input;
+  line = text_input.line;
   CreateTextInput();
   // Copy chars_on_lines
   int i = 0;
+  // This will cause problems if input is partially empty
   for (auto it = text_input.chars_on_lines.begin(); it != text_input.chars_on_lines.end(); it++)
   {
     chars_on_lines[i] = *it;
@@ -86,9 +88,11 @@ TextInput& TextInput::operator=(const TextInput &text_input)
   font = text_input.font;
   font_size = text_input.font_size;
   input = text_input.input;
+  line = text_input.line;
   CreateTextInput();
   // Copy chars_on_lines
   int i = 0;
+  // This will cause problems if input is partially empty
   for (auto it = text_input.chars_on_lines.begin(); it != text_input.chars_on_lines.end(); it ++)
   {
     chars_on_lines[i] = *it;
@@ -118,7 +122,7 @@ void TextInput::setPosition(float x, float y)
 void TextInput::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
   target.draw(frame, states);
-  if (active && (line != 1 || chars_on_lines[0] != 0))
+  if (active && highlight_on && higlight_color)
   {
     target.draw(highlight, states);
   }
@@ -183,7 +187,7 @@ void TextInput::addChar(char32_t new_char)
           removeChar();
         }
         // Notice: following works only for Courier font
-        else if ((0.575 * font_size * (float)chars_on_lines[line -1]) < width)
+        else if ((0.575 * font_size * (float)(chars_on_lines[line -1] + 1)) < width)
         {
           // Add the char to current line
           input += new_char;
@@ -253,15 +257,23 @@ void TextInput::removeChar()
 void TextInput::HighlightCurrent()
 {
 
-  if (chars_on_lines[line -1] == 0 && line > 1)
+  if ((chars_on_lines[line -1] + 1) * 0.575 * (float) font_size < width)
   {
-    highlight.setPosition(x + (float) (chars_on_lines[line -2] - 1) * font_size * 0.575,
-                            y + ((line - 2) * font.getLineSpacing(font_size)) + font_size / 4);
+    // Cursor still not in the corner
+    highlight.setPosition(x + (float) (chars_on_lines[line -1] ) * font_size * 0.575,
+                            y + ((line - 1) * font.getLineSpacing(font_size)) + font_size / 4);
+    highlight_on = true;
+  }
+  else if (line < max_lines)
+  {
+    // Line change needed
+    highlight.setPosition(x, y + (line * font.getLineSpacing(font_size)) + font_size / 4);
+    highlight_on = true;
   }
   else
   {
-    highlight.setPosition(x + (float) (chars_on_lines[line -1] - 1) * font_size * 0.575,
-                            y + ((line - 1) * font.getLineSpacing(font_size)) + font_size / 4);
+    // highlight would be outside the box
+    highlight_on = false;
   }
 
 }
@@ -295,6 +307,7 @@ void TextInput::CreateTextInput()
   frame.setPosition(x, y);
 
   highlight = sf::RectangleShape(sf::Vector2f(0.575 * (float) font_size, font_size));
+  highlight.setPosition(x, y + font_size / 4);
   highlight.setFillColor(sf::Color(50, 50, 50, 50));
 
   // Create chars_on_lines vector
@@ -308,4 +321,31 @@ void TextInput::CreateTextInput()
     chars_on_lines.push_back(0);
     i ++;
   }
+  // assign value to max_lines variable, note different indexing
+  max_lines = i;
+}
+
+/*  Get input text */
+std::string TextInput::getInputText()
+{
+  return input;
+}
+
+/*  Create highlight effect */
+void TextInput::highlightEffect()
+{
+  // higlight_color is used to create highlight effect
+  if (cycles == 4000)
+  {
+    if (higlight_color)
+    {
+      higlight_color = false;
+    }
+    else
+    {
+      higlight_color = true;
+    }
+    cycles = 0;
+  }
+  cycles ++;
 }

@@ -243,6 +243,12 @@ class Button: public sf::Drawable
         */
       bool getChecked();
 
+      /**
+        *   @brief Make Button clickable or unclickable
+        *   @param enable true-> clicking_enabled
+        */
+      void enableClicking(bool enable);
+
   protected:
 
     /**
@@ -286,6 +292,7 @@ class Button: public sf::Drawable
     sf::RectangleShape checked_rect; /**< This shape is draw when button is checked */
     sf::Color checked_color; /**< Highlight color used when button is checked */
     bool checked = false;
+    bool clicking_enabled = true; /**< Button can be clicked */
 
   private:
 

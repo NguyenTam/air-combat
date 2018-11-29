@@ -1,0 +1,21 @@
+Level_name
+
+/* Description of the level, can be couple lines long. User enters this in
+LevelEditor save level. Description starts with /* and ends to */. Special
+chars including '*', '/', '\', should be sanitized. */
+
+After description all entities are listed in order they were placed to the level.
+Format for the listing (one line): entity type;x_coordinate;y_coordinate;orientation;width;height
+
+Entity type:
+  e.g. BlueAntiAircraft, RedAirPlane
+
+Coordinates:
+  Absolute coordinates in Level (and World) coordinate system.
+  Upper left corner of the entity
+
+Orientation:
+  1 (standard, left -> right)
+  0 (inverse, right -> left)
+
+Width and height are needed only for Ground entities (otherwise those can be just ignored)

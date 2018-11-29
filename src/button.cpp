@@ -245,7 +245,7 @@ unsigned Button::getHeight()
 
 bool Button::checkClicked(float x, float y)
 {
-  if (enabled)
+  if (enabled && clicking_enabled)
   {
     if (frame.contains(x, y))
     {
@@ -375,4 +375,10 @@ void Button::setChecked()
 bool Button::getChecked()
 {
   return checked;
+}
+
+/*  Enable / disable clicking */
+void Button::enableClicking(bool enable)
+{
+  clicking_enabled = enable;
 }

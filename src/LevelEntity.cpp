@@ -14,6 +14,7 @@ LevelEntity::LevelEntity()
   y = 0;
   width = 0;
   height = 0;
+  StoreOriginalValues();
   position = sf::Vector2f(0, 0);
   rect = sf::Rect<float>(x, y, width, height);
   sprite = sf::Sprite();
@@ -27,6 +28,7 @@ LevelEntity::LevelEntity(float x, float y, float width, float height, std::strin
   position = sf::Vector2f(x, y);
   this->width = width;
   this->height = height;
+  StoreOriginalValues();
   rect = sf::Rect<float>(x, y, width, height);
   img_path = image_path;
   // Try to load a texture from img_path
@@ -59,6 +61,7 @@ LevelEntity::LevelEntity(const LevelEntity &level_entity)
   position = sf::Vector2f(x, y);
   width = level_entity.width;
   height = level_entity.height;
+  StoreOriginalValues();
   rect = sf::Rect<float>(x, y, width, height);
   img_path = level_entity.img_path;
   // Try to load texture
@@ -74,6 +77,7 @@ LevelEntity& LevelEntity::operator=(const LevelEntity &level_entity)
   position = sf::Vector2f(x, y);
   width = level_entity.width;
   height = level_entity.height;
+  StoreOriginalValues();
   rect = sf::Rect<float>(x, y, width, height);
   img_path = level_entity.img_path;
   // Try to load texture
@@ -101,6 +105,7 @@ void LevelEntity::setPosition(float x, float y)
   position = sf::Vector2f(x, y);
   rect = sf::Rect<float>(x, y, width, height);
   sprite.setPosition(x, y);
+  StoreOriginalValues();
 }
 
 /* Set new positition */
@@ -111,6 +116,7 @@ void LevelEntity::setPosition(sf::Vector2f position)
   y = position.y;
   rect = sf::Rect<float>(x, y, width, height);
   sprite.setPosition(x, y);
+  StoreOriginalValues();
 }
 
 /*  Get position */
@@ -152,16 +158,20 @@ void LevelEntity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 /* Flip / unflip LevelEntity */
 void LevelEntity::flipLevelEntity()
 {
-  if (flipped)
+  if (flippable)
   {
-    sprite.setTextureRect(sf::IntRect(0, 0, width, height));
-    flipped = false;
+    if (flipped)
+    {
+      sprite.setTextureRect(sf::IntRect(0, 0, width, height));
+      flipped = false;
+    }
+    else
+    {
+      sprite.setTextureRect(sf::IntRect(width, 0, -width, height));
+      flipped = true;
+    }
   }
-  else
-  {
-    sprite.setTextureRect(sf::IntRect(width, 0, -width, height));
-    flipped = true;
-  }
+
 }
 
 /*  Return width */
@@ -174,4 +184,124 @@ float LevelEntity::getWidth()
 float LevelEntity::getHeight()
 {
   return height;
+}
+
+/*  Get orientation */
+int LevelEntity::getOrientation()
+{
+  if (flipped)
+  {
+    return 0;
+  }
+  return 1;
+}
+
+/* Set stretchable */
+void LevelEntity::setStretchable(bool enable)
+{
+  stretchable = enable;
+}
+
+/*  Get stretchable */
+bool LevelEntity::getStretchable()
+{
+  return stretchable;
+}
+
+/*  Set fully_constructed */
+void LevelEntity::setFullyConstructed()
+{
+  fully_constructed = true;
+}
+
+/*  Get fully_constructed */
+bool LevelEntity::getFullyConstructed()
+{
+  return fully_constructed;
+}
+
+/*  Try to activate stretching */
+void LevelEntity::activateStretching(float x, float y)
+{
+  // Give quite generous 'hitboxes' for stretching
+  if ( (y > this->y - 10) && (y < this->y + height))
+  {
+    if ((this->x - 10 < x) &&  (x < this->x + width + 10))
+    {
+      stretchable = true;
+    }
+  }
+
+}
+
+/* Stretch LevelEntity */
+void LevelEntity::stretch(float x, float y)
+{
+  if (stretchable)
+  {
+    // Set new width
+    if (x > orig_x)
+    {
+      width = x - orig_x;
+      this->x = orig_x;
+    }
+    else
+    {
+      this->x = x;
+      width = orig_x - x;
+    }
+    if (y >= orig_y)
+    {
+      // Set new y and update also height
+      // Try to keep this->y as the upper corner position
+      if (y < orig_y + orig_height)
+      {
+        this->y = y;
+        height =  orig_y + orig_height - y;
+      }
+      else
+      {
+        this->y = orig_y + orig_height;
+        height = y - this->y;
+      }
+
+    }
+
+    else
+    {
+      this->y = y;
+      height = orig_height + orig_y - y;
+    }
+
+    // Update positions and image
+    rect = sf::Rect<float>(this->x, this->y, width, height);
+    sprite.setPosition(this->x, this->y);
+    position = sf::Vector2f(this->x, this->y);
+    sprite.setScale(width / orig_width, height / orig_height);
+  }
+}
+
+
+/*  Store original values */
+void LevelEntity::StoreOriginalValues()
+{
+  orig_x = x;
+  orig_y = y;
+  orig_width = width;
+  orig_height = height;
+}
+
+void LevelEntity::setNonFlippable()
+{
+  flippable = false;
+}
+
+float LevelEntity::getX()
+{
+  return x;
+}
+
+float LevelEntity::getY()
+{
+  return y;
 }

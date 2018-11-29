@@ -41,6 +41,8 @@ class TextInput: public sf::Drawable
       *   @brief Copy constructor
       *   @param text_input Reference TextInput
       *   @remark Outline style is not copied !
+      *   @bug Can lead to unexpected results if text_input.input is partially
+      *   empty (won't be used like that by LevelEditor)
       */
       TextInput(const TextInput &text_input);
 
@@ -49,6 +51,8 @@ class TextInput: public sf::Drawable
       *   @param text_input Reference TextInput
       *   @return Returns copy of text_input
       *   @remark Outline style is not copied !
+      *   @bug Can lead to unexpected results if text_input.input is partially
+      *   empty (won't be used like that by LevelEditor)
       */
       TextInput& operator=(const TextInput &text_input);
 
@@ -102,6 +106,18 @@ class TextInput: public sf::Drawable
       */
       void enableStrictSanitization(bool activate);
 
+    /**
+      *   @brief Get input text
+      *   @return Returns input string
+      */
+      std::string getInputText();
+
+    /**
+      *   @brief Create Higlight effect
+      *   @remark This should be called periodically when TextInput is draw
+      */
+      void highlightEffect();
+
 
   protected:
 
@@ -147,9 +163,13 @@ class TextInput: public sf::Drawable
     bool active = false;
     unsigned font_size = 14;
     int line = 1;
+    int max_lines = 1;
     std::vector<unsigned> chars_on_lines;
     std::set<char32_t> input_sanitization;
     std::set<char32_t> input_sanitization_strict;
     bool strict_sanitization = false;
+    bool highlight_on = true;
+    int cycles = 0;
+    bool higlight_color = true;
 
 };
