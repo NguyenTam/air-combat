@@ -22,7 +22,7 @@ Editor_test: $(OBJECTS) LevelEditor_test.cpp
 LevelEntity_test: LevelEntity.o LevelEntity_test.cpp
 	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
-ResourceManager_test: ResourceManager.o ResourceManager_test.cpp
+ResourceManager_test: CommonDefinitions.o ResourceManager.o ResourceManager_test.cpp
 	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
 GameEngine_test: GameEngine.o GameEngine_test.cpp
