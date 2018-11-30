@@ -209,5 +209,5 @@ void MainMenu::select_level_action()
 /*  Create / recreate window for MainMenu */
 void MainMenu::CreateMainScreen()
 {
-  window.create(sf::VideoMode(800, 600), "Main Menu", sf::Style::Close);
+  window.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Main Menu", sf::Style::Close);
 }

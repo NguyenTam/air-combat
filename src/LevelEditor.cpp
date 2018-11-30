@@ -8,10 +8,6 @@
 
 /*  Class LevelEditor */
 
-/*  Class variable initializations */
-unsigned LevelEditor::Window_Width = 800;
-unsigned LevelEditor::Window_Height = 600;
-
 
 /*  Constructor for LevelEditor */
 
@@ -20,7 +16,7 @@ UI(render_window, dialog, sf::Color::White)
 {
   CreateMainScreen();
   ui_view = window.getDefaultView();
-  level.setYLimit(LevelEditor::Window_Height); // This must be set
+  level.setYLimit(Game::HEIGHT); // This must be set
 }
 
 /*  Create LevelEditor UI */
@@ -28,21 +24,21 @@ UI(render_window, dialog, sf::Color::White)
 void LevelEditor::CreateMainScreen()
 {
   // Recreate the window with correct size
-  unsigned window_width = LevelEditor::Window_Width + vertical_toolbar_width;
-  unsigned window_height = LevelEditor::Window_Height + horizontal_toolbar_height;
+  unsigned window_width = Game::WIDTH + vertical_toolbar_width;
+  unsigned window_height = Game::HEIGHT + horizontal_toolbar_height;
   window.create(sf::VideoMode(window_width, window_height), "Level Editor", sf::Style::Close);
 
   CreateVerticalToolbar(window_height);
   CreateHorizontalToolbar(window_width);
 
   // Create another view for level (it's crusial to make divisions with floats)
-  float level_width = (float)LevelEditor::Window_Width / (float) window_width;
-  float level_height = (float) LevelEditor::Window_Height / (float) window_height;
+  float level_width = (float)Game::WIDTH / (float) window_width;
+  float level_height = (float) Game::HEIGHT / (float) window_height;
   float level_x = (float) vertical_toolbar_width / (float) window_width;
   float level_y = (float) horizontal_toolbar_height / (float) window_height;
   level_view.setViewport(sf::FloatRect(level_x, level_y, level_width, level_height));
-  level_view.setSize(sf::Vector2f(LevelEditor::Window_Width, LevelEditor::Window_Height));
-  level_view.setCenter(sf::Vector2f(LevelEditor::Window_Width / 2, LevelEditor::Window_Height / 2));
+  level_view.setSize(sf::Vector2f(Game::WIDTH, Game::HEIGHT));
+  level_view.setCenter(sf::Vector2f(Game::WIDTH / 2, Game::HEIGHT / 2));
 
 }
 
@@ -190,7 +186,7 @@ void LevelEditor::HandleMouseMove(sf::Event event)
     // Mouse hovers on the Level
 
     // Move current LevelEntity, use Level coordinates
-    float level_x = x - vertical_toolbar_width + view * (float) LevelEditor::Window_Width;
+    float level_x = x - vertical_toolbar_width + view * (float) Game::WIDTH;
     float level_y = y - horizontal_toolbar_height;
     level.moveCurrentEntity(level_x, level_y);
   }
@@ -348,7 +344,7 @@ void LevelEditor::HandleMousePress(sf::Event event)
 
       // Place or create new LevelEntity
       // Notice that coordinate system origin differs in Level realative to LevelEditor
-      float level_x = x - vertical_toolbar_width + view * (float) LevelEditor::Window_Width;
+      float level_x = x - vertical_toolbar_width + view * (float) Game::WIDTH;
       float level_y = y - horizontal_toolbar_height;
 
       level.addEntity(level_x, level_y, current_entity_type);
@@ -362,7 +358,7 @@ void LevelEditor::HandleMousePress(sf::Event event)
     {
       // Try to flip LevelEntity
       // Notice that coordinate system origin differs in Level realative to LevelEditor
-      float level_x = x - vertical_toolbar_width + view * (float) LevelEditor::Window_Width;
+      float level_x = x - vertical_toolbar_width + view * (float) Game::WIDTH;
       float level_y = y - horizontal_toolbar_height;
 
       level.flipEntity(level_x, level_y);
@@ -500,9 +496,9 @@ void LevelEditor::open_button_action()
 {
   // Set correct window
 
-  window.setSize(sf::Vector2u(LevelEditor::Window_Width, LevelEditor::Window_Height));
+  window.setSize(sf::Vector2u(Game::WIDTH, Game::HEIGHT));
   // Reset view and update set it to window
-  ui_view.reset(sf::FloatRect(0, 0, LevelEditor::Window_Width, LevelEditor::Window_Height));
+  ui_view.reset(sf::FloatRect(0, 0, Game::WIDTH, Game::HEIGHT));
   window.setView(ui_view);
   CreateSelectLevel();
 }
@@ -534,7 +530,7 @@ void LevelEditor::DrawVerticalToolbar()
 void LevelEditor::CreateHorizontalToolbar(unsigned window_width)
 {
   // Create the rect and lines
-  horizontal_toolbar.rect = sf::RectangleShape(sf::Vector2f(LevelEditor::Window_Width, horizontal_toolbar_height));
+  horizontal_toolbar.rect = sf::RectangleShape(sf::Vector2f(Game::WIDTH, horizontal_toolbar_height));
   horizontal_toolbar.rect.setFillColor(sf::Color(230, 230, 230, 150));
 
   horizontal_toolbar.line[0] = sf::Vertex(sf::Vector2f(vertical_toolbar_width, horizontal_toolbar_height),
@@ -929,7 +925,7 @@ void LevelEditor::view_left_action()
   if (view > 0)
   {
     view --;
-    level_view.setCenter(sf::Vector2f((float) LevelEditor::Window_Width * (0.5 + view), (float) LevelEditor::Window_Height / 2));
+    level_view.setCenter(sf::Vector2f((float) Game::WIDTH * (0.5 + view), (float) Game::HEIGHT / 2));
     if (view == 0.f)
     {
       // Disable left_arrow (inpossible to move left)
@@ -944,7 +940,7 @@ void LevelEditor::view_right_action()
   // Enable left_arrow
   vertical_toolbar.view_left->setEnabled(true);
   view ++;
-  level_view.setCenter(sf::Vector2f((float) LevelEditor::Window_Width * (0.5 + view), (float) LevelEditor::Window_Height / 2));
+  level_view.setCenter(sf::Vector2f((float) Game::WIDTH * (0.5 + view), (float) Game::HEIGHT / 2));
 }
 
 
@@ -1182,11 +1178,11 @@ void LevelEditor::writeLevel()
 
     // Draw Level to rendertexture and save the texture as an image
     sf::RenderTexture level_content;
-    level_content.create(LevelEditor::Window_Width / 2, LevelEditor::Window_Height / 2);
+    level_content.create(Game::WIDTH / 2, Game::HEIGHT / 2);
     sf::View texture_view;
-    texture_view.setSize(LevelEditor::Window_Width / 2, LevelEditor::Window_Height / 2);
+    texture_view.setSize(Game::WIDTH / 2, Game::HEIGHT / 2);
     texture_view.zoom(4); // zoom out ( make 1/ 4 of the normal size)
-    texture_view.setCenter(level.getLevelWidth() / 2, LevelEditor::Window_Height / 2);
+    texture_view.setCenter(level.getLevelWidth() / 2, Game::HEIGHT / 2);
     level_content.setView(texture_view);
     level_content.clear(sf::Color::White);
     level.drawTexture(level_content);
@@ -1216,13 +1212,13 @@ void LevelEditor::cancel_to_mainscreen_action()
   screen_mode = MAINSCREEN;
 
   // Resize the window and set correct title
-  window.setSize(sf::Vector2u(LevelEditor::Window_Width + vertical_toolbar_width,
-                  LevelEditor::Window_Height + horizontal_toolbar_height ));
+  window.setSize(sf::Vector2u(Game::WIDTH + vertical_toolbar_width,
+                  Game::HEIGHT + horizontal_toolbar_height ));
   window.setTitle("Level Editor");
-  ui_view.setSize(LevelEditor::Window_Width + vertical_toolbar_width,
-                  LevelEditor::Window_Height + horizontal_toolbar_height);
-  ui_view.setCenter((LevelEditor::Window_Width + vertical_toolbar_width) / 2,
-                 (LevelEditor::Window_Height + horizontal_toolbar_height) / 2);
+  ui_view.setSize(Game::WIDTH + vertical_toolbar_width,
+                  Game::HEIGHT + horizontal_toolbar_height);
+  ui_view.setCenter((Game::WIDTH + vertical_toolbar_width) / 2,
+                 (Game::HEIGHT + horizontal_toolbar_height) / 2);
 
   // Deactivate active color on open button
   vertical_toolbar.open_button->activate(false);

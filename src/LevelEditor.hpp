@@ -15,6 +15,7 @@
 #include "button.hpp"
 #include "Level.hpp"
 #include "TextInput.hpp"
+#include "CommonDefinitions.hpp"
 
 
 
@@ -100,12 +101,6 @@ struct SaveLevelUI
 class LevelEditor: public UI
 {
   public:
-
-    /**< Air combat main game window width */
-    static unsigned Window_Width;
-
-    /**< Air combat main game window height */
-    static unsigned Window_Height;
 
     /**
       *   @brief Constructor for LevelEditor
