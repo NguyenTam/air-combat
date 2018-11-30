@@ -32,3 +32,7 @@ BlueHangar;283;474;1;28;26
 Tree;205;464;1;27;36
 Tree;157;464;1;27;36
 BlueBase;32;437;1;76;63
+InvisibleWall;0;0;1;1494;1
+InvisibleWall;0;600;1;1494;1
+InvisibleWall;0;0;1;1;600
+InvisibleWall;1494;0;1;1;600
