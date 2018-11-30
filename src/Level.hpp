@@ -139,6 +139,23 @@ class Level
       */
     float getLevelWidth();
 
+    /**
+      *   @brief Parse Level from levelfile
+      *   @param levelfile Path to Level file
+      *   @details Clears whole Level first and then adds LevelEntities based on the
+      *   file
+      *   @remark File format needs to follow level file format
+      *   (espicially comment symbols are needed even though comment
+      *   would be an empty string)
+      *   @return Returns true if level was successfully parsed
+      */
+    bool parseLevel(std::string& levelfile);
+
+    /**
+      *   @brief Clear all LevelEntities from Level
+      */
+    void clearAll();
+
   private:
 
     /**
@@ -179,6 +196,15 @@ class Level
       *   @remark Ground entities are special so they require own add function
       */
     void AddGround(float x, float y);
+
+    /**
+      *   @brief Update ground level
+      *   @details Call this when new ground object is being placed
+      *   @param x_left LevelEntity left corner x coordinate
+      *   @param x_right LevelEntity right corner x coordinate
+      *   @param y LevelEntity top corner y coordinate
+      */
+    void UpdateGroundLevel(unsigned x_left, unsigned x_right, unsigned y);
 
     /**
       *   @brief Get ground level below entity
@@ -224,6 +250,13 @@ class Level
       */
     void RemoveSpecificEntities(int entity_type, std::shared_ptr<LevelEntity> not_removed);
 
+    /**
+      *   @brief Convert string to LevelEntity type
+      *   @remark This isn't currenly compatible with ResourceManager.
+      *   On error case returns NO_ENTITY int value
+      *   @param str Input string which is converted
+      */
+    int ConvertStrToType(std::string &str);
 
     /*  Variables */
     float level_y_limit = 0; /**< Tells level y limit (i.e. the lowest allowed point to place entities) */

@@ -494,6 +494,28 @@ void Level::AddGround(float x, float y)
   }
 }
 
+/*  Update ground level */
+void Level::UpdateGroundLevel(unsigned x_left, unsigned x_right, unsigned y)
+{
+  for (; x_left < x_right; x_left++)
+  {
+    auto it = ground_level.find(x_left);
+    if (it == ground_level.end())
+    {
+      // No ground below
+      ground_level[x_left] = y;
+    }
+    else
+    {
+      if (y < it->second)
+      {
+        ground_level[x_left] = y;
+      }
+    }
+
+  }
+}
+
 /*  Set ground fully_constructed and update ground_level */
 bool Level::finishAddingGround()
 {
@@ -504,23 +526,8 @@ bool Level::finishAddingGround()
     unsigned x = (unsigned) current_entity->getX();
     unsigned max_x = x + (unsigned) current_entity->getWidth();
     unsigned y = (unsigned) current_entity->getY();
-    for (; x < max_x; x++)
-    {
-      auto it = ground_level.find(x);
-      if (it == ground_level.end())
-      {
-        // No ground below
-        ground_level[x] = y;
-      }
-      else
-      {
-        if (y < it->second)
-        {
-          ground_level[x] = y;
-        }
-      }
+    UpdateGroundLevel(x, max_x, y);
 
-    }
     // Add to grounds
     grounds.push_back(current_entity);
     RemoveEntitiesBelow(current_entity->getX(), current_entity->getY(),
@@ -687,4 +694,155 @@ float Level::getLevelWidth()
     }
   }
   return x_max;
+}
+
+/*  Parse Level from file */
+bool Level::parseLevel(std::string& levelfile)
+{
+  float x, y, width, height;
+  int orientation, entity_name;
+
+  std::ifstream file(levelfile);
+  if (file.is_open())
+  {
+    // Remove old entities
+    clearAll();
+    bool comments_read = false;
+    std::string line;
+    while(getline(file, line))
+    {
+      if (! comments_read)
+      {
+        if (line.find("*/") != std::string::npos)
+        {
+          // End comment mark found
+          comments_read = true;
+        }
+      }
+      else
+      {
+        // Try to parse line to 6 sections with ; as separator
+        std::istringstream temp_stream(line);
+        // Use getline to parse inputstringstream
+        std::string split_str;
+        int i = 0;
+        while(getline(temp_stream, split_str, ';'))
+        {
+          try
+          {
+            switch (i)
+            {
+              // Own container would be a better solution (could be filled by container[i] = ..)
+              case 0:
+                entity_name = ConvertStrToType(split_str);
+                break;
+              case 1:
+                x = std::stod(split_str);
+                break;
+              case 2:
+                y = std::stod(split_str);
+                break;
+              case 3:
+                orientation = std::stoi(split_str);
+                break;
+              case 4:
+                width = std::stod(split_str);
+                break;
+              case 5:
+                height = std::stod(split_str);
+                break;
+
+            }
+            i ++;
+
+          } catch (std::exception &e)
+          {
+            std::cout << e.what() << std::endl;
+            // Fail
+            clearAll();
+            return false;
+          }
+        }
+        // One line read
+        if (i != 6 )
+        {
+          // Fail
+          clearAll();
+          return false;
+        }
+        else
+        {
+          // Everything went ok, add new entity to Level
+          if (entity_name == GROUND_ENTITY)
+          {
+            // Ground entity is special entity (needs to be stretched to correct size)
+            std::shared_ptr<LevelEntity> ground = std::make_shared<LevelEntity>
+                  (x, y, ground_width, ground_height, ground_path, GROUND_ENTITY);
+            ground->setPositioned(true);
+            ground->setFullyConstructed();
+            ground->setNonFlippable();
+            // Stretch to the correct size
+            ground->setStretchable(true);
+            ground->autoStretch(width, height);
+
+
+
+            // Update ground level
+            UpdateGroundLevel(x, x + width, y);
+            // Push to the containers
+            grounds.push_back(ground);
+            level_entities.push_back(ground);
+
+          }
+          else
+          {
+            // For other entities use just addEntity (must be called two times)
+            // This calls AddEntity which locks entities the second time
+            addEntity(x, y, entity_name);
+            // Now set the correct orientation
+            if (! orientation)
+            {
+              current_entity->flipLevelEntity(); // current_entity is updated by AddEntity
+            }
+            addEntity(x, y, entity_name);
+          }
+        }
+      }
+    }
+
+  }
+  return true;
+
+}
+
+/*  Clear all LevelEntities */
+void Level::clearAll()
+{
+  // clear all containers and current_entity
+  removeCurrent();
+  // Notice containers only contain shared pointers or single stack integers so
+  // those can be safely cleared
+  grounds.clear();
+  level_entities.clear();
+  ground_level.clear();
+}
+
+
+/*  Convert str to Entity type */
+int Level::ConvertStrToType(std::string &str)
+{
+  if (str == "BlueAirplane") return FRIENDLY_PLANE;
+  else if (str == "RedAirplane") return HOSTILE_PLANE;
+  else if (str == "BlueInfantry") return FRIENDLY_INFANTRY;
+  else if (str == "RedInfantry") return HOSTILE_INFANTRY;
+  else if (str == "BlueAntiAircraft") return FRIENDLY_AA;
+  else if (str == "RedAntiAircraft") return HOSTILE_AA;
+  else if (str == "BlueHangar") return FRIENDLY_HANGAR;
+  else if (str == "RedHangar") return HOSTILE_HANGAR;
+  else if (str == "BlueBase") return FRIENDLY_BASE;
+  else if (str == "RedBase") return HOSTILE_BASE;
+  else if (str == "Tree") return TREE_ENTITY;
+  else if (str == "Rock") return ROCK_ENTITY;
+  else if (str == "Ground") return GROUND_ENTITY;
+  return NO_ENTITY;
 }
