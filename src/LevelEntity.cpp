@@ -305,3 +305,14 @@ float LevelEntity::getY()
 {
   return y;
 }
+
+/*  Stretch LevelEntity (ground) to correct size */
+void LevelEntity::autoStretch(float width, float height)
+{
+  // Update image
+  rect = sf::Rect<float>(x, y, width, height);
+  sprite.setScale(width / orig_width, height / orig_height);
+  // Update width and height
+  this->height = height;
+  this->width = width;
+}

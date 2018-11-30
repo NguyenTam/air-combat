@@ -184,6 +184,14 @@ class LevelEntity: public sf::Drawable
       */
     float getY();
 
+    /**
+      *   @brief Automatically stretch LevelEntity to correct size
+      *   @param width New width
+      *   @param height New height
+      *   @remark This should be used only when Level is created from file
+      */
+    void autoStretch(float width, float height);
+
 
   protected:
     /**
