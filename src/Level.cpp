@@ -320,6 +320,16 @@ void Level::drawLevel(sf::RenderWindow &window)
   }
 }
 
+/*  Draw Level to texture */
+void Level::drawTexture(sf::RenderTexture &texture)
+{
+  // Draw all LevelEntities
+  for (auto it = level_entities.begin(); it != level_entities.end(); it++)
+  {
+    texture.draw( (**it) );
+  }
+}
+
 /* Try to flip LevelEntity */
 void Level::flipEntity(float x, float y)
 {
@@ -403,6 +413,11 @@ std::ostream& operator<<(std::ostream &os, const Level &level)
 /*  Save Level to file */
 bool Level::saveToFile(std::string level_name, std::string description, bool truncate)
 {
+  if (level_name == "")
+  {
+    // This check is needed to make sure .txt file isn't created
+    return false;
+  }
   std::ofstream file;
   std::string filename = "../data/level_files/" + level_name + ".txt";
   if (truncate)
@@ -537,7 +552,7 @@ unsigned Level::GetGroundLevel(float entity_x, float entity_width, float entity_
 
     }
   }
-  if ((unsigned)entity_height < min_y)
+  if ((unsigned)entity_height <= min_y)
   {
     return min_y - entity_height;
   }

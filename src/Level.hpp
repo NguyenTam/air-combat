@@ -86,6 +86,8 @@ class Level
       */
     void drawLevel(sf::RenderWindow &window);
 
+    void drawTexture(sf::RenderTexture &texture);
+
     /**
       *   @brief Remove current_entity from level_entities
       *   @details Doesn't remove current if it's positioned, in this case
