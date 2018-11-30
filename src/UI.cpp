@@ -37,6 +37,20 @@ void UI::CloseDialog()
   messagebox.active = false;
 }
 
+/* Close the main window */
+void UI::CloseWindow()
+{
+  // Clear all select level containers
+  level_select.buttons.clear();
+  level_select.image_buttons.clear();
+  level_select.level_names.clear();
+  // close window
+  window.close();
+  window_status = false;
+  exit_status = QUIT;
+}
+
+
 
 /*  Update UI based on sf::Events */
 
@@ -52,36 +66,49 @@ void UI::updateUI()
     // Only update if there is no active dialog
     if (! dialog_active)
     {
-      switch (event.type)
+      if (screen_mode == MAINSCREEN)
       {
-        case sf::Event::Closed:
-          window.close();
-          window_status = false;
-          break;
+        switch (event.type)
+        {
+          case sf::Event::Closed:
+            CloseWindow();
+            break;
 
-        case sf::Event::KeyPressed:
-          HandleKeyPress(event);
-          break;
+          case sf::Event::KeyPressed:
+            HandleKeyPress(event);
+            break;
 
-        case sf::Event::MouseMoved:
-          HandleMouseMove(event);
-          break;
+          case sf::Event::MouseMoved:
+            HandleMouseMove(event);
+            break;
 
-        case sf::Event::MouseButtonPressed:
-          HandleMousePress(event);
-          break;
+          case sf::Event::MouseButtonPressed:
+            HandleMousePress(event);
+            break;
 
-        case sf::Event::Resized:
-          HandleResize(event);
-          break;
+          case sf::Event::Resized:
+            HandleResize(event);
+            break;
 
-        default:
-          std::cout << "Other sf::Event" << std::endl;
+          default:
+            std::cout << "Other sf::Event" << std::endl;
+        }
+      }
+      else if (screen_mode == LEVELSELECT)
+      {
+        UpdateLevelSelect(event);
       }
 
       // Clear and display window
       window.clear(sf::Color(BackgoundColor));
-      DrawUI();
+      if (screen_mode == MAINSCREEN)
+      {
+        DrawUI();
+      }
+      else if (screen_mode == LEVELSELECT)
+      {
+        DrawLevelSelect();
+      }
       window.display();
 
     }
@@ -215,3 +242,297 @@ void UI::HandleResize(sf::Event event)
    dialog_active = true;
 
  }
+
+ /* Create screen for choosing level */
+ void UI::CreateSelectLevel()
+ {
+   // Recreate the window
+   //window.create(sf::VideoMode(800, 600), "Level select", sf::Style::Close);
+   window.setTitle("Level Select");
+   screen_mode = LEVELSELECT;
+
+   // Create UI for LevelSelect
+   std::shared_ptr<Button> cancel = std::make_shared<Button> ("Cancel", sf::Color::Blue, 100, 30);
+   cancel->setPosition(150, 500);
+   std::shared_ptr<Button> select = std::make_shared<Button> ("Select", sf::Color::Blue, 100, 30);
+   select->setPosition(550, 500);
+   select->setClickFunction(std::bind(&UI::level_selected_action, this));
+   cancel->setClickFunction(std::bind(&UI::cancel_to_mainscreen_action, this));
+   cancel->setActiveColor(sf::Color(15, 10, 75));
+   select->setActiveColor(sf::Color(15, 10, 75));
+   // Add to the container
+   level_select.buttons.push_back(cancel);
+   level_select.buttons.push_back(select);
+
+   // Create ImageButtons to switch shown level
+   std::shared_ptr<ImageButton> left = std::make_shared<ImageButton> ("", "../data/img/left_arrow.png", 100, 100);
+   std::shared_ptr<ImageButton> right = std::make_shared<ImageButton> ("", "../data/img/right_arrow.png", 100, 100);
+   right->setScale(0.2);
+   left->setScale(0.2);
+   right->setClickFunction(std::bind(&UI::LevelSelectNext, this));
+   left->setClickFunction(std::bind(&UI::LevelSelectPrev, this));
+   left->setPosition(470, 430);
+   right->setPosition(510, 430);
+   left->setCheckable(false);
+   right->setCheckable(false);
+
+   // Add to the container
+   level_select.image_buttons.push_back(left);
+   level_select.image_buttons.push_back(right);
+
+   // Get all level name in the correct directory
+   const std::string dir = "../data/level_files/";
+   level_select.max_level = -1;
+   try
+   {
+     for (auto &file : std::experimental::filesystem::directory_iterator(dir))
+     {
+       std::string level_name = file.path();
+       level_name.erase(0, dir.length());
+       level_select.level_names.push_back(level_name);
+       level_select.max_level ++; // update to get how many levels there are
+     }
+   } catch (std::exception &e)
+   {
+     // Directory probably doesn't exist
+     std::cout << e.what();
+   }
+
+
+   // Construct text and image of the first level
+   level_select.font.loadFromFile(FONT_COURIER);
+   level_select.level_name = sf::Text();
+   level_select.description = sf::Text();
+   level_select.level_name.setFont(level_select.font);
+   level_select.level_name.setColor(sf::Color::Blue);
+   level_select.level_name.setStyle(sf::Text::Bold);
+   level_select.level_name.setCharacterSize(30);
+   level_select.description.setFont(level_select.font);
+   level_select.description.setColor(sf::Color::Blue);
+   level_select.description.setCharacterSize(14);
+   level_select.level_name.setPosition(300, 30);
+   level_select.description.setPosition(50, 150);
+   level_select.level_image.setPosition(300, 100);
+
+   if (level_select.max_level == -1)
+   {
+     // No levels, also disable select button clicking
+     level_select.level_name.setString("No levels found");
+     select->enableClicking(false);
+   }
+   else
+   {
+     level_select.curr_level = 0;
+     UpdateLevelShown();
+   }
+ }
+
+
+void UI::DrawLevelSelect()
+{
+  for (auto it = level_select.buttons.begin(); it != level_select.buttons.end(); it++)
+  {
+    window.draw(**it);
+  }
+  for (auto it = level_select.image_buttons.begin(); it != level_select.image_buttons.end(); it++)
+  {
+    window.draw(**it);
+  }
+  // Draw texts and image
+  window.draw(level_select.level_name);
+  window.draw(level_select.description);
+  window.draw(level_select.level_image);
+}
+
+/* Update Level select screen */
+void UI::UpdateLevelSelect(sf::Event event)
+{
+  if (event.type == sf::Event::Closed)
+  {
+    // Stop program
+    CloseWindow();
+  }
+  if (event.type == sf::Event::MouseButtonPressed)
+  {
+    // Try to press level_select Buttons
+    bool clicked = false;
+
+    for (auto it = level_select.buttons.begin(); it != level_select.buttons.end(); it++)
+    {
+      if ((*it)->checkClicked(event.mouseButton.x, event.mouseButton.y))
+      {
+        clicked = true;
+        break;
+      }
+    }
+    if (! clicked)
+    {
+      for (auto it = level_select.image_buttons.begin(); it != level_select.image_buttons.end(); it++)
+      {
+        if ((*it)->checkClicked(event.mouseButton.x, event.mouseButton.y))
+        {
+          break;
+        }
+      }
+    }
+
+  }
+  else if (event.type == sf::Event::MouseMoved)
+  {
+    // Try to activate level_select Buttons
+    bool activated = false;
+
+    for (auto it = level_select.buttons.begin(); it != level_select.buttons.end(); it++)
+    {
+      if ((*it)->tryActivate(event.mouseMove.x, event.mouseMove.y))
+      {
+        activated = true;
+        break;
+      }
+    }
+    if (! activated)
+    {
+      for (auto it = level_select.image_buttons.begin(); it != level_select.image_buttons.end(); it++)
+      {
+        if ((*it)->tryActivate(event.mouseMove.x, event.mouseMove.y))
+        {
+          break;
+        }
+      }
+    }
+  }
+  else if (event.type == sf::Event::KeyPressed)
+  {
+    if (event.key.code == sf::Keyboard::Left)
+    {
+      LevelSelectPrev();
+    }
+    else if (event.key.code == sf::Keyboard::Right)
+    {
+      LevelSelectNext();
+    }
+  }
+}
+
+void UI::level_selected_action()
+{
+  // Close window and set exit status to STARTGAME
+  level_selected = level_select.level_name.getString();
+  CloseWindow();
+  exit_status = STARTGAME;
+}
+
+void UI::cancel_to_mainscreen_action()
+{
+  // Clear all select_level containers
+  level_select.buttons.clear();
+  level_select.image_buttons.clear();
+  level_select.level_names.clear();
+
+  // Switch to main screen (MainMenu / LevelEditor)
+  screen_mode = MAINSCREEN;
+  window.setTitle("Main Menu");
+
+}
+
+/*  Update to show correct level */
+void UI::UpdateLevelShown()
+{
+  std::string level = level_select.level_names[level_select.curr_level];
+  // Parse description
+  level_select.description.setString(ParseDescription("../data/level_files/" + level));
+
+  // remove .txt ending
+  level.erase(level.length() - 4);
+  level_select.level_name.setString(level);
+
+  // Set correct image to the sprite
+  if (level_select.level_texture.loadFromFile("../data/level_img/" + level + ".png"))
+  {
+    level_select.level_image.setTexture(level_select.level_texture);
+  }
+  else
+  {
+    // Loading failed, assign an empty image to correct position
+    level_select.level_image = sf::Sprite();
+    level_select.level_image.setPosition(300, 100);
+  }
+
+
+}
+
+/*  Parse description out of level file */
+std::string UI::ParseDescription(const std::string& filepath)
+{
+  // Description format: /* xxxxxx(can be multiple lines) */
+
+  std::string description = "";
+  std::ifstream file(filepath);
+  if (file.is_open())
+  {
+    std::string line;
+    while(getline(file, line))
+    {
+      description += line;
+      std::size_t end_index = line.find("*/");
+      if (end_index !=  std::string::npos)
+      {
+        // end found
+        std::size_t start_index = description.find("/*");
+        if (start_index != std::string::npos)
+        {
+          // Erase from begin to start index  + 3 and last three chars
+          description.erase(0, start_index + 3);
+          if (description.length() >= 3)
+          {
+            description.erase(description.length() - 3);
+          }
+          else
+          {
+            // Smt went wrong
+            return "";
+          }
+        }
+        else
+        {
+          // Smt went wrong
+          return "";
+        }
+
+        break;
+      }
+      description += "\n"; // Add line feed as in the original description
+    }
+  }
+  return description;
+}
+
+/*  Display new level */
+void UI::LevelSelectNext()
+{
+  if (level_select.curr_level < level_select.max_level)
+  {
+    // Ok to show next level
+    level_select.curr_level ++;
+    // Display correct image and texts
+    UpdateLevelShown();
+  }
+}
+
+/*  Display prev level */
+void UI::LevelSelectPrev()
+{
+  if (level_select.curr_level > 0)
+  {
+    // Ok to show prev level
+    level_select.curr_level --;
+    // Display correct image and texts
+    UpdateLevelShown();
+  }
+}
+
+/*  Get level path */
+std::string UI::getLevel()
+{
+  return "../data/level_files/" + level_selected + ".txt";
+}
