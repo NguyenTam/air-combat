@@ -14,7 +14,6 @@ int main ()
 
   sf::RenderWindow window;
   sf::RenderWindow dialog_window;
-  window.create(sf::VideoMode(800, 600), "Main Menu", sf::Style::Default);
 
   MainMenu menu = MainMenu(window, dialog_window);
 
