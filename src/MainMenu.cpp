@@ -20,6 +20,7 @@ int MainMenu::MainMenuButtons = 4;
 MainMenu::MainMenu(sf::RenderWindow &parent_window, sf::RenderWindow &dialog):
 UI(parent_window, dialog, sf::Color(150, 200, 255, 255))
 {
+  CreateMainScreen();
   CreateMainMenu();
 }
 
@@ -132,11 +133,11 @@ void MainMenu::CreateMainMenu()
 {
   // Create Buttons
   // First create the button with longest text and match other widths to it
-  std::shared_ptr<Button> button1 = std::make_shared<Button>("Start Game", sf::Color::Blue);
-  button1->setPosition(100, 100);
-  buttons.push_back(button1);
-  unsigned width = button1->getWidth();
-  unsigned height = button1->getHeight();
+  std::shared_ptr<Button> select_level = std::make_shared<Button>("Start Game", sf::Color::Blue);
+  select_level->setPosition(100, 100);
+  buttons.push_back(select_level);
+  unsigned width = select_level->getWidth();
+  unsigned height = select_level->getHeight();
   std::shared_ptr<Button> button2 = std::make_shared<Button>("Editor",
                                     sf::Color::Blue, width, height);
   std::shared_ptr<Button> button3 = std::make_shared<Button>("Settings",
@@ -151,16 +152,16 @@ void MainMenu::CreateMainMenu()
   buttons.push_back(button4);
 
   // Set click_actions IMPORTANT
-  button1->setClickFunction(std::bind(&MainMenu::Test1, this));
+  select_level->setClickFunction(std::bind(&MainMenu::select_level_action, this));
   button2->setClickFunction(std::bind(&MainMenu::Test2, this));
   button3->setClickFunction(std::bind(&MainMenu::Test3, this));
   button4->setClickFunction(std::bind(&MainMenu::Test4, this));
 
   // Set active colors
-  button1->setActiveColor(sf::Color(sf::Color::Yellow));
-  button2->setActiveColor(sf::Color(sf::Color::Yellow));
-  button3->setActiveColor(sf::Color(sf::Color::Yellow));
-  button4->setActiveColor(sf::Color(sf::Color::Yellow));
+  select_level->setActiveColor(sf::Color(15, 10, 75));
+  button2->setActiveColor(sf::Color(15, 10, 75));
+  button3->setActiveColor(sf::Color(15, 10, 75));
+  button4->setActiveColor(sf::Color(15, 10, 75));
 
 
 }
@@ -197,4 +198,16 @@ void MainMenu::ClickCurrentButton()
       break;
     }
   }
+}
+
+/*  Activate level select */
+void MainMenu::select_level_action()
+{
+  CreateSelectLevel();
+}
+
+/*  Create / recreate window for MainMenu */
+void MainMenu::CreateMainScreen()
+{
+  window.create(sf::VideoMode(800, 600), "Main Menu", sf::Style::Close);
 }

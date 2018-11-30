@@ -42,8 +42,12 @@ class MainMenu: public UI
       */
     MainMenu(sf::RenderWindow &parent_window, sf::RenderWindow &dialog);
 
+    /**
+      *   @brief Action for select_level Button
+      */
+    void select_level_action();
+
     /*  Only for testing */
-    void Test1(){std::cout << "BUTTON1____________CLICKED" << std::endl;}
     void Test2(){std::cout << "BUTTON2____________CLICKED" << std::endl;}
     void Test3(){std::cout << "BUTTON3____________CLICKED" << std::endl;}
     void Test4(){std::cout << "BUTTON4____________CLICKED" << std::endl;}
@@ -76,6 +80,12 @@ class MainMenu: public UI
       *   @remark Defined as a pure virtual method in UI
       */
     virtual void HandleMousePress(sf::Event event);
+
+    /**
+      *   @brief Recreates MainMenu window
+      *   @remark Defined as pure virtual method in UI
+      */
+    virtual void CreateMainScreen();
 
 
   private:
