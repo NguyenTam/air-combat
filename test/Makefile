@@ -1,5 +1,11 @@
 # Simple Makefile for test files
 
+# About automatic variables $^ and $@. $^ equals to target name. $@ equals to list of dependency.
+# Example:
+# output_test: foo1.o foo2.o foo3_test.cpp
+# => $^ is "foo1.o foo2.o foo3_test.cpp"
+# => $@ is "output_test"
+
 CC = g++
 CFLAGS = -Wall -Wextra -pedantic -g -std=c++17
 LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system -lstdc++fs
@@ -25,10 +31,10 @@ LevelEntity_test: LevelEntity.o LevelEntity_test.cpp
 ResourceManager_test: CommonDefinitions.o ResourceManager.o ResourceManager_test.cpp
 	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
-GameEngine_test: GameEngine.o GameEngine_test.cpp
+GameEngine_test: CommonDefinitions.o ResourceManager.o GameEngine.o GameEngine_test.cpp
 	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
-# Objects
+# Instruction to compile from cpp-files in src-folder to object-files.
 %.o:	$(SRC)%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
