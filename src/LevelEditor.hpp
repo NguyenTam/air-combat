@@ -86,6 +86,7 @@ struct SaveLevelUI
   std::shared_ptr<Button> use_old_description; /**< Button to use old description */
   std::vector<std::shared_ptr <Button>> buttons; /**< Container for Buttons */
   bool saving_failed = false; /**< Whether level saving has failed */
+  bool opened_level = false; /**< Whether user has opened level */
 
 };
 

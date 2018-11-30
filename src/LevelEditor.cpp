@@ -1005,8 +1005,8 @@ void LevelEditor::SaveLevel()
   saveUI.use_old_name->setClickFunction(std::bind(&LevelEditor::use_old_name_action, this));
   saveUI.use_old_description->setClickFunction(std::bind(&LevelEditor::use_old_description_action, this));
 
-  // Deactivate by default if no level_selected
-  if (level_selected == "")
+  // Deactivate by default if no level opened
+  if (! saveUI.opened_level)
   {
     saveUI.use_old_name->setEnabled(false);
     saveUI.use_old_description->setEnabled(false);
@@ -1180,7 +1180,6 @@ void LevelEditor::writeLevel()
     horizontal_toolbar.info_text.setString("Level succesfully saved");
     horizontal_toolbar.info_counter = 0;
 
-    dialog_window.clear();
     // Draw Level to rendertexture and save the texture as an image
     sf::RenderTexture level_content;
     level_content.create(LevelEditor::Window_Width / 2, LevelEditor::Window_Height / 2);
@@ -1234,6 +1233,23 @@ void LevelEditor::level_selected_action()
 {
   // Construct Level
   level_selected = level_select.level_name.getString();
+  std::string levelpath = getLevel();
+  if (level.parseLevel(levelpath))
+  {
+    // Success
+    // Show info text
+    horizontal_toolbar.info_text.setString("Level successfully opened");
+    // Make it possible to save with old name & description
+    saveUI.opened_level = true;
+  }
+  else
+  {
+    horizontal_toolbar.info_text.setString("Level opening failed");
+    // Hide Buttons that make possible to save with old name & description
+    saveUI.opened_level = false;
+  }
+  horizontal_toolbar.info_counter = 0;
+
   // Go back to main screen
   cancel_to_mainscreen_action();
 }
