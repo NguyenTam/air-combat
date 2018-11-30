@@ -16,6 +16,7 @@
 #include <fstream>
 #include <experimental/filesystem>
 #include "LevelEntity.hpp"
+#include "CommonDefinitions.hpp"
 
 
 /*  Macros */
@@ -86,6 +87,11 @@ class Level
       */
     void drawLevel(sf::RenderWindow &window);
 
+    /**
+      *   @brief Draw Level to RenderTexture
+      *   @param texture RenderTexture where Level is drawn
+      *   @remark This is used to create an image of the Level
+      */
     void drawTexture(sf::RenderTexture &texture);
 
     /**
@@ -137,7 +143,7 @@ class Level
       *   point of the level
       *   @return Returns the right most x coordinate
       */
-    float getLevelWidth();
+    float getLevelWidth() const;
 
     /**
       *   @brief Parse Level from levelfile

@@ -406,6 +406,16 @@ std::ostream& operator<<(std::ostream &os, const Level &level)
       os << (*it)->getWidth() << ";" << (*it)->getHeight() << std::endl;
     }
   }
+  // Now write InvisibleWalls to edges of the Level
+  float max_width = level.getLevelWidth();
+  // Top wall (all Wall orientations are 1)
+  os << "InvisibleWall;0;0;1;" << max_width + 1 << ";1" << std::endl;
+  // Bottom wall
+  os << "InvisibleWall;0;" <<  Game::HEIGHT << ";1;" << max_width + 1 << ";1" << std::endl;
+  // Left Wall
+  os << "InvisibleWall;0;0;1;1;" << Game::HEIGHT << std::endl;
+  // Right Wall
+  os << "InvisibleWall;" << max_width + 1 << ";0;1;1;" << Game::HEIGHT << std::endl;
 
   return os;
 }
@@ -682,7 +692,7 @@ void Level::RemoveSpecificEntities(int type, std::shared_ptr<LevelEntity> not_re
 }
 
 /*  Get Level width */
-float Level::getLevelWidth()
+float Level::getLevelWidth() const
 {
   float x_max = 0;
   for (auto it = level_entities.begin(); it != level_entities.end(); it++)
