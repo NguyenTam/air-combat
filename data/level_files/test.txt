@@ -1,6 +1,8 @@
 test
-/* Used to test level       
-writing */
+/* Demonstrates that
+Level Select works
+also if level image
+is missing */
 RedInfantry;94;199;1
 RedInfantry;235;93;1
 BlueInfantry;204;293;1

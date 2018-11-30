@@ -1,0 +1,34 @@
+Level1
+/*                         
+Made this level for     
+testing purposes.       
+Represents the basic    
+level style and format */
+Ground;2;501;1;715;99
+Ground;717;531;1;775;69
+Ground;1112;392;1;381;208
+BlueInfantry;737;498;1;19;32
+BlueInfantry;770;498;1;19;32
+RedInfantry;997;498;0;19;32
+RedInfantry;1032;498;0;19;32
+RedInfantry;926;498;0;19;32
+RedHangar;1144;365;1;28;26
+RedAntiAircraft;1064;499;0;36;31
+RedAntiAircraft;1226;360;0;36;31
+RedBase;1333;328;1;76;63
+Tree;1465;355;1;27;36
+Tree;1426;355;1;27;36
+Tree;831;494;1;27;36
+Rock;1283;371;1;25;20
+Rock;636;480;1;25;20
+BlueAirplane;212;172;1;38;18
+RedAirplane;991;234;0;38;18
+RedAirplane;1188;294;0;38;18
+RedAirplane;1216;67;0;38;18
+RedAirplane;1289;189;0;38;18
+BlueAntiAircraft;389;469;1;36;31
+BlueAntiAircraft;508;469;1;36;31
+BlueHangar;283;474;1;28;26
+Tree;205;464;1;27;36
+Tree;157;464;1;27;36
+BlueBase;32;437;1;76;63
