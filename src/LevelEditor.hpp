@@ -273,8 +273,25 @@ class LevelEditor: public UI
       */
     void writeLevel();
 
+    /**
+      *   @brief Click action for use_old_name button (Save Level)
+      */
+    void use_old_name_action();
+
+    /**
+      *   @brief Click action for use_old_description button (Save Level)
+      */
+    void use_old_description_action();
+
 
   protected:
+
+    /**
+      *   @brief Create editor window
+      *   @details Sets up buttons and other LevelEditor UI objects
+      *   @remark Called from the constructor. Defined as pure virtual in UI
+      */
+    virtual void CreateMainScreen();
 
     /**
       *   @brief Draw all buttons and other UI objects
@@ -336,14 +353,19 @@ class LevelEditor: public UI
       */
     virtual void DrawDialog();
 
-  private:
+    /**
+      *   @brief Action for level_selected button (UI::level_select)
+      *   @remark Reimplemented from the base class UI
+      */
+    virtual void level_selected_action();
 
     /**
-      *   @brief Create editor window
-      *   @details Sets up buttons and other LevelEditor UI objects
-      *   @remark Called from the constructor
+      *   @brief Action for cancel button in UI::level_select
+      *   @Reimplemented from the base class UI
       */
-    void CreateEditorWindow();
+    virtual void cancel_to_mainscreen_action();
+
+  private:
 
     /**
       *   @brief Draw current editor window

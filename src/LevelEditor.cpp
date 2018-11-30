@@ -18,14 +18,14 @@ unsigned LevelEditor::Window_Height = 600;
 LevelEditor::LevelEditor(sf::RenderWindow &render_window, sf::RenderWindow &dialog):
 UI(render_window, dialog, sf::Color::White)
 {
-  CreateEditorWindow();
+  CreateMainScreen();
   ui_view = window.getDefaultView();
   level.setYLimit(LevelEditor::Window_Height); // This must be set
 }
 
 /*  Create LevelEditor UI */
 
-void LevelEditor::CreateEditorWindow()
+void LevelEditor::CreateMainScreen()
 {
   // Recreate the window with correct size
   unsigned window_width = LevelEditor::Window_Width + vertical_toolbar_width;
@@ -498,7 +498,13 @@ void LevelEditor::save_button_action()
 
 void LevelEditor::open_button_action()
 {
-  std::cout << "Open button pressed" << std::endl;
+  // Set correct window
+
+  window.setSize(sf::Vector2u(LevelEditor::Window_Width, LevelEditor::Window_Height));
+  // Reset view and update set it to window
+  ui_view.reset(sf::FloatRect(0, 0, LevelEditor::Window_Width, LevelEditor::Window_Height));
+  window.setView(ui_view);
+  CreateSelectLevel();
 }
 
 void LevelEditor::help_button_action()
@@ -996,10 +1002,16 @@ void LevelEditor::SaveLevel()
   saveUI.use_old_description->setPosition(50, 130);
   saveUI.use_old_name->setActiveColor(sf::Color(50, 50, 50, 180));
   saveUI.use_old_description->setActiveColor(sf::Color(50, 50, 50, 180));
+  saveUI.use_old_name->setClickFunction(std::bind(&LevelEditor::use_old_name_action, this));
+  saveUI.use_old_description->setClickFunction(std::bind(&LevelEditor::use_old_description_action, this));
 
-  // Deactivate by default
-  saveUI.use_old_name->setEnabled(false);
-  saveUI.use_old_description->setEnabled(false);
+  // Deactivate by default if no level_selected
+  if (level_selected == "")
+  {
+    saveUI.use_old_name->setEnabled(false);
+    saveUI.use_old_description->setEnabled(false);
+  }
+
 
   saveUI.buttons.push_back(saveUI.use_old_name);
   saveUI.buttons.push_back(saveUI.use_old_description);
@@ -1149,12 +1161,41 @@ void LevelEditor::writeLevel()
   // Set TextInputs deactivated
   saveUI.name_input.deactivate();
   saveUI.description_input.deactivate();
-  if (level.saveToFile(saveUI.name_input.getInputText(), saveUI.description_input.getInputText(), false))
+  // Overwrite old level if user has set name matching level_selected
+  bool ret_value = false;
+  if (saveUI.name_input.getInputText() == level_selected && level_selected != "")
+  {
+    // Truncate the old level
+    ret_value = level.saveToFile(saveUI.name_input.getInputText(), saveUI.description_input.getInputText(), true);
+  }
+  else
+  {
+    // Don't truncate (overwrite)
+    ret_value = level.saveToFile(saveUI.name_input.getInputText(), saveUI.description_input.getInputText(), false);
+  }
+  if (ret_value)
   {
     // Successfully saved
-    cancelSaving();
+
     horizontal_toolbar.info_text.setString("Level succesfully saved");
     horizontal_toolbar.info_counter = 0;
+
+    dialog_window.clear();
+    // Draw Level to rendertexture and save the texture as an image
+    sf::RenderTexture level_content;
+    level_content.create(LevelEditor::Window_Width / 2, LevelEditor::Window_Height / 2);
+    sf::View texture_view;
+    texture_view.setSize(LevelEditor::Window_Width / 2, LevelEditor::Window_Height / 2);
+    texture_view.zoom(4); // zoom out ( make 1/ 4 of the normal size)
+    texture_view.setCenter(level.getLevelWidth() / 2, LevelEditor::Window_Height / 2);
+    level_content.setView(texture_view);
+    level_content.clear(sf::Color::White);
+    level.drawTexture(level_content);
+    level_content.display();
+    // The image is named as the level name + .png (and correct path to the folder)
+    std::string image_name = "../data/level_img/" + saveUI.name_input.getInputText() + ".png";
+    level_content.getTexture().copyToImage().saveToFile(image_name);
+    cancelSaving();
   }
   else
   {
@@ -1162,4 +1203,51 @@ void LevelEditor::writeLevel()
     saveUI.saving_failed = true;
   }
 
+}
+
+/*  Cancel from Level Select */
+void LevelEditor::cancel_to_mainscreen_action()
+{
+  // Clear all select_level containers
+  level_select.buttons.clear();
+  level_select.image_buttons.clear();
+  level_select.level_names.clear();
+
+  // Switch to main screen (LevelEditor)
+  screen_mode = MAINSCREEN;
+
+  // Resize the window and set correct title
+  window.setSize(sf::Vector2u(LevelEditor::Window_Width + vertical_toolbar_width,
+                  LevelEditor::Window_Height + horizontal_toolbar_height ));
+  window.setTitle("Level Editor");
+  ui_view.setSize(LevelEditor::Window_Width + vertical_toolbar_width,
+                  LevelEditor::Window_Height + horizontal_toolbar_height);
+  ui_view.setCenter((LevelEditor::Window_Width + vertical_toolbar_width) / 2,
+                 (LevelEditor::Window_Height + horizontal_toolbar_height) / 2);
+
+  // Deactivate active color on open button
+  vertical_toolbar.open_button->activate(false);
+}
+
+/*  Update Level UI to match opened Level */
+void LevelEditor::level_selected_action()
+{
+  // Construct Level
+  level_selected = level_select.level_name.getString();
+  // Go back to main screen
+  cancel_to_mainscreen_action();
+}
+
+
+/*  Use old name in Save Level */
+void LevelEditor::use_old_name_action()
+{
+  saveUI.name_input.setText(level_selected);
+}
+
+/*  Use old description in Save Level */
+void LevelEditor::use_old_description_action()
+{
+  std::string new_desc = level_select.description.getString();
+  saveUI.description_input.setText(new_desc);
 }
