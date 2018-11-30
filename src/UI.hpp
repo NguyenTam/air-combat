@@ -14,7 +14,12 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <iostream>
+#include <vector>
+#include <memory>
+#include <experimental/filesystem>
+#include <fstream>
 #include "button.hpp"
+#include "image_button.hpp"
 
 
 
@@ -32,7 +37,41 @@ struct MessageBox
 };
 
 
+enum ScreenMode
+{
+  MAINSCREEN,
+  LEVELSELECT,
+  SETTINGS,
+  STATS,
 
+};
+
+enum ExitStatus
+{
+  QUIT,
+  STARTGAME,
+  STARTEDITOR,
+};
+
+/**
+  *   @struct LevelSelect
+  *   @brief Struct used to draw Level select window
+  */
+struct LevelSelect
+{
+  sf::Text level_name; /**< Level name displayed */
+  sf::Font font; /**< Font used in texts FONT_COURIER */
+  sf::Text description; /**< Level description */
+  sf::Texture level_texture; /**< Texture of the current level image */
+  sf::Sprite level_image; /**< Image of the currently displayed level */
+
+  std::vector <std::shared_ptr<Button>> buttons; /**< Cancel and select buttons */
+  std::vector <std::shared_ptr<ImageButton>> image_buttons; /**< Left & right buttons */
+  std::vector <std::string> level_names; /**< Container for all level filenames */
+  int curr_level = -1;
+  int max_level = -1;
+
+};
 
 /**
   *   @class UI
@@ -67,9 +106,17 @@ class UI
     int getStatus();
 
     /**
-      *   Close active dialog
+      *   @brief Close active dialog
       */
     void CloseDialog();
+
+    /**
+      *   @brief Get level path which user selected
+      *   @details Intended to be used from main to get correct level file
+      *   name for the main game
+      *   @return Returns level name string (path + .txt added)
+      */
+    std::string getLevel();
 
 
   protected:
@@ -152,6 +199,72 @@ class UI
       */
     virtual void HandleDialogKeyPress(sf::Event event) {std::cout << event.type << std::endl;}
 
+    /**
+      *   @brief Create select level screen
+      *   @details This method is called from MainMenu and LevelEditor
+      */
+    void CreateSelectLevel();
+
+    /**
+      *   @brief Draw Level select window
+      */
+    void DrawLevelSelect();
+
+    /**
+      *   @brief Close main window
+      *   @details This is executed when user wants to stop the program
+      */
+    void CloseWindow();
+
+    /**
+      *   @brief Update Level select screen
+      *   @param event sf::Event
+      */
+    void UpdateLevelSelect(sf::Event);
+
+    /**
+      *   @brief Action for select_level select button
+      *   @details Does preparations to starts the main game
+      *   @remark Needs to be reimplemented in LevelEditor
+      */
+    virtual void level_selected_action();
+
+    /**
+      *   @brief Action for select_level cancel button
+      *   @details Switches screen_mode to MAINSCREEN
+      *   @brief Needs to be reimplemented in LevelEditor
+      */
+    virtual void cancel_to_mainscreen_action();
+
+    /**
+      *   @brief Pure virtual method which recreates correct window
+      *   @details This has to be defined in MainMenu and LevelEditor
+      */
+    virtual void CreateMainScreen() = 0;
+
+    /**
+      *   @brief Update select_level to show corret level in screen
+      */
+    void UpdateLevelShown();
+
+    /**
+      *   @brief Parse description from Level file
+      *   @filepath Path to the Level file
+      *   @return Returns description as a string
+      */
+    std::string ParseDescription(const std::string& filepath);
+
+    /**
+      *   @brief Display next level
+      *   @remark Does nothing if current level is the last level
+      */
+    void LevelSelectNext();
+
+    /**
+      *   @brief Display prev level
+      *   @brief Does nothing if current level is first level
+      */
+    void LevelSelectPrev();
 
     /*  Variables */
 
@@ -161,5 +274,9 @@ class UI
     int window_status = 1; /**< 1 window active, 0 closed */
     sf::Color BackgoundColor; /**< Background color */
     struct MessageBox messagebox; /**< MessageBox instance */
+    ScreenMode screen_mode = MAINSCREEN;
+    ExitStatus exit_status;
+    LevelSelect level_select;
+    std::string level_selected; /**< Level name which user selected */
 
 };
