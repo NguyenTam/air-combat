@@ -118,6 +118,14 @@ class TextInput: public sf::Drawable
       */
       void highlightEffect();
 
+    /**
+      *   @brief Set new input text
+      *   @param text New input text
+      *   @remark This method assumes text was initially created with TextInput
+      *   it won't work in a general case
+      */
+      void setText(std::string text);
+
 
   protected:
 

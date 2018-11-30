@@ -349,3 +349,43 @@ void TextInput::highlightEffect()
   }
   cycles ++;
 }
+
+/*  Set new input text */
+void TextInput::setText(std::string text)
+{
+  // Correct chars_on_lines
+  if (max_lines > 0)
+  {
+    line = 1; //This needs to be inited
+    for (int i = 0; i < max_lines; i++)
+    {
+      // Reset chars_on_lines
+      chars_on_lines[i] = 0;
+    }
+    // Create chars_on_lines based on the text
+    for (auto it = text.begin(); it != text.end(); it++)
+    {
+      if (*it == '\n')
+      {
+        // Go to next line and reset chars on that line
+        line ++;
+        if (line >= max_lines)
+        {
+          // String too long, erase the end of it
+          text.erase(it, text.end());
+          break;
+        }
+      }
+      else
+      {
+        // Correct char amount on lines
+        chars_on_lines[line -1] += 1;
+      }
+    }
+
+    // Set string
+    input = text;
+    this->text.setString(input);
+  }
+  HighlightCurrent();
+}
