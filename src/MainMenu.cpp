@@ -17,13 +17,28 @@ int MainMenu::MainMenuButtons = 4;
 
 /*  Constructor */
 
-MainMenu::MainMenu(sf::RenderWindow &parent_window, sf::RenderWindow &dialog):
-UI(parent_window, dialog, sf::Color(150, 200, 255, 255))
+MainMenu::MainMenu(sf::RenderWindow &parent_window, sf::RenderWindow &dialog,
+                  sf::RenderWindow &help):
+UI(parent_window, dialog, help, sf::Color(150, 200, 255, 255))
 {
-  CreateMainScreen();
+  //createMainScreen();
+  ui_view = window.getDefaultView();
   CreateMainMenu();
 }
 
+
+/*  Create / recreate window for MainMenu */
+void MainMenu::createMainScreen()
+{
+  // Set window active
+  window_status = true;
+
+  window.setSize(sf::Vector2u(Game::WIDTH, Game::HEIGHT));
+  window.setTitle("Main Menu");
+  // Reset view and update set it to window
+  ui_view.reset(sf::FloatRect(0, 0, Game::WIDTH, Game::HEIGHT));
+  window.setView(ui_view);
+}
 
 /* Draw UI */
 
@@ -45,8 +60,7 @@ void MainMenu::DrawUI()
    if (event.key.code == sf::Keyboard::Escape)
    {
      // Close window
-     window.close();
-     window_status = false;
+     CloseWindow();
    }
    else if (event.key.code == sf::Keyboard::Up)
    {
@@ -138,14 +152,14 @@ void MainMenu::CreateMainMenu()
   buttons.push_back(select_level);
   unsigned width = select_level->getWidth();
   unsigned height = select_level->getHeight();
-  std::shared_ptr<Button> button2 = std::make_shared<Button>("Editor",
+  std::shared_ptr<Button> start_editor = std::make_shared<Button>("Editor",
                                     sf::Color::Blue, width, height);
   std::shared_ptr<Button> button3 = std::make_shared<Button>("Settings",
                                     sf::Color::Blue, width, height);
   std::shared_ptr<Button> button4 = std::make_shared<Button>("Statistics",
                                     sf::Color::Blue, width, height);
-  button2->setPosition(100, 200);
-  buttons.push_back(button2);
+  start_editor->setPosition(100, 200);
+  buttons.push_back(start_editor);
   button3->setPosition(100, 300);
   buttons.push_back(button3);
   button4->setPosition(100, 400);
@@ -153,13 +167,13 @@ void MainMenu::CreateMainMenu()
 
   // Set click_actions IMPORTANT
   select_level->setClickFunction(std::bind(&MainMenu::select_level_action, this));
-  button2->setClickFunction(std::bind(&MainMenu::Test2, this));
+  start_editor->setClickFunction(std::bind(&MainMenu::start_editor_action, this));
   button3->setClickFunction(std::bind(&MainMenu::Test3, this));
   button4->setClickFunction(std::bind(&MainMenu::Test4, this));
 
   // Set active colors
   select_level->setActiveColor(sf::Color(15, 10, 75));
-  button2->setActiveColor(sf::Color(15, 10, 75));
+  start_editor->setActiveColor(sf::Color(15, 10, 75));
   button3->setActiveColor(sf::Color(15, 10, 75));
   button4->setActiveColor(sf::Color(15, 10, 75));
 
@@ -206,8 +220,20 @@ void MainMenu::select_level_action()
   CreateSelectLevel();
 }
 
-/*  Create / recreate window for MainMenu */
-void MainMenu::CreateMainScreen()
+/*  Swicth to LevelEditor */
+void MainMenu::start_editor_action()
 {
-  window.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Main Menu", sf::Style::Close);
+  // Set correct exit status
+  exit_status = ExitStatus::STARTEDITOR;
+  // Clear all Buttons
+
+  window_status = false;
+}
+
+/*  Init MainMenu */
+void MainMenu::init()
+{
+  ClearLevelSelectContainers();
+  // Switch to the main menu screen
+  screen_mode = MAINSCREEN;
 }

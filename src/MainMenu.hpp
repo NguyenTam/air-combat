@@ -40,18 +40,39 @@ class MainMenu: public UI
       *   @details Creates MainMenu window
       *   @param parent_window RenderWindow which is used to display MainMenu
       *   @param dialog RenderWindow for dialogs
+      *   @param help RenderWindow for possible help screen
       */
-    MainMenu(sf::RenderWindow &parent_window, sf::RenderWindow &dialog);
+    MainMenu(sf::RenderWindow &parent_window, sf::RenderWindow &dialog,
+              sf::RenderWindow &help);
+
+    /**
+      *   @brief Recreates MainMenu window
+      *   @remark Defined as pure virtual method in UI
+      */
+    virtual void createMainScreen();
 
     /**
       *   @brief Action for select_level Button
       */
     void select_level_action();
 
+    /**
+      *   @brief Action for start_editor Button
+      *   @details Do necessary changes to swicth to LevelEditor
+      */
+    void start_editor_action();
+
     /*  Only for testing */
-    void Test2(){std::cout << "BUTTON2____________CLICKED" << std::endl;}
     void Test3(){std::cout << "BUTTON3____________CLICKED" << std::endl;}
     void Test4(){std::cout << "BUTTON4____________CLICKED" << std::endl;}
+
+    /**
+      *   @brief Init MainMenu to safe state to restart it
+      *   @details Currently the menu buttons aren't cleared
+      *   because those aren't recreated (like LevelEditor recreates Toolbars)
+      *   @remark Defined as pure virtual in UI
+      */
+    virtual void init();
 
   protected:
 
@@ -81,12 +102,6 @@ class MainMenu: public UI
       *   @remark Defined as a pure virtual method in UI
       */
     virtual void HandleMousePress(sf::Event event);
-
-    /**
-      *   @brief Recreates MainMenu window
-      *   @remark Defined as pure virtual method in UI
-      */
-    virtual void CreateMainScreen();
 
 
   private:
