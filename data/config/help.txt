@@ -1,0 +1,37 @@
+1. Placing Entities
+  - Click entity symbol
+  - Move cursor on level and click left mouse
+  - Drag the entity to desired position, another click locks it
+  - Flip entity with right mouse (hover mouse over entity)
+  Notice: View can be switched by arrow keys or buttons
+
+2. Placing Ground
+  - After initially placed, left mouse starts resizing
+  - Move mouse, set desired size and lock with another click
+  - Previous procedure can be repeated while ground isn't
+    locked. The final locking is done with Place button
+  - When Ground button is active, other entities aren't
+    available. Use Cancel button to deactivate Ground
+  Notice: Ground entities can't be flipped
+
+3. Removing Entities
+  - Activate Erase
+  - Click entity to permanently erase it from level
+
+Save
+  - Save starts save dialog
+    * Main window is deactivated
+  - Level Name can only be one 'word'
+  - Description has more free format
+  - If level is created by opening an existing one,
+    its level name and description can be used
+  Notice: Using existing name will overwrite the old level
+
+Open
+  - Use arrows keys or buttons to change level
+  - Open level by Select button
+  - Cancel without opening with Cancel
+
+Menu
+  - Go back to Main Menu
+  Notice: Level isn't saved
