@@ -11,22 +11,33 @@
 
 /*  Constructor for LevelEditor */
 
-LevelEditor::LevelEditor(sf::RenderWindow &render_window, sf::RenderWindow &dialog):
-UI(render_window, dialog, sf::Color::White)
+LevelEditor::LevelEditor(sf::RenderWindow &render_window, sf::RenderWindow &dialog,
+                        sf::RenderWindow &help):
+UI(render_window, dialog, help, sf::Color::White)
 {
-  CreateMainScreen();
+  //createMainScreen();
   ui_view = window.getDefaultView();
   level.setYLimit(Game::HEIGHT); // This must be set
 }
 
 /*  Create LevelEditor UI */
 
-void LevelEditor::CreateMainScreen()
+void LevelEditor::createMainScreen()
 {
+  // Set window active
+  window_status = true;
+
   // Recreate the window with correct size
   unsigned window_width = Game::WIDTH + vertical_toolbar_width;
   unsigned window_height = Game::HEIGHT + horizontal_toolbar_height;
-  window.create(sf::VideoMode(window_width, window_height), "Level Editor", sf::Style::Close);
+
+  // Resize window and also adjust view
+  window.setSize(sf::Vector2u(window_width, window_height));
+  window.setTitle("Level Editor");
+  ui_view.setSize(Game::WIDTH + vertical_toolbar_width,
+                  Game::HEIGHT + horizontal_toolbar_height);
+  ui_view.setCenter((Game::WIDTH + vertical_toolbar_width) / 2,
+                 (Game::HEIGHT + horizontal_toolbar_height) / 2);
 
   CreateVerticalToolbar(window_height);
   CreateHorizontalToolbar(window_width);
@@ -68,8 +79,7 @@ void LevelEditor::HandleKeyPress(sf::Event event)
   if (event.key.code == sf::Keyboard::Escape)
   {
     // Close window
-    window.close();
-    window_status = false;
+    CloseWindow();
   }
   else if (event.key.code == sf::Keyboard::Right)
   {
@@ -426,7 +436,7 @@ void LevelEditor::CreateVerticalToolbar(unsigned window_height)
   float height = vertical_toolbar.save_button->getHeight();
   vertical_toolbar.open_button = std::make_shared<Button>("Open", sf::Color(50, 50, 50, 100), width, height);
   vertical_toolbar.help_button = std::make_shared<Button>("Help", sf::Color(50, 50, 50, 100), width, height);
-  vertical_toolbar.quit_button = std::make_shared<Button>("Quit", sf::Color(50, 50, 50, 100), width, height);
+  vertical_toolbar.quit_button = std::make_shared<Button>("Menu", sf::Color(50, 50, 50, 100), width, height);
 
   // Set text colors
   vertical_toolbar.save_button->setTextColor(sf::Color::White);
@@ -505,12 +515,46 @@ void LevelEditor::open_button_action()
 
 void LevelEditor::help_button_action()
 {
-  std::cout << "Help button pressed" << std::endl;
+  // Create and activate help window
+  help_window.create(sf::VideoMode(400, 600), "Help", sf::Style::Close);
+  help_font.loadFromFile(FONT_ARIAL);
+  help_title = sf::Text("Help" , help_font, 30);
+  help_title.setStyle(sf::Text::Bold | sf::Text::Underlined);
+  help_title.setPosition(100, 20);
+  help_title.setColor(sf::Color::Blue);
+
+  help_text = sf::Text("Sorry, Help unavailable", help_font, 12);
+  help_text.setPosition(50, 70);
+  help_text.setColor(sf::Color::Black);
+
+  // Load text from file
+  std::string help_content;
+  std::ifstream file("../data/config/help.txt");
+  if (file.is_open())
+  {
+    std::string line;
+    while(getline(file, line))
+    {
+      // Read all lines to help_content
+      help_content += line;
+      help_content += "\n";
+    }
+    help_text.setString(help_content);
+  }
+  // Set help button not active (otherwise is active until mouse is moved)
+  vertical_toolbar.help_button->activate(false);
+  help_active = true;
 }
 
 void LevelEditor::quit_button_action()
 {
-  std::cout << "Quit buttons pressed" << std::endl;
+  // First clear all entities from level
+  level.clearAll();
+
+  // Return to main menu
+  exit_status = ExitStatus::MAINMENU;
+  help_window.close();
+  window_status = false;
 }
 
 
@@ -1262,4 +1306,45 @@ void LevelEditor::use_old_description_action()
 {
   std::string new_desc = level_select.description.getString();
   saveUI.description_input.setText(new_desc);
+}
+
+/*  Clear all buttons from containers to avoid duplicates */
+void LevelEditor::ClearAllButtons()
+{
+   // First vertical toolbar buttons
+   if (! vtoolbar_buttons.empty())
+   {
+     vtoolbar_buttons.clear();
+   }
+
+  // The horizontal_toolbar
+  if (! horizontal_toolbar.essentials.empty())
+  {
+    horizontal_toolbar.essentials.clear();
+  }
+  if (! horizontal_toolbar.objectives.empty())
+  {
+    horizontal_toolbar.objectives.clear();
+  }
+  if (! horizontal_toolbar.barriers.empty())
+  {
+    horizontal_toolbar.barriers.clear();
+  }
+
+  // Save Level buttons
+  if (! saveUI.buttons.empty())
+  {
+    saveUI.buttons.clear();
+  }
+}
+
+/*  Init LevelEditor */
+void LevelEditor::init()
+{
+  // Clear all buttons
+  ClearAllButtons();
+  // Clear level select related containers
+  ClearLevelSelectContainers();
+  // Set Level opened to standard value
+  saveUI.opened_level = false;
 }

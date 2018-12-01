@@ -106,9 +106,17 @@ class LevelEditor: public UI
       *   @brief Constructor for LevelEditor
       *   @param render_window RenderWindow instance as reference
       *   @param dialog Another RenderWindow used for dialogs
-      *   @remark Class UI constructor with render_window as an argument
+      *   @param help RenderWindow for help screen
       */
-    LevelEditor(sf::RenderWindow &render_window, sf::RenderWindow &dialog);
+    LevelEditor(sf::RenderWindow &render_window, sf::RenderWindow &dialog,
+                sf::RenderWindow &help);
+
+    /**
+      *   @brief Create editor window
+      *   @details Sets up buttons and other LevelEditor UI objects
+      *   @remark Called from the constructor. Defined as pure virtual in UI
+      */
+    virtual void createMainScreen();
 
     /**
       *   @brief Click action for add_friendly_infantry button (horizontal_toolbar)
@@ -279,15 +287,14 @@ class LevelEditor: public UI
       */
     void use_old_description_action();
 
+    /**
+      *   @brief Init LevelEditor to safe state to restart it
+      *   @remark Defined as pure virtual in UI
+      */
+    virtual void init();
+
 
   protected:
-
-    /**
-      *   @brief Create editor window
-      *   @details Sets up buttons and other LevelEditor UI objects
-      *   @remark Called from the constructor. Defined as pure virtual in UI
-      */
-    virtual void CreateMainScreen();
 
     /**
       *   @brief Draw all buttons and other UI objects
@@ -400,8 +407,20 @@ class LevelEditor: public UI
     void DrawHorizontalToolbar();
 
     /**
+      *   brief Create dialog to save Level
       */
     void SaveLevel();
+
+    /**
+      *   @brief Clear all buttons
+      *   @remark Call this from main when on exit from LevelEditor
+      *   @details Buttons are shared_ptrs so no memory leaks should emerge.
+      *   Next time when toolbars are recreated e.g. horizontal_toolbar.add_ground
+      *   is replaced with new std::shared_ptr, then old buttons reference count is 0
+      *   and it is deleted automatically. So clearing is done to avoid duplicate buttons
+      *   in the containers
+      */
+    void ClearAllButtons();
 
 
     /*  Variables */
@@ -414,7 +433,6 @@ class LevelEditor: public UI
     VerticalToolbar vertical_toolbar;
     HorizontalToolbar horizontal_toolbar;
     float view = 0; /**< Tells position on the level view */
-    sf::View ui_view;
     sf::View level_view;
 
     Level level; /** Level Object */
