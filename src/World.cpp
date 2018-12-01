@@ -9,6 +9,9 @@
 
 /*  Constructor  */
 
+//TODO: add functionality for reading level files and create new entities
+//change map's first element to template?
+
 World::World(sf::RenderWindow *main_window) : window(main_window) {
 }
 
@@ -56,8 +59,16 @@ void World::update() {
 
 	for (auto const& it : objects) {
 		if (it.second->GetType() == b2_dynamicBody) {
-			//set new body position as entity's position
+
+			//new position for sprite
+			sf::Vector2f newpos(TOPIXELS*it.second->GetPosition().x, TOPIXELS*it.second->GetPosition().y);
+			it.first->setPos(newpos);
+			
+			//set sfml sprite's angle from body's angle
+			it.first->setRot(it.second->GetAngle()*RADTODEG);
 		}
+
+		it.first->drawTo(*window);
 	}
 
 }

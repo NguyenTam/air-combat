@@ -56,6 +56,10 @@ void Entity::setPos(sf::Vector2f newPos)
   entity.setPosition(newPos);
 }
 
+void Entity::setRot(float angle) {
+  entity.setRotation(angle);
+}
+
 void Entity::rotate(float degree) {entity.rotate(degree);}
 
 int Entity::getY() {return entity.getPosition().y;}

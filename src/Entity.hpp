@@ -12,6 +12,7 @@ public:
   void setPos(sf::Vector2f newPos);
   sf::Vector2f getPosition();
   void rotate(float);
+  void setRot(float angle);
   void moveUp();
   void moveDown();
   void moveLeft();
@@ -22,6 +23,7 @@ public:
   void setSpeed(float speed);
   float getSpeed();
   bool shoot();
+
 
 protected:
   sf::RectangleShape entity;
