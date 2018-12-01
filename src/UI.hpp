@@ -51,6 +51,7 @@ enum ExitStatus
   QUIT,
   STARTGAME,
   STARTEDITOR,
+  MAINMENU,
 };
 
 /**
@@ -87,10 +88,18 @@ class UI
       *   @brief Constructor for UI
       *   @param render_window window for UI
       *   @param dialog Another RenderWindow which is used to show dialogs
+      *   @param help Third RenderWindow which is used to show help screen
       *   @param backgroundcolor UI BackgoundColor
       **  @remark render_window should be a stack object in the main
       */
-    UI(sf::RenderWindow &render_window, sf::RenderWindow &dialog, sf::Color backgroundcolor);
+    UI(sf::RenderWindow &render_window, sf::RenderWindow &dialog,
+      sf::RenderWindow &help, sf::Color backgroundcolor);
+
+      /**
+        *   @brief Pure virtual method which recreates correct window
+        *   @details This has to be defined in MainMenu and LevelEditor
+        */
+      virtual void createMainScreen() = 0;
 
     /**
       *   @brief Update UI
@@ -103,7 +112,7 @@ class UI
       *   @brief Get window status
       *   @return Returns 0 if window is closed
       */
-    int getStatus();
+    bool getStatus();
 
     /**
       *   @brief Close active dialog
@@ -118,6 +127,18 @@ class UI
       */
     std::string getLevel();
 
+    /**
+      *   @brif Get exit status
+      *   @return Return int matching correct ExitStatus enum
+      */
+    int getExitStatus();
+
+    /**
+      *   @brief Init function
+      *   @details Called from main after user exits from MainMenu or LevelEditor
+      *   @reamrk Pure virtual method, needs to be implemented in lower classes
+      */
+    virtual void init() = 0;
 
   protected:
 
@@ -237,12 +258,6 @@ class UI
     virtual void cancel_to_mainscreen_action();
 
     /**
-      *   @brief Pure virtual method which recreates correct window
-      *   @details This has to be defined in MainMenu and LevelEditor
-      */
-    virtual void CreateMainScreen() = 0;
-
-    /**
       *   @brief Update select_level to show corret level in screen
       */
     void UpdateLevelShown();
@@ -266,17 +281,42 @@ class UI
       */
     void LevelSelectPrev();
 
+    /**
+      *   @brief Close help window
+      */
+    void CloseHelp();
+
+    /**
+      *   @brief Draw help window
+      */
+    void DrawHelp();
+
+    /**
+      *   @brief Clear Level Select related containers
+      *   @remark This should be called in init()
+      *   @see LevelEditor::ClearAllButtons
+      */
+    void ClearLevelSelectContainers();
+
+
     /*  Variables */
 
     sf::RenderWindow &window; /**< Main window */
+    sf::View ui_view; /**< Standard View for window */
     sf::RenderWindow &dialog_window; /**< Window used to display dialogs */
+    sf::RenderWindow &help_window; /**< Window used to display help screen */
+
     bool dialog_active = false; /**< Whether a dialog is active or not */
-    int window_status = 1; /**< 1 window active, 0 closed */
+    bool help_active = false; /**< Whether the help window is active or not */
+    bool window_status = true; /**< true window active, false closed */
     sf::Color BackgoundColor; /**< Background color */
     struct MessageBox messagebox; /**< MessageBox instance */
     ScreenMode screen_mode = MAINSCREEN;
-    ExitStatus exit_status;
+    int exit_status;
     LevelSelect level_select;
     std::string level_selected; /**< Level name which user selected */
+    sf::Text help_text;
+    sf::Text help_title;
+    sf::Font help_font;
 
 };

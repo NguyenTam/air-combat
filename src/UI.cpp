@@ -13,8 +13,8 @@
 
 /*  Constructor */
 
-UI::UI(sf::RenderWindow &render_window, sf::RenderWindow &dialog, sf::Color backgroundcolor):
-window(render_window), dialog_window(dialog), BackgoundColor(backgroundcolor)
+UI::UI(sf::RenderWindow &render_window, sf::RenderWindow &dialog, sf::RenderWindow &help, sf::Color backgroundcolor):
+window(render_window), dialog_window(dialog), help_window(help), BackgoundColor(backgroundcolor)
 {
   // TODO error checking
   messagebox.message_font.loadFromFile(FONT_ARIAL);
@@ -23,7 +23,7 @@ window(render_window), dialog_window(dialog), BackgoundColor(backgroundcolor)
 
 /*  Return window_status  */
 
-int UI::getStatus ()
+bool UI::getStatus ()
 {
   return window_status;
 }
@@ -44,10 +44,11 @@ void UI::CloseWindow()
   level_select.buttons.clear();
   level_select.image_buttons.clear();
   level_select.level_names.clear();
-  // close window
+  // close window and possible help window
   window.close();
+  help_window.close();
   window_status = false;
-  exit_status = QUIT;
+  exit_status = ExitStatus::QUIT;
 }
 
 
@@ -145,6 +146,23 @@ void UI::updateUI()
     dialog_window.clear(sf::Color::White);
     DrawDialog();
     dialog_window.display();
+  }
+
+  // Handle also possible help window
+  if (help_active)
+  {
+    sf::Event event;
+    while(help_window.pollEvent(event))
+    {
+      // Help window is kept as simple as possible (only close events are handled)
+      if (event.type == sf::Event::Closed)
+      {
+        CloseHelp();
+      }
+    }
+    help_window.clear(sf::Color::White);
+    DrawHelp();
+    help_window.display();
   }
 
 }
@@ -416,10 +434,10 @@ void UI::UpdateLevelSelect(sf::Event event)
 
 void UI::level_selected_action()
 {
-  // Close window and set exit status to STARTGAME
+  // Set window statusto false and exit status to STARTGAME
   level_selected = level_select.level_name.getString();
-  CloseWindow();
   exit_status = STARTGAME;
+  window_status = false;
 }
 
 void UI::cancel_to_mainscreen_action()
@@ -535,4 +553,42 @@ void UI::LevelSelectPrev()
 std::string UI::getLevel()
 {
   return "../data/level_files/" + level_selected + ".txt";
+}
+
+/*  Close help window */
+void UI::CloseHelp()
+{
+  help_window.close();
+}
+
+/*  Draw help window */
+void UI::DrawHelp()
+{
+  // Draw help_text and title
+  help_window.draw(help_text);
+  help_window.draw(help_title);
+}
+
+/*  Get exit_status */
+int UI::getExitStatus()
+{
+  return exit_status;
+}
+
+/*  Clear level select containers */
+void UI::ClearLevelSelectContainers()
+{
+  // Check containers aren't empty
+  if (! level_select.buttons.empty())
+  {
+    level_select.buttons.clear();
+  }
+  if (! level_select.image_buttons.empty())
+  {
+    level_select.image_buttons.clear();
+  }
+  if (! level_select.level_names.empty())
+  {
+    level_select.level_names.clear();
+  }
 }
