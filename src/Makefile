@@ -1,14 +1,14 @@
 CC=g++
 CPPFLAGS=-c -g -std=c++17 -Wall -Wextra -pedantic
-SFMLFLAGS=-pthread -lsfml-graphics -lsfml-window -lsfml-system
-SOURCES=$(wildcard *.cpp)
+SFMLFLAGS=-pthread -lsfml-graphics -lsfml-window -lsfml-system -lstdc++fs -lBox2D
+SOURCES=$(filter-out main.cpp, $(wildcard *.cpp))
 OBJECTS=$(SOURCES:.cpp=.o)
-#EXECUTABLE=game
+EXECUTABLE=game
 
-all: $(SOURCES) $(OBJECTS) 
+all: $(SOURCES) $(OBJECTS) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) $(SFMLFLAGS) -o $(EXECUTABLE) 
+	$(CC) $(OBJECTS) main.cpp $(SFMLFLAGS) -o $(EXECUTABLE)
 %.o: %.cpp
 	$(CC) $(CPPFLAGS) $< -o $@
 run: $(EXECUTABLE)
