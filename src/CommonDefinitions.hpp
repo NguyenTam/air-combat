@@ -13,7 +13,8 @@ namespace Paths
     {
       fonts,
       img,
-      level_files
+      level_files,
+      logs
     };
   extern std::vector<std::string> Paths; /**< Use this command in data/img "ls -1 | sort | sed -e 's/$/",/' | sed -e 's/^/"/'" to get this output. */
   

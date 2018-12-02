@@ -10,8 +10,9 @@ namespace Paths
   std::vector<std::string> Paths
   {
     "../data/fonts/",
-    "../data/img/",
-    "../data/level_files/"      
+        "../data/img/",
+        "../data/level_files/",
+        "../data/logs/"      
   };
 }
 
