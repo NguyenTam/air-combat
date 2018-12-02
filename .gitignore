@@ -18,6 +18,6 @@ game-log.txt
 *.a
 *.lib
 
-#ignore doxygen generated files
+#ignore folders
 doc/*
 logs/*
