@@ -33,7 +33,7 @@ GameEngine::GameEngine(sf::RenderWindow & rw) : renderWindow(rw), gameFont()
     try
     {
       /*Construct spdlogger*/
-      gameEngineLogger =spdlog::daily_logger_st("async_file_logger", "../data/game-engine-log.txt");
+      gameEngineLogger =spdlog::daily_logger_st("async_file_logger", Paths::Paths[Paths::PATHS::logs]+ "game-engine-log.txt");
       
       /*Try to load texture from file*/
       if(!resources.init())
