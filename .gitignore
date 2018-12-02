@@ -20,3 +20,4 @@ game-log.txt
 
 #ignore doxygen generated files
 doc/*
+logs/*
