@@ -14,14 +14,12 @@ class GameEngine : private sf::NonCopyable
   /**
    * @brief Construct a GameEngine object.
    */
-  GameEngine(sf::RenderWindow *);
+  GameEngine(sf::RenderWindow &);
   /**
    * @brief Run game engine.
    */
   void run(); 
 
-  static const int WIDTH = 800; /**< Width of VideoMode.*/
-  static const int HEIGHT = 600;  /**< Height of VideoMode.*/
   static const int FPS = 60; /**< Frames Per Second.*/
   static const float METERS_PER_PIXEL; /**< To convert from pixels to meters.*/
   static const float PIXELS_PER_METER; /**< To convert from meters to pixels.*/
@@ -55,17 +53,11 @@ class GameEngine : private sf::NonCopyable
    */
   // void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
   
-  sf::RenderWindow *renderWindow; /**< Display window for game engine */
+  sf::RenderWindow &renderWindow; /**< Display window for game engine */
   sf::Texture playerTexture; /**< Player texture like aircraft image */
   sf::Sprite playerSprite; /**< Player object with texture.*/
   sf::Font gameFont; /**< Game font type and size*/
   sf::Text gameInfo; /**< To write game info on screen.*/
-  bool isMovingUp; /**< Is player moving up*/
-  bool isMovingDown; /**< Is player moving down*/
-  bool isMovingLeft; /**< Is player moving left*/
-  bool isMovingRight; /**< Is player moving right*/
-  bool isRotatingClockWise; /**< Is player rotating clock wise*/
-  bool isRotatingCounterClockWise; /**< Is player rotating counter clock wise*/
 
   bool isGameEngineReady; /**< Is the game ended*/
   std::shared_ptr<spdlog::logger> gameEngineLogger; /**< Game engine logger. Logs are written to data folder.*/
