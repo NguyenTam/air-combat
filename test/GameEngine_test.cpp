@@ -7,7 +7,9 @@
 
 int main()
 {
-  GameEngine game;
+  sf::RenderWindow window;
+  window.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Main Menu", sf::Style::Close);
+  GameEngine game(window);
   game.run();
   return 0;
 }
