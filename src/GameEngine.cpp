@@ -22,10 +22,12 @@ const sf::Time GameEngine::TIME_PER_FRAME = sf::seconds(1.f/FPS);
 const float GameEngine::PLAYER_SPEED = 100.f;
 const float GameEngine::PLAYER_ROTATION_DEGREE = 5.f;
 
-GameEngine::GameEngine() : gameFont()
+GameEngine::GameEngine(sf::RenderWindow * render_window) : gameFont()
 {
+  renderWindow = render_window;
+
   /* Construct a render window.*/
-  renderWindow.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Air Combat 1", sf::Style::Titlebar | sf::Style::Close);
+  renderWindow->create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Air Combat 1", sf::Style::Titlebar | sf::Style::Close);
 
   /* Initialize directions*/
   isMovingUp = isMovingDown = isMovingLeft = isMovingRight = isRotatingClockWise = isRotatingCounterClockWise = false;
@@ -75,7 +77,7 @@ void GameEngine::run()
   sf::Time lastUpdateTime = sf::Time::Zero;
 
   /* While render window = game is on.*/
-  while(renderWindow.isOpen())
+  while(renderWindow->isOpen())
   {
     /*restart function returns elapsed time and reset the clock to zero to get elapsed time of next iteration.*/
     sf::Time elapsedTime = clock.restart();
@@ -97,18 +99,18 @@ void GameEngine::run()
 void GameEngine::processEvents()
 {
   sf::Event event;
-  while(renderWindow.pollEvent(event))
+  while(renderWindow->pollEvent(event))
   {
     switch(event.type)
     {
       case sf::Event::KeyPressed:
-        handlePlayerInput(event.key.code, true);
+        //handlePlayerInput(event.key.code, true);
         break;
       case sf::Event::KeyReleased:
-        handlePlayerInput(event.key.code, false);
+        //handlePlayerInput(event.key.code, false);
         break;
       case sf::Event::Closed:
-        renderWindow.close();
+        renderWindow->close();
         gameEngineLogger->info("Closing Game Engine");
         break;
       default:
@@ -120,10 +122,10 @@ void GameEngine::processEvents()
 
 void GameEngine::render()
 {
-  renderWindow.clear();
-  renderWindow.draw(playerSprite);
-  renderWindow.draw(gameInfo);
-  renderWindow.display();
+  renderWindow->clear();
+  renderWindow->draw(playerSprite);
+  renderWindow->draw(gameInfo);
+  renderWindow->display();
 }
 
 /* Sum all inputs (movements and rotations) and set new position and orientation in two function call: move and rotate. */
@@ -132,17 +134,17 @@ void GameEngine::update(sf::Time elapsedTime)
 
   sf::Vector2f moveTo(0.f,0.f);
   float rotated = 0.f;
-  if(isMovingUp)
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     moveTo.y -= PLAYER_SPEED;
-  if(isMovingDown)
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
     moveTo.y += PLAYER_SPEED;
-  if(isMovingLeft)
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     moveTo.x -= PLAYER_SPEED;
-  if(isMovingRight)
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     moveTo.x += PLAYER_SPEED;
-  if(isRotatingClockWise)
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::N))
     rotated += PLAYER_ROTATION_DEGREE;
-  if(isRotatingCounterClockWise)
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::M))
     rotated -= PLAYER_ROTATION_DEGREE;
 
   playerSprite.move(moveTo * elapsedTime.asSeconds());
@@ -158,6 +160,7 @@ void GameEngine::updateGameInfo()
 }
 
 /*Set which inputs are pressed.*/
+/*
 void GameEngine::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 {
   switch(key)
@@ -186,7 +189,7 @@ void GameEngine::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
       break;
    }
 }
-
+*/
 /*
 int main()
 {  

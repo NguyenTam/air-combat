@@ -14,7 +14,7 @@ class GameEngine : private sf::NonCopyable
   /**
    * @brief Construct a GameEngine object.
    */
-  GameEngine();
+  GameEngine(sf::RenderWindow *);
   /**
    * @brief Run game engine.
    */
@@ -53,9 +53,9 @@ class GameEngine : private sf::NonCopyable
    * @brief Handle player input.
    * @see processEvents()
    */
-  void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
+  // void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
   
-  sf::RenderWindow renderWindow; /**< Display window for game engine */
+  sf::RenderWindow *renderWindow; /**< Display window for game engine */
   sf::Texture playerTexture; /**< Player texture like aircraft image */
   sf::Sprite playerSprite; /**< Player object with texture.*/
   sf::Font gameFont; /**< Game font type and size*/

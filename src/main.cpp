@@ -7,7 +7,7 @@
 #include "MainMenu.hpp"
 #include "LevelEditor.hpp"
 #include "CommonDefinitions.hpp"
-
+#include "GameEngine.hpp"
 /**
   *   @brief Main for Air combat
   *   @details Integrates MainMenu, LevelEditor and TODO Game
@@ -19,6 +19,9 @@ int main()
   sf::RenderWindow dialog_window;
   sf::RenderWindow help_window;
 
+  // Create Game Engine
+  GameEngine game {&window};
+  
   // Create main window (size and name don't matter, MainMenu resizes and renames window)
   window.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Main Menu", sf::Style::Close);
 
@@ -60,6 +63,7 @@ int main()
       std::cout << "Open this level in the base game: " << level_name << std::endl;
       // TODO The base game here
       // Now just go back to Main Menu
+      game.run();
       exit_status = ExitStatus::MAINMENU;
     }
     if (exit_status == ExitStatus::QUIT)
