@@ -8,7 +8,7 @@
 
 CC = g++
 CFLAGS = -Wall -Wextra -pedantic -g -std=c++17
-LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system -lstdc++fs
+LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system
 
 OBJECTS = button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o TextInput.o CommonDefinitions.o
 
