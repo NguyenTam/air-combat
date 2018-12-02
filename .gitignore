@@ -20,4 +20,4 @@ game-log.txt
 
 #ignore folders
 doc/*
-logs/*
+data/logs/*
