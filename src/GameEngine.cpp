@@ -85,12 +85,21 @@ void GameEngine::run()
     {
       lastUpdateTime -= TIME_PER_FRAME;
       // Handle events
-      processEvents();
+      sf::Event event;
+      while(renderWindow.pollEvent(event))
+      {
+        if(event.type == sf::Event::KeyReleased)
+        {
+          if(event.key.code == sf::Keyboard::Escape)
+          {
+            gameEngineLogger->info("Closing Game Engine");
+            return;
+          }
+        }
+      }
       updateGameInfo();
       update(TIME_PER_FRAME);
     }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-      return;
     render();
   }
 }
