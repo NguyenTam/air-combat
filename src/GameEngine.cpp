@@ -109,7 +109,7 @@ void GameEngine::processEvents()
         //handlePlayerInput(event.key.code, false);
         break;
       case sf::Event::Closed:
-        renderWindow.close();
+        // renderWindow.close();
         gameEngineLogger->info("Closing Game Engine");
         break;
       default:
