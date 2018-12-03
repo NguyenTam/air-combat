@@ -1,6 +1,6 @@
 #include "Plane.hpp"
 
-Plane::Plane(const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate):Entity(t, position, speed = 20, bullets = 100, bombs = 6, firerate = 10){ }
+Plane::Plane(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate):Entity(w, b, t, position, speed = 20, bullets = 100, bombs = 6, firerate = 10){ }
 
 bool Plane::shoot(){
       if (fireCountDown <= 0) {

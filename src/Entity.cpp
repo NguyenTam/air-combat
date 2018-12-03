@@ -1,11 +1,9 @@
 #include "Entity.hpp"
 
-Entity::Entity(const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate) 
+Entity::Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate) : world(w), b2body(b)
 {
   entity.setTexture(t);
   entity.setPosition(position);
-  //entity.setOrigin(size.x/2.f, size.y/2.f);
-  //entity.setFillColor(sf::Color::Green);
   moveSpeed = speed;
   numberOfBullets = bullets;
   numberOfBombs = bombs;
@@ -48,14 +46,15 @@ void Entity::rotateCounterClockWise()
   entity.rotate(-5.f);
 }
 
-sf::Vector2f Entity::getPosition(){
-  return position;
+sf::Vector2f Entity::getPosition() const{
+  return entity.getPosition();
 }
 
 void Entity::setPos(sf::Vector2f newPos)
 {
   entity.setPosition(newPos);
 }
+
 
 void Entity::setRot(float angle) {
   entity.setRotation(angle);
@@ -71,7 +70,7 @@ float Entity::getSpeed()
 }
 
 void Entity::move(sf::Vector2f direction){
-  setPos(position + moveSpeed*direction);  
+  setPos(getPosition() + moveSpeed*direction);
 }
 
 bool Entity::shoot() {
@@ -81,3 +80,10 @@ bool Entity::shoot() {
   } else {return false;}
 }
 
+void Entity::setType(Textures::ID t){
+  type = t;
+}
+
+Textures::ID Entity::getType() {return type;}
+
+b2Body& Entity::getB2Body() {return b2body;}

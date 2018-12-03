@@ -7,11 +7,15 @@
 
 #include "Entity.hpp"
 #include "PhysicsWorld.hpp"
+#include "ResourceManager.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <vector>
 #include <Box2D/Box2D.h>
+#include <fstream>
+#include <sstream>
+
 
 #define DEGTORAD 0.0174532925199432957f
 #define RADTODEG 57.295779513082320876f
@@ -33,7 +37,7 @@ public:
       *   @details creates variable for used window
       *   @param main_window RenderWindow which is used to display the game
       */
-	World(sf::RenderWindow *main_window);
+	World(sf::RenderWindow &main_window, ResourceManager &resources);
 
 	/**
       *   @brief Adds given entity to the game
@@ -55,8 +59,12 @@ public:
       */
 	void update();
 
+  bool read_level(std::string filename);
+
+  void clear_all();
+
 private:
   PhysicsWorld pworld;
-	sf::RenderWindow *window; /**< Window that is being used */
-	std::map<Entity*, b2Body*> objects; /**< Contains all the entities added */
+	sf::RenderWindow &window; /**< Window that is being used */
+	std::vector<Entity*> objects; /**< Contains all the entities added */
 };
