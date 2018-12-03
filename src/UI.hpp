@@ -129,7 +129,7 @@ class UI
     std::string getLevel();
 
     /**
-      *   @brif Get exit status
+      *   @brief Get exit status
       *   @return Return int matching correct ExitStatus enum
       */
     int getExitStatus();
@@ -137,7 +137,7 @@ class UI
     /**
       *   @brief Init function
       *   @details Called from main after user exits from MainMenu or LevelEditor
-      *   @reamrk Pure virtual method, needs to be implemented in lower classes
+      *   @remark Pure virtual method, needs to be implemented in lower classes
       */
     virtual void init() = 0;
 
@@ -265,7 +265,7 @@ class UI
 
     /**
       *   @brief Parse description from Level file
-      *   @filepath Path to the Level file
+      *   @param filepath Path to the Level file
       *   @return Returns description as a string
       */
     std::string ParseDescription(const std::string& filepath);
