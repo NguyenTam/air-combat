@@ -754,8 +754,8 @@ void LevelEditor::DrawHorizontalToolbar()
   window.draw( *horizontal_toolbar.show_objectives);
   window.draw( *horizontal_toolbar.show_barriers);
 
-  // Draw info text if counter below 10000
-  if (horizontal_toolbar.info_counter < 100)
+  // Draw info text if counter below 50000
+  if (horizontal_toolbar.info_counter < 5000)
   {
     horizontal_toolbar.info_counter ++;
     window.draw(horizontal_toolbar.info_text);
