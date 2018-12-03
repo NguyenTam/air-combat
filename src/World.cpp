@@ -13,7 +13,9 @@
 
 bool World::read_level(std::string filename) {
 	//entity type; x; y; orientation; width; height
-	std::string parsed[5];
+	double x, y, width, height;
+  	int orientation;
+  	std::string type;
 	std::ifstream file(filename);
 	if (file.is_open()) {
 		//clear all
@@ -34,22 +36,22 @@ bool World::read_level(std::string filename) {
 					try {
 						switch (i) {
 							case 0:
-			                parsed[0] = std::string(split_str);
+			                type = split_str;
 			                break;
 			              case 1:
-			                parsed[1] = std::stod(split_str);
+			                x = std::stod(split_str);
 			                break;
 			              case 2:
-			                parsed[2] = std::stod(split_str);
+			                y = std::stod(split_str);
 			                break;
 			              case 3:
-			                parsed[3] = std::stoi(split_str);
+			                orientation = std::stoi(split_str);
 			                break;
 			              case 4:
-			                parsed[4] = std::stod(split_str);
+			                width = std::stod(split_str);
 			                break;
 			              case 5:
-			                parsed[5] = std::stod(split_str);
+			                height = std::stod(split_str);
 			                break;
 						}
 						i++;
@@ -69,7 +71,7 @@ bool World::read_level(std::string filename) {
 				}
 				else {
 					//all ok
-					//ADD ENTITY HERE
+					create_entity(type, x, y, orientation, width, height);
 				}
 			}
 		}
@@ -81,32 +83,33 @@ void World::clear_all() {
 	
 }
 
-World::World(sf::RenderWindow &main_window, ResourceManager &resources) : window(main_window) {
+World::World(sf::RenderWindow &main_window, ResourceManager &_resources) : window(main_window), resources(_resources) {
 }
 
-/*  Add entity  */
+/*  Create entity  */
 
-bool World::add_entity(Entity *entity) {
+bool World::create_entity(std::string type, double x, double y, int orientation, double width, double height) {
+	//b2Body* body = pworld.create_body()
+	//std::shared_ptr<Entity> entity = std::make_shared<Entity>(pworld, )
 
-	if (std::find(objects.begin(), objects.end(), entity) != objects.end()) {
+	/*if (std::find(objects.begin(), objects.end(), entity) != objects.end()) {
 		objects.push_back(entity);
 		return true;
 	}
 	//entity was already added
 	else {
 		return false;
-	}
+	}*/
 
 }
 
 /*  Remove entity  */
 
-bool World::remove_entity(Entity *entity) {
+bool World::remove_entity(std::shared_ptr<Entity> entity) {
 	auto it = std::find(objects.begin(), objects.end(), entity);
 	
 	if (it != objects.end()) {
 		objects.erase(it); //erase entity from vector
-		delete *it;
 
 		return true;
 	}
@@ -126,7 +129,7 @@ void World::update() {
   	int32 positionIterations = 3;   //how strongly to correct position
 	
 	pworld.get_world()->Step(timeStep, velocityIterations, positionIterations);
-
+	
 	for (auto const& it : objects) {
 		if (it->getB2Body().GetType() == b2_dynamicBody) {
 
@@ -140,5 +143,5 @@ void World::update() {
 
 		it->drawTo(window);
 	}
-
+	
 }

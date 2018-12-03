@@ -5,7 +5,7 @@ PhysicsWorld::PhysicsWorld() {
 	World = new b2World(gvector);
 }
 
-b2Body* PhysicsWorld::create_body_dynamic(std::string type, double x, double y, int orientation, double width, double height) {
+b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, double height) {
 	//creating a definition of a body
 	b2BodyDef BodyDef;
 	BodyDef.type = b2_dynamicBody; //creating a dynamic body
@@ -27,7 +27,7 @@ b2Body* PhysicsWorld::create_body_dynamic(std::string type, double x, double y, 
 	return Body; 
 }
 
-b2Body* PhysicsWorld::create_body_static(std::string type, double x, double y, int orientation, double width, double height) {
+b2Body* PhysicsWorld::create_body_static(double x, double y, double width, double height) {
 	b2BodyDef BodyDef;
 	BodyDef.type = b2_staticBody;
 	BodyDef.position = b2Vec2(x/SCALE, y/SCALE);
