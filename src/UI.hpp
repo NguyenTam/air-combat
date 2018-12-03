@@ -69,8 +69,9 @@ struct LevelSelect
   std::vector <std::shared_ptr<Button>> buttons; /**< Cancel and select buttons */
   std::vector <std::shared_ptr<ImageButton>> image_buttons; /**< Left & right buttons */
   std::vector <std::string> level_names; /**< Container for all level filenames */
-  int curr_level = -1;
-  int max_level = -1;
+  int curr_level = -1; /**< Tells index for currently selected level */
+  int max_level = -1; /**< Tells index for the last level available */
+  int curr_button = -1; /**< Tells which buttons is currently active */
 
 };
 
