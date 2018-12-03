@@ -1,6 +1,6 @@
 CC=g++
 CPPFLAGS=-g -std=c++17 -Wall -Wextra -pedantic
-SFMLFLAGS=-pthread -lsfml-graphics -lsfml-window -lsfml-system -lBox2D
+SFMLFLAGS=-pthread -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lstdc++fs
 SOURCES=$(filter-out main.cpp, $(wildcard *.cpp))
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=game
