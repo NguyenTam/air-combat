@@ -39,18 +39,27 @@ class LevelEntity: public sf::Drawable
       *   @param y y coordinate
       *   @param width LevelEntity width
       *   @param height LevelEntity height
-      *   @param image_path img_path, path to image representing the entity
+      *   @param Entity texture from ResourceManager
       *   @param type LevelEntity type, defined in Level.hpp
       */
-    LevelEntity(float x, float y, float width, float height, std::string image_path, int type = 0);
+    LevelEntity(float x, float y, float width, float height, sf::Texture &texture, int type = 0);
+
+    /**
+      *   @brief Set texture for LevelEntity
+      *   @param texture Texture from which sprite is created
+      *   @remark Call this after copying LevelEntities
+      */
+    void setTexture(const sf::Texture &texture);
 
     /**
       *   @brief Copy constructor
+      *   @remark texture isn't copied, use setTexture
       */
     LevelEntity(const LevelEntity &level_entity);
 
     /**
       *   @brief assignment operator
+      *   @remark texture isn't copied, use setTexture
       */
     LevelEntity& operator=(const LevelEntity &level_entity);
 
@@ -205,13 +214,6 @@ class LevelEntity: public sf::Drawable
   private:
 
     /**
-      *   @brief Load texture and create sprite
-      *   @remark If texture can't be loaded, en empty sprite is created. Also,
-      *   the created sprite is possible cut to match rect
-      */
-    void CreateSprite();
-
-    /**
       *   @brief Store original values for x, y, width and height
       */
     void StoreOriginalValues();
@@ -231,8 +233,6 @@ class LevelEntity: public sf::Drawable
     bool positioned = false;
     int type = 0; /**< LevelEntity type, defined in Level.hpp */
 
-    std::string img_path;
-    sf::Texture texture;
     sf::Sprite sprite;
     bool flipped = false;
     bool stretchable = false; /**< Used with Ground */

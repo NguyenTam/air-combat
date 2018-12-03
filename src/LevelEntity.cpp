@@ -21,7 +21,7 @@ LevelEntity::LevelEntity()
 }
 
 /*  Standard constructor */
-LevelEntity::LevelEntity(float x, float y, float width, float height, std::string image_path, int type)
+LevelEntity::LevelEntity(float x, float y, float width, float height, sf::Texture &texture, int type)
 {
   this->x = x;
   this->y = y;
@@ -30,27 +30,17 @@ LevelEntity::LevelEntity(float x, float y, float width, float height, std::strin
   this->height = height;
   StoreOriginalValues();
   rect = sf::Rect<float>(x, y, width, height);
-  img_path = image_path;
-  // Try to load a texture from img_path
-  CreateSprite();
+  // Create sprite from texture
+  sprite = sf::Sprite(texture, sf::Rect<int>(0, 0, (int) width, (int) height));
+  sprite.setPosition(x, y);
   this->type = type;
 
 }
 
-
-/* Try to load texture from img_path and construct sprite */
-void LevelEntity::CreateSprite()
+/*  Set texture */
+void LevelEntity::setTexture(const sf::Texture &texture)
 {
-  if (! texture.loadFromFile(img_path) )
-  {
-    // Create an empty sprite
-    sprite = sf::Sprite();
-  }
-  else
-  {
-    sprite = sf::Sprite(texture, sf::Rect<int>(0, 0, (int) width, (int) height));
-  }
-  sprite.setPosition(x, y);
+  sprite = sf::Sprite(texture, sf::Rect<int>(0, 0, (int) width, (int) height));
 }
 
 /* Copy constructor */
@@ -63,9 +53,6 @@ LevelEntity::LevelEntity(const LevelEntity &level_entity)
   height = level_entity.height;
   StoreOriginalValues();
   rect = sf::Rect<float>(x, y, width, height);
-  img_path = level_entity.img_path;
-  // Try to load texture
-  CreateSprite();
   type = level_entity.type;
 }
 
@@ -79,9 +66,6 @@ LevelEntity& LevelEntity::operator=(const LevelEntity &level_entity)
   height = level_entity.height;
   StoreOriginalValues();
   rect = sf::Rect<float>(x, y, width, height);
-  img_path = level_entity.img_path;
-  // Try to load texture
-  CreateSprite();
   type = level_entity.type;
 
   return *this;
