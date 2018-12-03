@@ -6,7 +6,7 @@ class Entity {
 public:
   /**
    */
-  Entity(sf::Vector2f size, float speed, int bullets, int bombs, int firerate);
+  Entity(const sf::Texture &t, const sf::Vector2f &position,  float speed, int bullets, int bombs, int firerate);
   void drawTo(sf::RenderWindow &window);
   void move(sf::Vector2f distance);
   void setPos(sf::Vector2f newPos);
@@ -26,11 +26,15 @@ public:
 
 
 protected:
-  sf::RectangleShape entity;
+  //sf::RectangleShape entity;
+  sf::Sprite entity;
   sf::Vector2f position;
   float moveSpeed;
   int numberOfBullets;
   int numberOfBombs;
   int rateOfFire;
   int fireCountDown;
+
+  private:
+  int hitpoints;
 };

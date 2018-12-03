@@ -51,7 +51,8 @@ class GameEngine : private sf::NonCopyable
    * @brief Handle player input.
    * @see processEvents()
    */
-  // void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
+
+  
   
   sf::RenderWindow &renderWindow; /**< Display window for game engine */
   sf::Texture playerTexture; /**< Player texture like aircraft image */

@@ -1,6 +1,6 @@
 #include "Artillery.hpp"
 
-Artillery::Artillery(sf::Vector2f size, float speed, int bullets, int bombs, int firerate):Entity(size, speed = 0.f, bullets = 999, bombs = 0, firerate = 60){ }
+Artillery::Artillery(const sf::Texture &t, const sf::Vector2f &position, float speed=0.f, int bullets=999, int bombs=0, int firerate = 60):Entity(t, position, speed, bullets, bombs, firerate){ }
 
 bool Artillery::shoot(){
       if (fireCountDown <= 0) {

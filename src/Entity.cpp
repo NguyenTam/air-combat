@@ -1,10 +1,11 @@
 #include "Entity.hpp"
 
-Entity::Entity(sf::Vector2f size, float speed, int bullets, int bombs, int firerate) 
+Entity::Entity(const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate) 
 {
-  entity.setSize(size);
-  entity.setOrigin(size.x/2.f, size.y/2.f);
-  entity.setFillColor(sf::Color::Green);
+  entity.setTexture(t);
+  entity.setPosition(position);
+  //entity.setOrigin(size.x/2.f, size.y/2.f);
+  //entity.setFillColor(sf::Color::Green);
   moveSpeed = speed;
   numberOfBullets = bullets;
   numberOfBombs = bombs;

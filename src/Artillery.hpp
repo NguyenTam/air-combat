@@ -3,7 +3,7 @@
 
 class Artillery : public Entity {
   public:
-    Artillery(sf::Vector2f size, float speed, int bullets, int bombs, int firerate);
+  Artillery(const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate);
     bool shoot();
 };
 
