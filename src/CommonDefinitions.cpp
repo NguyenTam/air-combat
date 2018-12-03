@@ -19,8 +19,7 @@ std::vector<std::string> Paths
 namespace Textures
 {
 
-std::vector<std::string> TextureFiles
-{
+std::vector<std::string> TextureFiles {
   "BlueAirplane_alpha.png",
       "BlueAirplane.png",
       "BlueAntiAircraft_alpha.png",
@@ -49,12 +48,12 @@ std::vector<std::string> TextureFiles
       "RedInfantry_alpha.png",
       "RedInfantry.png",
       "right_arrow.png",
-      "rock_alpha.png",
-      "rock.png",
+      "Rock_alpha.png",
+      "Rock.png",
       "std_button.png",
-      "tree_alpha.png",
-      "tree.png",          
-      };
+      "Tree_alpha.png",
+      "Tree.png"
+};
 
 std::map<std::string, Textures::ID> alphaTextures
 {
@@ -70,7 +69,7 @@ std::map<std::string, Textures::ID> alphaTextures
   { "RedBase", RedBase_alpha },
   { "RedHangar", RedHangar_alpha },
   { "RedInfantry", RedInfantry_alpha },
-  { "rock", rock_alpha },
-  { "tree", tree_alpha }      
+  { "Rock", Rock_alpha },
+  { "Tree", Tree_alpha }     
 };
 }

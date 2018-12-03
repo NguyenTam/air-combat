@@ -53,13 +53,13 @@ namespace Textures
       RedInfantry_alpha,
       RedInfantry,
       right_arrow,
-      rock_alpha,
-      rock,
+      Rock_alpha,
+      Rock,
       std_button,
-      tree_alpha,
-      tree,
+      Tree_alpha,
+      Tree,
       end      
-      };
+    };
   extern std::vector<std::string> TextureFiles;
 extern std::map<std::string, Textures::ID> alphaTextures;
 }
