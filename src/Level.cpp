@@ -7,11 +7,33 @@
 
 /*  Class Level */
 
+/*  Member Initializations */
+const float Level::infantry_width = 19.f;
+const float Level::infantry_height = 32.f;
+const float Level::plane_width = 38.f;
+const float Level::plane_height = 18.f;
+const float Level::AA_width = 36.f;
+const float Level::AA_height = 31.f;
+const float Level::hangar_width = 28.f;
+const float Level::hangar_height = 26.f;
+const float Level::base_width = 76.f;
+const float Level::base_height = 63.f;
+const float Level::tree_width = 27.f;
+const float Level::tree_height = 36.f;
+const float Level::rock_width = 25.f;
+const float Level::rock_height = 20.f;
+const float Level::ground_width = 100.f;
+const float Level::ground_height = 100.f;
+
+
+
 /* Constructor */
 Level::Level()
 {
   // Constuct empty LevelEntity
   current_entity = std::make_shared<LevelEntity>();
+  // init ResourceManager
+  manager.init();
 }
 
 /* Set level_y_limit */
@@ -131,51 +153,51 @@ void Level::addEntity(float x, float y, int entity_type)
   // Go through all entity_type and try to create correct LevelEntity
   if (entity_type == FRIENDLY_INFANTRY)
   {
-    AddEntity(x, y, FRIENDLY_INFANTRY, infantry_width, infantry_height, friendly_infantry_path);
+    AddEntity(x, y, FRIENDLY_INFANTRY, Level::infantry_width, Level::infantry_height, manager.get(Textures::BlueInfantry_alpha));
   }
   else if (entity_type == HOSTILE_INFANTRY)
   {
-    AddEntity(x, y, HOSTILE_INFANTRY, infantry_width, infantry_height, hostile_infantry_path);
+    AddEntity(x, y, HOSTILE_INFANTRY, Level::infantry_width, Level::infantry_height, manager.get(Textures::RedInfantry_alpha));
   }
   else if (entity_type == FRIENDLY_PLANE)
   {
-    AddEntity(x, y, FRIENDLY_PLANE, plane_width, plane_height, friendly_plane_path);
+    AddEntity(x, y, FRIENDLY_PLANE, Level::plane_width, Level::plane_height, manager.get(Textures::BlueAirplane_alpha));
   }
   else if (entity_type == HOSTILE_PLANE)
   {
-    AddEntity(x, y, HOSTILE_PLANE, plane_width, plane_height, hostile_plane_path);
+    AddEntity(x, y, HOSTILE_PLANE, Level::plane_width, Level::plane_height, manager.get(Textures::RedAirplane_alpha));
   }
   else if (entity_type == FRIENDLY_AA)
   {
-    AddEntity(x, y, FRIENDLY_AA, AA_width, AA_height, friendly_AA_path);
+    AddEntity(x, y, FRIENDLY_AA, Level::AA_width, Level::AA_height, manager.get(Textures::BlueAntiAircraft_alpha));
   }
   else if (entity_type == HOSTILE_AA)
   {
-    AddEntity(x, y, HOSTILE_AA, AA_width, AA_height, hostile_AA_path);
+    AddEntity(x, y, HOSTILE_AA, Level::AA_width, Level::AA_height, manager.get(Textures::RedAntiAircraft_alpha));
   }
   else if (entity_type == FRIENDLY_HANGAR)
   {
-    AddEntity(x, y, FRIENDLY_HANGAR, hangar_width, hangar_height, friendly_hangar_path);
+    AddEntity(x, y, FRIENDLY_HANGAR, Level::hangar_width, Level::hangar_height, manager.get(Textures::BlueHangar_alpha));
   }
   else if (entity_type == HOSTILE_HANGAR)
   {
-    AddEntity(x, y, HOSTILE_HANGAR, hangar_width, hangar_height, hostile_hangar_path);
+    AddEntity(x, y, HOSTILE_HANGAR, Level::hangar_width, Level::hangar_height, manager.get(Textures::RedHangar_alpha));
   }
   else if (entity_type == FRIENDLY_BASE)
   {
-    AddEntity(x, y, FRIENDLY_BASE, base_width, base_height, friendly_base_path);
+    AddEntity(x, y, FRIENDLY_BASE, Level::base_width, Level::base_height, manager.get(Textures::BlueBase_alpha));
   }
   else if (entity_type == HOSTILE_BASE)
   {
-    AddEntity(x, y, HOSTILE_BASE, base_width, base_height, hostile_base_path);
+    AddEntity(x, y, HOSTILE_BASE, Level::base_width, Level::base_height, manager.get(Textures::RedBase_alpha));
   }
   else if (entity_type == TREE_ENTITY)
   {
-    AddEntity(x, y, TREE_ENTITY, tree_width, tree_height, tree_path);
+    AddEntity(x, y, TREE_ENTITY, Level::tree_width, Level::tree_height, manager.get(Textures::Tree_alpha));
   }
   else if (entity_type == ROCK_ENTITY)
   {
-    AddEntity(x, y, ROCK_ENTITY, rock_width, rock_height, rock_path);
+    AddEntity(x, y, ROCK_ENTITY, Level::rock_width, Level::rock_height, manager.get(Textures::Rock_alpha));
   }
   else if(entity_type == ERASE_ENTITY )
   {
@@ -191,7 +213,7 @@ void Level::addEntity(float x, float y, int entity_type)
 
 
 /* Try to add an infantry entity */
-void Level::AddEntity(float x, float y, int entity_type, float entity_width, float entity_height, std::string entity_img)
+void Level::AddEntity(float x, float y, int entity_type, float entity_width, float entity_height, sf::Texture &texture)
 {
   current_entity_height = entity_height;
 
@@ -231,7 +253,7 @@ void Level::AddEntity(float x, float y, int entity_type, float entity_width, flo
   {
     // Construct new entity_type LevelEntity
     current_entity = std::make_shared<LevelEntity>(x, y, entity_width, entity_height,
-                    entity_img, entity_type);
+                    texture, entity_type);
     level_entities.push_back(current_entity);
 
   }
@@ -242,7 +264,7 @@ void Level::AddEntity(float x, float y, int entity_type, float entity_width, flo
     // Construct new entity_type LevelEntity
 
     current_entity = std::make_shared<LevelEntity>(x, y, entity_width, entity_height,
-                    entity_img, entity_type);
+                    texture, entity_type);
     level_entities.push_back(current_entity);
 
   }
@@ -477,18 +499,18 @@ void Level::AddGround(float x, float y)
 
   if (current_entity->getType() == NO_ENTITY)
   {
-    unsigned correct_y = GetGroundLevel(x, ground_width, ground_height);
+    unsigned correct_y = GetGroundLevel(x, Level::ground_width, Level::ground_height);
 
     // Construct new Ground LevelEntity
-    current_entity = std::make_shared<LevelEntity> (x, correct_y, ground_width, ground_height,
-                      ground_path, GROUND_ENTITY);
+    current_entity = std::make_shared<LevelEntity> (x, correct_y, Level::ground_width, Level::ground_height,
+                      manager.get(Textures::Ground_alpha), GROUND_ENTITY);
     current_entity->setNonFlippable();
     level_entities.push_back(current_entity);
     current_entity_height = ground_height;
   }
   else if (!current_entity->getPositioned())
   {
-    unsigned correct_y = GetGroundLevel(x, ground_width, ground_height);
+    unsigned correct_y = GetGroundLevel(x, Level::ground_width, Level::ground_height);
     current_entity->setPosition(x, correct_y);
     current_entity->setPositioned(true);
   }
@@ -787,7 +809,7 @@ bool Level::parseLevel(std::string& levelfile)
           {
             // Ground entity is special entity (needs to be stretched to correct size)
             std::shared_ptr<LevelEntity> ground = std::make_shared<LevelEntity>
-                  (x, y, ground_width, ground_height, ground_path, GROUND_ENTITY);
+                  (x, y, Level::ground_width, Level::ground_height, manager.get(Textures::Ground_alpha), GROUND_ENTITY);
             ground->setPositioned(true);
             ground->setFullyConstructed();
             ground->setNonFlippable();
