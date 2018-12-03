@@ -81,33 +81,33 @@ void World::clear_all() {
 	
 }
 
-World::World(sf::RenderWindow *main_window) : window(main_window) {
+World::World(sf::RenderWindow &main_window, ResourceManager &resources) : window(main_window) {
 }
 
 /*  Add entity  */
 
 bool World::add_entity(Entity *entity) {
 
-	if (objects.find(entity) != objects.end()) {
-		//add new pair (Entity*,Body*) to objects-map
-		//objects[entity] = pworld.create_body_dynamic();
-
+	if (std::find(objects.begin(), objects.end(), entity) != objects.end()) {
+		objects.push_back(entity);
 		return true;
 	}
 	//entity was already added
 	else {
 		return false;
 	}
+
 }
 
 /*  Remove entity  */
 
 bool World::remove_entity(Entity *entity) {
-	auto it = objects.find(entity);
+	auto it = std::find(objects.begin(), objects.end(), entity);
 	
 	if (it != objects.end()) {
-		pworld.remove_body(it->second); //remove body from physics world
-		objects.erase(it); //erase from objects maps
+		objects.erase(it); //erase entity from vector
+		delete *it;
+
 		return true;
 	}
 
@@ -115,6 +115,7 @@ bool World::remove_entity(Entity *entity) {
 	else {
 		return false;
 	}
+	
 }
 /*  Update the world  */
 
@@ -127,17 +128,17 @@ void World::update() {
 	pworld.get_world()->Step(timeStep, velocityIterations, positionIterations);
 
 	for (auto const& it : objects) {
-		if (it.second->GetType() == b2_dynamicBody) {
+		if (it->getB2Body().GetType() == b2_dynamicBody) {
 
 			//new position for sprite
-			sf::Vector2f newpos(TOPIXELS*it.second->GetPosition().x, TOPIXELS*it.second->GetPosition().y);
-			it.first->setPos(newpos);
+			sf::Vector2f newpos(TOPIXELS*it->getB2Body().GetPosition().x, TOPIXELS*it->getB2Body().GetPosition().y);
+			it->setPos(newpos);
 			
 			//set sfml sprite's angle from body's angle
-			it.first->setRot(it.second->GetAngle()*RADTODEG);
+			it->setRot(it->getB2Body().GetAngle()*RADTODEG);
 		}
 
-		it.first->drawTo(*window);
+		it->drawTo(window);
 	}
 
 }

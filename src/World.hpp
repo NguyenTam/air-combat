@@ -7,6 +7,7 @@
 
 #include "Entity.hpp"
 #include "PhysicsWorld.hpp"
+#include "ResourceManager.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <algorithm>
@@ -36,7 +37,7 @@ public:
       *   @details creates variable for used window
       *   @param main_window RenderWindow which is used to display the game
       */
-	World(sf::RenderWindow *main_window);
+	World(sf::RenderWindow &main_window, ResourceManager &resources);
 
 	/**
       *   @brief Adds given entity to the game
@@ -64,6 +65,6 @@ public:
 
 private:
   PhysicsWorld pworld;
-	sf::RenderWindow *window; /**< Window that is being used */
-	std::map<Entity*, b2Body*> objects; /**< Contains all the entities added */
+	sf::RenderWindow &window; /**< Window that is being used */
+	std::vector<Entity*> objects; /**< Contains all the entities added */
 };
