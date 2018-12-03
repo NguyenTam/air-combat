@@ -407,6 +407,9 @@ void UI::UpdateLevelSelect(sf::Event event)
       {
         activated = true;
         level_select.curr_button = i;
+        // Deactivate the other button (so that key presses don't mess up the level select)
+        if (level_select.curr_button == 1) level_select.buttons[0]->activate(false);
+        else level_select.buttons[1]->activate(false);
         break;
       }
       i++;
