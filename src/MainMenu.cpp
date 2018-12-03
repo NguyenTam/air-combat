@@ -72,15 +72,11 @@ void MainMenu::DrawUI()
    }
    else if (event.key.code == sf::Keyboard::Tab)
    {
-     UpdateActiveButton(BUTTON_NEXT);
-   }
-   else if (event.key.code == sf::Keyboard::Space)
-   {
-     UpdateActiveButton(BUTTON_PREV);
+     UpdateActiveButton();
    }
    else if (event.key.code == sf::Keyboard::Return)
    {
-     // Somehow it won't compile with Enter (Return is should be deprecated)
+     // In older sfml version there is no Enter
      ClickCurrentButton();
    }
 
@@ -93,13 +89,31 @@ void MainMenu::DrawUI()
    float x = (float) event.mouseMove.x;
    float y = (float) event.mouseMove.y;
 
+   int i = 0;
    for (auto it = buttons.begin(); it != buttons.end(); it++)
    {
      if ( (*it)->tryActivate(x, y) )
      {
-       // Button was activated, reset current_button
-       current_button = 0;
+       // Correct current_button
+       current_button = i;
+       int j = 0;
+       for (auto it = buttons.begin(); it != buttons.end(); it++)
+       {
+         // Deactivate other buttons
+         if (j != i)
+         {
+           (*it)->activate(false);
+         }
+         j ++;
+       }
+       break;
      }
+     i ++;
+   }
+   if (i == MainMenu::MainMenuButtons)
+   {
+     // No Button was activated, reset current_button
+     current_button = -1;
    }
  }
 
@@ -126,16 +140,28 @@ void MainMenu::DrawUI()
 
  void MainMenu::UpdateActiveButton(int action)
  {
-   if ( (action == BUTTON_NEXT) && (current_button < MainMenu::MainMenuButtons) )
+   if ( (action == BUTTON_NEXT) && (current_button < MainMenu::MainMenuButtons -1) )
    {
      current_button ++;
    }
 
-   else if ( (action == BUTTON_PREV) && (current_button > 1) )
+   else if ( (action == BUTTON_PREV) && (current_button > 0) )
    {
      current_button --;
    }
    // Activate the correct button
+   ActivateCurrentButton();
+ }
+
+ /* Update active button */
+ void MainMenu::UpdateActiveButton()
+ {
+   if (current_button < MainMenu::MainMenuButtons - 1)
+   {
+     current_button ++;
+   }
+   else current_button = 0;
+   // Activate Button
    ActivateCurrentButton();
 
  }
@@ -154,28 +180,28 @@ void MainMenu::CreateMainMenu()
   unsigned height = select_level->getHeight();
   std::shared_ptr<Button> start_editor = std::make_shared<Button>("Editor",
                                     sf::Color::Blue, width, height);
-  std::shared_ptr<Button> button3 = std::make_shared<Button>("Settings",
+  std::shared_ptr<Button> button3 = std::make_shared<Button>("Stats",
                                     sf::Color::Blue, width, height);
-  std::shared_ptr<Button> button4 = std::make_shared<Button>("Statistics",
+  std::shared_ptr<Button> quit = std::make_shared<Button>("Quit",
                                     sf::Color::Blue, width, height);
   start_editor->setPosition(100, 200);
   buttons.push_back(start_editor);
   button3->setPosition(100, 300);
   buttons.push_back(button3);
-  button4->setPosition(100, 400);
-  buttons.push_back(button4);
+  quit->setPosition(100, 400);
+  buttons.push_back(quit);
 
   // Set click_actions IMPORTANT
   select_level->setClickFunction(std::bind(&MainMenu::select_level_action, this));
   start_editor->setClickFunction(std::bind(&MainMenu::start_editor_action, this));
   button3->setClickFunction(std::bind(&MainMenu::Test3, this));
-  button4->setClickFunction(std::bind(&MainMenu::Test4, this));
+  quit->setClickFunction(std::bind(&MainMenu::CloseWindow, this));
 
   // Set active colors
   select_level->setActiveColor(sf::Color(15, 10, 75));
   start_editor->setActiveColor(sf::Color(15, 10, 75));
   button3->setActiveColor(sf::Color(15, 10, 75));
-  button4->setActiveColor(sf::Color(15, 10, 75));
+  quit->setActiveColor(sf::Color(15, 10, 75));
 
 
 }
@@ -185,17 +211,15 @@ void MainMenu::CreateMainMenu()
 
 void MainMenu::ActivateCurrentButton()
 {
-  int i = 1;
-  for (auto it = buttons.begin(); it != buttons.end(); it++, i++)
+  int i = 0;
+  for (auto it = buttons.begin(); it != buttons.end(); it++)
   {
-    if (i == current_button)
-    {
-      (*it)->activate(true);
-    }
-    else
+    if (i != current_button)
     {
       (*it)->activate(false);
     }
+    else (*it)->activate(true);
+    i++;
   }
 }
 
@@ -203,14 +227,10 @@ void MainMenu::ActivateCurrentButton()
 
 void MainMenu::ClickCurrentButton()
 {
-  int i=1;
-  for (auto it = buttons.begin(); it != buttons.end(); it++, i++)
+  int i = 0;
+  if ((current_button) > -1 && (current_button < MainMenu::MainMenuButtons))
   {
-    if (i == current_button)
-    {
-      (*it)->clickAction();
-      break;
-    }
+    buttons[current_button]->clickAction();
   }
 }
 
@@ -234,6 +254,13 @@ void MainMenu::start_editor_action()
 void MainMenu::init()
 {
   ClearLevelSelectContainers();
+  // Set Main menu buttons to non-actived
+  for (auto it = buttons.begin(); it != buttons.end(); it++)
+  {
+    (*it)->activate(false);
+  }
+  level_select.curr_button = -1;
+  current_button = -1;
   // Switch to the main menu screen
   screen_mode = MAINSCREEN;
 }

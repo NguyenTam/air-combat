@@ -1251,6 +1251,7 @@ void LevelEditor::cancel_to_mainscreen_action()
   level_select.buttons.clear();
   level_select.image_buttons.clear();
   level_select.level_names.clear();
+  level_select.curr_button = -1; // init
 
   // Switch to main screen (LevelEditor)
   screen_mode = MAINSCREEN;
