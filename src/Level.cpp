@@ -438,8 +438,8 @@ bool Level::saveToFile(std::string level_name, std::string description, bool tru
   else
   {
     // Check if file exists
-    std::ifstream test_open(filename);
-    if (test_open.good())
+
+    if (std::experimental::filesystem::exists(filename))
     {
       // File already exists
       return false;

@@ -298,26 +298,24 @@ void UI::HandleResize(sf::Event event)
    level_select.image_buttons.push_back(left);
    level_select.image_buttons.push_back(right);
 
-   // Get all level names in the correct directory
+   // Get all level name in the correct directory
    const std::string dir = "../data/level_files/";
    level_select.max_level = -1;
-
-   struct dirent *file;
-   DIR *directory;
-   if (directory = opendir(dir.c_str()))
+   try
    {
-     while ((file = readdir(directory)))
+     for (auto &file : std::experimental::filesystem::directory_iterator(dir))
      {
-       std::string level_name = file->d_name;
-       if (level_name.find(".txt") != std::string::npos)
-       {
-         // Notice: readdir returns also 'hidden' files . and ..
-         level_select.level_names.push_back(level_name);
-         level_select.max_level ++; // update to get how many levels there are
-       }
+       std::string level_name = file.path();
+       level_name.erase(0, dir.length());
+       level_select.level_names.push_back(level_name);
+       level_select.max_level ++; // update to get how many levels there are
      }
+   } catch (std::exception &e)
+   {
+     // Directory probably doesn't exist
+     std::cout << e.what();
    }
-   else std::cout << "Directory doesn't exists" << std::endl;
+
 
    // Construct text and image of the first level
    level_select.font.loadFromFile(FONT_COURIER);
