@@ -9,8 +9,77 @@
 
 /*  Constructor  */
 
-//TODO: add functionality for reading level files and create new entities
 //change map's first element to template?
+
+bool World::read_level(std::string filename) {
+	//entity type; x; y; orientation; width; height
+	std::string parsed[5];
+	std::ifstream file(filename);
+	if (file.is_open()) {
+		//clear all
+		bool comments_read = false;
+		std::string line;
+		while(getline(file,line)) {
+			if (! comments_read) {
+				if (line.find("*/") != std::string::npos) {
+					comments_read = true;
+				}
+			}
+			else {
+				std::istringstream temp_stream(line);
+				std::string split_str;
+				int i = 0;
+
+				while(getline(temp_stream, split_str, ';')) {
+					try {
+						switch (i) {
+							case 0:
+			                parsed[0] = std::string(split_str);
+			                break;
+			              case 1:
+			                parsed[1] = std::stod(split_str);
+			                break;
+			              case 2:
+			                parsed[2] = std::stod(split_str);
+			                break;
+			              case 3:
+			                parsed[3] = std::stoi(split_str);
+			                break;
+			              case 4:
+			                parsed[4] = std::stod(split_str);
+			                break;
+			              case 5:
+			                parsed[5] = std::stod(split_str);
+			                break;
+						}
+						i++;
+					}
+					
+					catch (std::exception &e) {
+						std::cout << e.what() << std::endl;
+						//clear all
+						return false;
+					}
+				}
+
+				if (i != 6) {
+					//failed
+					//clear all
+					return false;
+				}
+				else {
+					//all ok
+					//ADD ENTITY HERE
+				}
+			}
+		}
+	}
+	return true;
+}
+
+void World::clear_all() {
+	
+}
 
 World::World(sf::RenderWindow *main_window) : window(main_window) {
 }
@@ -21,7 +90,7 @@ bool World::add_entity(Entity *entity) {
 
 	if (objects.find(entity) != objects.end()) {
 		//add new pair (Entity*,Body*) to objects-map
-		objects[entity] = pworld.create_body();
+		//objects[entity] = pworld.create_body_dynamic();
 
 		return true;
 	}
