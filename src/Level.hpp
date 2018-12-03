@@ -252,7 +252,7 @@ class Level
       *   @brief Remove specific type entities from level_entities
       *   @details Used to remove previously placed friendly planes (1 allowed at the time)
       *   @param entity_type LevelEntity type which are removed
-      *   @not_removed LevelEntity which isn't removed
+      *   @param not_removed LevelEntity which isn't removed
       */
     void RemoveSpecificEntities(int entity_type, std::shared_ptr<LevelEntity> not_removed);
 

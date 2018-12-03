@@ -400,17 +400,23 @@ void UI::UpdateLevelSelect(sf::Event event)
   {
     // Try to activate level_select Buttons
     bool activated = false;
-
+    int i = 0;
     for (auto it = level_select.buttons.begin(); it != level_select.buttons.end(); it++)
     {
       if ((*it)->tryActivate(event.mouseMove.x, event.mouseMove.y))
       {
         activated = true;
+        level_select.curr_button = i;
+        // Deactivate the other button (so that key presses don't mess up the level select)
+        if (level_select.curr_button == 1) level_select.buttons[0]->activate(false);
+        else level_select.buttons[1]->activate(false);
         break;
       }
+      i++;
     }
     if (! activated)
     {
+      level_select.curr_button = -1;
       for (auto it = level_select.image_buttons.begin(); it != level_select.image_buttons.end(); it++)
       {
         if ((*it)->tryActivate(event.mouseMove.x, event.mouseMove.y))
@@ -429,6 +435,30 @@ void UI::UpdateLevelSelect(sf::Event event)
     else if (event.key.code == sf::Keyboard::Right)
     {
       LevelSelectNext();
+    }
+    else if (event.key.code == sf::Keyboard::Tab)
+    {
+      if (level_select.curr_button == 0)
+      {
+        level_select.curr_button = 1;
+        level_select.buttons[1]->activate(true);
+        level_select.buttons[0]->activate(false);
+      }
+      else
+      {
+        level_select.curr_button = 0;
+        level_select.buttons[0]->activate(true);
+        level_select.buttons[1]->activate(false);
+      }
+    }
+    else if (event.key.code == sf::Keyboard::Return)
+    {
+      if ((level_select.curr_button == 0) || (level_select.curr_button == 1))
+      {
+        // Check curr_button ok
+        level_select.buttons[level_select.curr_button]->clickAction();
+      }
+
     }
   }
 }

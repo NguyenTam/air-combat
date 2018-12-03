@@ -160,8 +160,8 @@ class LevelEntity: public sf::Drawable
 
     /**
       *   @brief Stretch LevelEntity
-      *   @param float x Level x coordinate
-      *   @param float y Level y coordinate
+      *   @param x Level x coordinate
+      *   @param y Level y coordinate
       *   @remark Does nothing if LevelEntity isn't stretchable
       */
     void stretch(float x, float y);

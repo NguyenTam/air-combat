@@ -69,8 +69,9 @@ struct LevelSelect
   std::vector <std::shared_ptr<Button>> buttons; /**< Cancel and select buttons */
   std::vector <std::shared_ptr<ImageButton>> image_buttons; /**< Left & right buttons */
   std::vector <std::string> level_names; /**< Container for all level filenames */
-  int curr_level = -1;
-  int max_level = -1;
+  int curr_level = -1; /**< Tells index for currently selected level */
+  int max_level = -1; /**< Tells index for the last level available */
+  int curr_button = -1; /**< Tells which buttons is currently active */
 
 };
 
@@ -128,7 +129,7 @@ class UI
     std::string getLevel();
 
     /**
-      *   @brif Get exit status
+      *   @brief Get exit status
       *   @return Return int matching correct ExitStatus enum
       */
     int getExitStatus();
@@ -136,7 +137,7 @@ class UI
     /**
       *   @brief Init function
       *   @details Called from main after user exits from MainMenu or LevelEditor
-      *   @reamrk Pure virtual method, needs to be implemented in lower classes
+      *   @remark Pure virtual method, needs to be implemented in lower classes
       */
     virtual void init() = 0;
 
@@ -264,7 +265,7 @@ class UI
 
     /**
       *   @brief Parse description from Level file
-      *   @filepath Path to the Level file
+      *   @param filepath Path to the Level file
       *   @return Returns description as a string
       */
     std::string ParseDescription(const std::string& filepath);
