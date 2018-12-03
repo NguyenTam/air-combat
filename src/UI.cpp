@@ -99,25 +99,26 @@ void UI::updateUI()
       {
         UpdateLevelSelect(event);
       }
-
-      // Clear and display window
-      window.clear(sf::Color(BackgoundColor));
-      if (screen_mode == MAINSCREEN)
-      {
-        DrawUI();
-      }
-      else if (screen_mode == LEVELSELECT)
-      {
-        DrawLevelSelect();
-      }
-      window.display();
-
     }
 
   }
+  if (! dialog_active)
+  {
+    // Clear and display window
+    window.clear(sf::Color(BackgoundColor));
+    if (screen_mode == MAINSCREEN)
+    {
+      DrawUI();
+    }
+    else if (screen_mode == LEVELSELECT)
+    {
+      DrawLevelSelect();
+    }
+    window.display();
+  }
 
   // Handle also possible dialog_window event loop
-  if (dialog_active)
+  else if (dialog_active)
   {
     sf::Event event;
     while (dialog_window.pollEvent(event))
