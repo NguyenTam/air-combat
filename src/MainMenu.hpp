@@ -64,7 +64,6 @@ class MainMenu: public UI
 
     /*  Only for testing */
     void Test3(){std::cout << "BUTTON3____________CLICKED" << std::endl;}
-    void Test4(){std::cout << "BUTTON4____________CLICKED" << std::endl;}
 
     /**
       *   @brief Init MainMenu to safe state to restart it
@@ -114,6 +113,12 @@ class MainMenu: public UI
     void UpdateActiveButton(int action);
 
     /**
+      *   @brief Update active button
+      *   @remark This call doesn't take 'direction' as which button to activate
+      */
+    void UpdateActiveButton();
+
+    /**
       *   @brief Create main menu
       *   @details Creates all the necessary Buttons
       */
@@ -132,7 +137,7 @@ class MainMenu: public UI
 
     /*  Variables */
 
-    int current_button = 0; /**< Which button is currently active */
+    int current_button = -1; /**< Which button is currently active */
     std::vector<std::shared_ptr <Button> > buttons;
 
 };
