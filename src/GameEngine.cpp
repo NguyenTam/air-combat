@@ -88,7 +88,7 @@ void GameEngine::run()
       sf::Event event;
       while(renderWindow.pollEvent(event))
       {
-        if(event.type == sf::Event::KeyReleased)
+        if(event.type == sf::Event::KeyPressed)
         {
           if(event.key.code == sf::Keyboard::Escape)
           {
