@@ -664,11 +664,11 @@ void LevelEditor::CreateHorizontalToolbar(unsigned window_width)
 
   // Create all BARRIERS_MODE ImageButtons
   horizontal_toolbar.add_ground = std::make_shared<ImageButton>
-                              ("Ground", "../data/img/grass_small.png", 40, 40);
+                              ("Ground", "../data/img/Ground.png", 40, 40);
   std::shared_ptr<ImageButton> add_tree = std::make_shared<ImageButton>
-                              ("Tree", "../data/img/tree.png", 40, 40);
+                              ("Tree", "../data/img/Tree.png", 40, 40);
   std::shared_ptr<ImageButton> add_rock = std::make_shared<ImageButton>
-                              ("Rock", "../data/img/rock.png", 40, 40);
+                              ("Rock", "../data/img/Rock.png", 40, 40);
   // Set positions and click functions
   horizontal_toolbar.add_ground->setPosition(250, 5);
   add_tree->setPosition(300, 5);
