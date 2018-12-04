@@ -11,7 +11,7 @@
 
 //change map's first element to template?
 
-bool World::read_level(std::string filename) {
+bool World::read_level(std::string& filename) {
 	//entity type; x; y; orientation; width; height
 	double x, y, width, height;
   	int orientation;
@@ -79,11 +79,7 @@ bool World::read_level(std::string filename) {
 	return true;
 }
 
-void World::clear_all() {
-	
-}
-
-World::World(sf::RenderWindow &main_window, ResourceManager &_resources) : window(main_window), resources(_resources) {
+World::World(sf::RenderWindow &main_window, ResourceManager &_resources) : pworld(), window(main_window), resources(_resources) {
 }
 
 /*  Create entity  */

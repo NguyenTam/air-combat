@@ -32,6 +32,9 @@
 
 class World {
 public:
+
+  World() = delete;
+  World& operator=(World &other);
 	/**
       *   @brief Constructor for World
       *   @details creates variable for used window
@@ -60,7 +63,7 @@ public:
       */
 	void update();
 
-  bool read_level(std::string filename);
+  bool read_level(std::string& filename);
 
   void clear_all();
 
