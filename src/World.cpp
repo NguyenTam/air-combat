@@ -100,16 +100,17 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 	sf::Texture tex = resources.get(id);
 	sf::Vector2f pos(x,y);
 	b2Body* body;
+	std::shared_ptr<Entity> entity;
 	
 	switch(id) {
 		case Textures::BlueAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			std::shared_ptr<Plane> entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::BlueAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			std::shared_ptr<Artillery> entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::BlueBase_alpha: {
@@ -122,12 +123,12 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		}
 		case Textures::BlueInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			std::shared_ptr<Infantry> entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::Bullet_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			std::shared_ptr<Bullet> entity = std::make_shared<Bullet>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Bullet>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::Ground_alpha: {
@@ -136,12 +137,12 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		}
 		case Textures::RedAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			std::shared_ptr<Plane> entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::RedAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			std::shared_ptr<Artillery> entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::RedBase_alpha: {
@@ -154,7 +155,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		}
 		case Textures::RedInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			std::shared_ptr<Infantry> entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::Rock_alpha: {
@@ -170,8 +171,8 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			break;
 	}
 
-/*
 	if (std::find(objects.begin(), objects.end(), entity) != objects.end()) {
+		std::cout << "test" << std::endl;
 		objects.push_back(entity);
 		return true;
 	}
@@ -179,7 +180,6 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 	else {
 		return false;
 	}
-*/
 }
 
 /*  Remove entity  */
@@ -211,10 +211,20 @@ void World::update() {
 	pworld.get_world()->Step(timeStep, velocityIterations, positionIterations);
 
 	for (b2Contact* contact = pworld.get_world()->GetContactList(); contact;  contact = contact->GetNext()) {
-		b2Body* a = contact->GetFixtureA()->GetBody();
-		b2Body* b = contact->GetFixtureB()->GetBody();
+		b2Body* a_body = contact->GetFixtureA()->GetBody();
+		b2Body* b_body = contact->GetFixtureB()->GetBody();
 
-		//DO SOMETHING WITH BODIES
+		std::shared_ptr<Entity> a_entity;
+		std::shared_ptr<Entity> b_entity;
+
+		for (auto it = objects.begin(); it != objects.end(); it++) {
+			if (&(*it)->getB2Body() == a_body)
+				a_entity = *it;
+			else if (&(*it)->getB2Body() == b_body)
+				b_entity = *it;
+		}
+
+
 	}
 
 	for (auto it : objects) {
