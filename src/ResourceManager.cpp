@@ -1,9 +1,18 @@
 #include "ResourceManager.hpp"
 #include <iostream>
 
+ResourceManager::ResourceManager()
+{
+  if (resourceMap.size()==0)
+    {
+      init();
+    }
+}
+
 bool ResourceManager::init()
 {
   //TODO: More resources, after we have decided image names
+  if (resourceMap.size()==0){
   try
     {
       for (int enum_value = 0; enum_value != Textures::ID::end; enum_value++)
@@ -16,7 +25,8 @@ bool ResourceManager::init()
     {
       std::cout << "Exception: " << e.what() << std::endl;
       return false;
-    }   
+    }
+  }
 }
 
 void ResourceManager::load(Textures::ID id, const std::string& filename)

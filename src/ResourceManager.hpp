@@ -13,7 +13,7 @@
 
 class ResourceManager{
 public:
-  ResourceManager() =default;
+  ResourceManager();
   /**
    * @brief Load resources.
    * @return true if all resources are loaded to resource map, a member variable. Otherwise return false.
