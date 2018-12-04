@@ -1,4 +1,11 @@
+/**
+ *   @file CommonDefinitions.hpp
+ *   @brief Header for CommonDefinitions class
+ */
 #pragma once
+
+/* Includes */
+
 #include <string>
 #include <vector>
 #include <map>
