@@ -209,9 +209,6 @@ void World::update() {
 	
 	pworld.get_world()->Step(timeStep, velocityIterations, positionIterations);
 
-	// set the shape color to green
-	shape.setFillColor(sf::Color(100, 250, 50));
-
 	for (b2Contact* contact = pworld.get_world()->GetContactList(); contact;  contact = contact->GetNext()) {
 		if (contact->IsTouching()){
 			b2Body* a_body = contact->GetFixtureA()->GetBody();
