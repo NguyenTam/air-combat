@@ -8,18 +8,21 @@
 
 CC = g++
 CFLAGS = -Wall -Wextra -pedantic -g -std=c++17
-LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system -lstdc++fs
+LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system -lstdc++fs -lBox2D
 
-OBJECTS = button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o TextInput.o CommonDefinitions.o ResourceManager.o
+OBJECTS = Entity.o button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o TextInput.o CommonDefinitions.o ResourceManager.o
 
 SRC = ../src/
 
-all:	Menu_test Editor_test LevelEntity_test ResourceManager_test GameEngine_test
+all:	World_test Menu_test Editor_test LevelEntity_test ResourceManager_test GameEngine_test
 
 run: Menu_test
 	./Menu_test
 
 Menu_test: $(OBJECTS) MainMenu_test.cpp
+	$(CC) $(CFLAGS)  $^  $(LINKER) -o $@
+
+World_test:$(OBJECTS) Plane.o Artillery.o Infantry.o Bullet.o World.o PhysicsWorld.o GameEngine.o World_test.cpp
 	$(CC) $(CFLAGS)  $^  $(LINKER) -o $@
 
 Editor_test: $(OBJECTS) LevelEditor_test.cpp
