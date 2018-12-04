@@ -100,51 +100,73 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 	sf::Texture tex = resources.get(id);
 	sf::Vector2f pos(x,y);
 	b2Body* body;
-	/*
+	
 	switch(id) {
-		case Textures::BlueAirplane_alpha:
+		case Textures::BlueAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			std::shared_ptr<Plane> entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);
 			break;
-		case Textures::BlueAntiAircraft_alpha:
+		}
+		case Textures::BlueAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			std::shared_ptr<Artillery> entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos);
 			break;
-		case Textures::BlueBase_alpha:
+		}
+		case Textures::BlueBase_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			break;
-		case Textures::BlueHangar_alpha:
+		}
+		case Textures::BlueHangar_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			break;
-		case Textures::BlueInfantry_alpha:
+		}
+		case Textures::BlueInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
+			std::shared_ptr<Infantry> entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos);
 			break;
-		case Textures::Bullet_alpha:
+		}
+		case Textures::Bullet_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
+			std::shared_ptr<Bullet> entity = std::make_shared<Bullet>(*pworld.get_world(), *body, tex, pos);
 			break;
-		case Textures::Ground_alpha:
+		}
+		case Textures::Ground_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			break;
-		case Textures::RedAirplane_alpha:
+		}
+		case Textures::RedAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
+			std::shared_ptr<Plane> entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);
 			break;
-		case Textures::RedAntiAircraft_alpha:
+		}
+		case Textures::RedAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
+			std::shared_ptr<Artillery> entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos);
 			break;
-		case Textures::RedBase_alpha:
+		}
+		case Textures::RedBase_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			break;
-		case Textures::RedHangar_alpha:
+		}
+		case Textures::RedHangar_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			break;
-		case Textures::RedInfantry_alpha:
+		}
+		case Textures::RedInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
+			std::shared_ptr<Infantry> entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos);
 			break;
-		case Textures::Rock_alpha:	
+		}
+		case Textures::Rock_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			break;
-		case Textures::Tree_alpha:
+		}
+		case Textures::Tree_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
+			break;
+		}
+		default:
+			std::cout << "id not found" << std::endl;
 			break;
 	}
 
