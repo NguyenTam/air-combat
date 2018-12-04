@@ -294,6 +294,9 @@ void UI::HandleResize(sf::Event event)
    right->setPosition(510, 430);
    left->setCheckable(false);
    right->setCheckable(false);
+   // Set ouline disabled
+   right->enableOutline(false);
+   left->enableOutline(false); 
 
    // Add to the container
    level_select.image_buttons.push_back(left);
