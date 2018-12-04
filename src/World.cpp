@@ -105,7 +105,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 	switch(id) {
 		case Textures::BlueAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);			
+			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::BlueAntiAircraft_alpha: {
@@ -171,10 +171,9 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			break;
 	}
 	
-	if (entity) {
-		std::cout << "test" << std::endl;
-		objects.push_back(entity);
-		return true;
+	if (entity) {	
+	  objects.push_back(std::move(entity));
+	  return true;
 	}
 	//entity was already added
 	else {
@@ -210,6 +209,9 @@ void World::update() {
 	
 	pworld.get_world()->Step(timeStep, velocityIterations, positionIterations);
 
+	// set the shape color to green
+	shape.setFillColor(sf::Color(100, 250, 50));
+
 	for (b2Contact* contact = pworld.get_world()->GetContactList(); contact;  contact = contact->GetNext()) {
 		if (contact->IsTouching()){
 			b2Body* a_body = contact->GetFixtureA()->GetBody();
@@ -228,10 +230,9 @@ void World::update() {
 
 
 	}
-
+	
 	for (auto it : objects) {
 		if (it->getB2Body().GetType() == b2_dynamicBody) {
-
 			//new position for sprite
 			sf::Vector2f newpos(TOPIXELS*it->getB2Body().GetPosition().x, TOPIXELS*it->getB2Body().GetPosition().y);
 			it->setPos(newpos);
