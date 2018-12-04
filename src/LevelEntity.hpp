@@ -40,6 +40,7 @@ class LevelEntity: public sf::Drawable
       *   @param width LevelEntity width
       *   @param height LevelEntity height
       *   @param Entity texture from ResourceManager
+      *   @param texture (png image) of current entity
       *   @param type LevelEntity type, defined in Level.hpp
       */
     LevelEntity(float x, float y, float width, float height, sf::Texture &texture, int type = 0);

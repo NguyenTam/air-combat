@@ -27,7 +27,8 @@ public:
    *   @param speed Maximum speed for entity
    *   @param bullets Number of bullets this entity can shoot
    *   @param bombs Number of bombs this entity can drop
-   *   @param firerate How many frames does it take for the entity to shoot again, so 60 would mean shooting once per second
+   *   @param firerate How many frames does it take for the entity to shoot again, so 60 would mean shooting once per second.
+   *   @param hp Hitpoint of this entity
    */
   Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position,  float speed, int bullets, int bombs, int firerate, int hp);
 

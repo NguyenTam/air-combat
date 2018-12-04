@@ -206,7 +206,7 @@ class Level
       *   @param entity_type LevelEntity type (see Macros)
       *   @param entity_width Type matching width
       *   @param entity_height Type matching height
-      *   @param entity_img Path to image file for matching entity_type
+      *   @param texture Texture (png image) of this entity.
       */
     void AddEntity(float x, float y, int entity_type, float entity_width, float entity_height, sf::Texture &texture);
 
