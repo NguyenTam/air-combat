@@ -10,7 +10,7 @@ CC = g++
 CFLAGS = -Wall -Wextra -pedantic -g -std=c++17
 LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system -lstdc++fs -lBox2D
 
-OBJECTS = Entity.o button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o TextInput.o CommonDefinitions.o ResourceManager.o
+OBJECTS = PhysicsWorld.o Plane.o Artillery.o Infantry.o Bullet.o World.o Entity.o button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o TextInput.o CommonDefinitions.o ResourceManager.o
 
 SRC = ../src/
 
@@ -34,7 +34,7 @@ LevelEntity_test: LevelEntity.o LevelEntity_test.cpp
 ResourceManager_test: CommonDefinitions.o ResourceManager.o ResourceManager_test.cpp
 	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
-GameEngine_test: CommonDefinitions.o ResourceManager.o GameEngine.o GameEngine_test.cpp
+GameEngine_test: $(OBJECTS) CommonDefinitions.o ResourceManager.o GameEngine.o GameEngine_test.cpp
 	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
 # Instruction to compile from cpp-files in src-folder to object-files.
