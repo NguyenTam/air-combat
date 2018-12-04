@@ -18,7 +18,7 @@ class GameEngine : private sf::NonCopyable
   /**
    * @brief Run game engine.
    */
-  void run(); 
+  void run(std::string &level_file); 
 
   static const int FPS = 60; /**< Frames Per Second.*/
   static const float METERS_PER_PIXEL; /**< To convert from pixels to meters.*/
@@ -55,6 +55,7 @@ class GameEngine : private sf::NonCopyable
   
   
   sf::RenderWindow &renderWindow; /**< Display window for game engine */
+  ResourceManager resources;
   sf::Texture playerTexture; /**< Player texture like aircraft image */
   sf::Sprite playerSprite; /**< Player object with texture.*/
   sf::Font gameFont; /**< Game font type and size*/
@@ -62,7 +63,7 @@ class GameEngine : private sf::NonCopyable
 
   bool isGameEngineReady; /**< Is the game ended*/
   std::shared_ptr<spdlog::logger> gameEngineLogger; /**< Game engine logger. Logs are written to data folder.*/
-  ResourceManager resources;
 
-  
+
+  World world;
 };

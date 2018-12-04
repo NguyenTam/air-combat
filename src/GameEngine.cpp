@@ -14,6 +14,7 @@
 #include <math.h>
 #include <cstdlib>
 #include <sstream>
+#include "World.hpp"
 
 /* Initialize members*/
 const float GameEngine::METERS_PER_PIXEL = 60.f;
@@ -22,7 +23,7 @@ const sf::Time GameEngine::TIME_PER_FRAME = sf::seconds(1.f/FPS);
 const float GameEngine::PLAYER_SPEED = 100.f;
 const float GameEngine::PLAYER_ROTATION_DEGREE = 5.f;
 
-GameEngine::GameEngine(sf::RenderWindow & rw) : renderWindow(rw), gameFont()
+GameEngine::GameEngine(sf::RenderWindow & rw) : renderWindow(rw), resources(), gameFont(), world(rw, resources)
 {
   /* Construct a render window.*/
   //renderWindow.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Air Combat 1", sf::Style::Titlebar | sf::Style::Close);
@@ -36,23 +37,18 @@ GameEngine::GameEngine(sf::RenderWindow & rw) : renderWindow(rw), gameFont()
       gameEngineLogger =spdlog::daily_logger_st("async_file_logger", Paths::Paths[Paths::PATHS::logs]+ "game-engine-log");
 
       /*Try to load texture from file*/
-      if(!resources.init())
-      {
-        isGameEngineReady = false;
-        return;
-      }
-      /*If loading is success, then load font and set game info position on render window*/
-      else {
+
         playerSprite.setTexture(resources.get(Textures::ID::BlueAirplane_alpha));
         playerSprite.setPosition(100.f,100.f);
 
+	std::cout << playerSprite.getTexture()->getSize().x << std::endl;	
+	std::cout << playerSprite.getTexture()->getSize().y << std::endl;
         gameFont.loadFromFile("../data/fonts/Sansation.ttf");
         gameInfo.setFont(gameFont);
         gameInfo.setPosition(10.f,10.f);
         gameInfo.setCharacterSize(10);
-
+             
         isGameEngineReady = true;
-      }
     }
     /* spdlog constructor threw an exception.*/
     catch(const spdlog::spdlog_ex &ex)
@@ -67,12 +63,14 @@ GameEngine::GameEngine(sf::RenderWindow & rw) : renderWindow(rw), gameFont()
  * This function passes constant TIME_PER_FRAME to update function to achieve fixed time steps.
  * Otherwise the game can be laggy and players can pass through a wall + easier to debug.
  */
-void GameEngine::run()
+void GameEngine::run(std::string &level_file)
 {
-
+  
   sf::Clock clock;
   sf::Time lastUpdateTime = sf::Time::Zero;
 
+  World world = World(renderWindow, resources);
+  world.read_level(level_file);
   /* While render window = game is on.*/
   while(renderWindow.isOpen())
   {
@@ -131,8 +129,9 @@ void GameEngine::processEvents()
 void GameEngine::render()
 {
   renderWindow.clear();
-  renderWindow.draw(playerSprite);
-  renderWindow.draw(gameInfo);
+  //renderWindow.draw(playerSprite);
+  //renderWindow.draw(gameInfo);
+  world.update();
   renderWindow.display();
 }
 

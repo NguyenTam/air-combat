@@ -63,7 +63,7 @@ int main()
       std::string level_name = menu.getLevel();
       std::cout << "Open this level in the base game: " << level_name << std::endl;
       // TODO : From game back to main menu.
-      game.run();      
+      game.run(level_name);      
       exit_status = ExitStatus::MAINMENU;
     }
     if (exit_status == ExitStatus::QUIT)
