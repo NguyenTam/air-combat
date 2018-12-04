@@ -8,6 +8,8 @@
 #include "Entity.hpp"
 #include "PhysicsWorld.hpp"
 #include "ResourceManager.hpp"
+#include "CommonDefinitions.hpp"
+#include "Plane.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <algorithm>
@@ -45,7 +47,7 @@ public:
       *   @return Returns true if succesful, false if not
       */
 
-	bool create_entity(std::string type, double x, double y, int orientation, double width, double height);
+	bool create_entity(Textures::ID id, double x, double y, int orientation, double width, double height);
 
 	/**
       *   @brief Removes given entity from the game

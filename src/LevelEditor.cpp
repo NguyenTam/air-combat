@@ -478,6 +478,10 @@ void LevelEditor::CreateVerticalToolbar(unsigned window_height)
   vertical_toolbar.view_left->setScale(0.2);
   vertical_toolbar.view_left->setPosition(right_arrow_x - 30, window_height - 80);
 
+  // Disable outline
+  vertical_toolbar.view_left->enableOutline(false);
+  vertical_toolbar.view_right->enableOutline(false);
+
   // Set click actions
   vertical_toolbar.view_left->setClickFunction( std::bind(&LevelEditor::view_left_action, this));
   vertical_toolbar.view_right->setClickFunction( std::bind(&LevelEditor::view_right_action, this));

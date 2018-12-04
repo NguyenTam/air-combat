@@ -119,6 +119,12 @@ class ImageButton: public Button
       */
     void setScale(float scale);
 
+    /**
+      *   @brief Disable / enable outline for ImageButton rect
+      *   @param enable true -> enable, false -> disable
+      */
+    void enableOutline(bool enable);
+
   protected:
     /**
       *   @brief Draw ImageButton to window
