@@ -87,3 +87,13 @@ void Entity::setType(Textures::ID t){
 Textures::ID Entity::getType() {return type;}
 
 b2Body& Entity::getB2Body() {return b2body;}
+
+bool Entity::setScale(float width, float height) {
+  if (width > 0) {
+    if (height > 0) {
+      entity.setScale(width / entity.getTexture()->getSize().x, height / entity.getTexture()->getSize().y);
+      return true;
+    }
+  }
+  return false;
+}
