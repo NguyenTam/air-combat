@@ -1,8 +1,29 @@
+/**
+  *   @file Bullet.hpp
+  *   @brief Header for Bullet class
+  */
+
 #pragma once
+
+/* Includes */
+
 #include "Entity.hpp"
 #include <SFML/Graphics.hpp>
+
+/**
+  *   @class Button
+  */
+
 class Bullet : public Entity {
  public:
-  Bullet(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate);
+
+ /*
+  *   @brief Standard constructor for Bullet
+  *   @param w Gameworld where bullet is created in
+  *   @param b Bullet's body for collisions
+  *   @param t Bullet's texture
+  *   @param position Place as vector where bullet is created
+  */
+  Bullet(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position);
 
 };

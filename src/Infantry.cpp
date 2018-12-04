@@ -1,6 +1,6 @@
 #include "Infantry.hpp"
 
-Infantry::Infantry(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate):Entity(w, b, t, position, speed = 2.f, bullets = 999, bombs = 0, firerate = 180){ }
+Infantry::Infantry(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position):Entity(w, b, t, position, 2.f, 200, 0, 180){ }
    
     bool Infantry::shoot(){
       if (fireCountDown <= 0) {
