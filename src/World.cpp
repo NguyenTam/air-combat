@@ -97,7 +97,7 @@ void World::clear_all() {}
 /*  Create entity  */
 
 bool World::create_entity(Textures::ID id, double x, double y, int orientation, double width, double height) {
-	sf::Texture tex = resources.get(id);
+	sf::Texture &tex = resources.get(id);
 	sf::Vector2f pos(x,y);
 	b2Body* body;
 	std::shared_ptr<Entity> entity;
@@ -105,7 +105,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 	switch(id) {
 		case Textures::BlueAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);			
 			break;
 		}
 		case Textures::BlueAntiAircraft_alpha: {
@@ -170,8 +170,8 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			std::cout << "id not found" << std::endl;
 			break;
 	}
-
-	if (std::find(objects.begin(), objects.end(), entity) != objects.end()) {
+	
+	if (entity) {
 		std::cout << "test" << std::endl;
 		objects.push_back(entity);
 		return true;
@@ -179,7 +179,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 	//entity was already added
 	else {
 		return false;
-	}
+		}
 }
 
 /*  Remove entity  */
