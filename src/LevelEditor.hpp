@@ -364,7 +364,7 @@ class LevelEditor: public UI
 
     /**
       *   @brief Action for cancel button in UI::level_select
-      *   @Reimplemented from the base class UI
+      *   @remark Reimplemented from the base class UI
       */
     virtual void cancel_to_mainscreen_action();
 

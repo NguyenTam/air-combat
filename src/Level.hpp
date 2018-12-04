@@ -16,7 +16,7 @@
 #include <fstream>
 #include <experimental/filesystem>
 #include "LevelEntity.hpp"
-#include "CommonDefinitions.hpp"
+#include "ResourceManager.hpp"
 
 
 /*  Macros */
@@ -37,7 +37,8 @@
 #define ROCK_ENTITY 12 /**< Entity type for rock */
 #define GROUND_ENTITY 13 /**< Entity type for ground */
 
-
+/*#define ground_height 100
+#define ground_width 100*/
 
 /**
   *   @class Level
@@ -49,6 +50,27 @@
 class Level
 {
   public:
+
+
+    /* Every entity width, height */
+    static const float infantry_width;
+    static const float infantry_height;
+    static const float plane_width;
+    static const float plane_height;
+    static const float AA_width;
+    static const float AA_height;
+    static const float hangar_width;
+    static const float hangar_height;
+    static const float base_width;
+    static const float base_height;
+    static const float tree_width;
+    static const float tree_height;
+    static const float rock_width;
+    static const float rock_height;
+    static const float ground_width;
+    static const float ground_height;
+
+
 
     /**
       *   @brief Standard constructor for Level
@@ -186,7 +208,7 @@ class Level
       *   @param entity_height Type matching height
       *   @param entity_img Path to image file for matching entity_type
       */
-    void AddEntity(float x, float y, int entity_type, float entity_width, float entity_height, std::string entity_img);
+    void AddEntity(float x, float y, int entity_type, float entity_width, float entity_height, sf::Texture &texture);
 
     /**
       *   @brief Try to remove a LevelEntity
@@ -252,7 +274,7 @@ class Level
       *   @brief Remove specific type entities from level_entities
       *   @details Used to remove previously placed friendly planes (1 allowed at the time)
       *   @param entity_type LevelEntity type which are removed
-      *   @not_removed LevelEntity which isn't removed
+      *   @param not_removed LevelEntity which isn't removed
       */
     void RemoveSpecificEntities(int entity_type, std::shared_ptr<LevelEntity> not_removed);
 
@@ -271,42 +293,6 @@ class Level
     std::vector<std::shared_ptr<LevelEntity>> level_entities; /**< All LevelEntities */
     std::vector<std::shared_ptr<LevelEntity>> grounds; /**< All ground entities are also added here */
     std::map <unsigned, unsigned> ground_level; /**< Stores the ground level below */
+    ResourceManager manager;
 
-    /* Every entity width, height and path */
-    float infantry_width = 19;
-    float infantry_height = 32;
-    const std::string friendly_infantry_path = "../data/img/BlueInfantry_alpha.png";
-    const std::string hostile_infantry_path = "../data/img/RedInfantry_alpha.png";
-
-    float plane_width = 38;
-    float plane_height = 18;
-    const std::string friendly_plane_path = "../data/img/BlueAirplane_alpha.png";
-    const std::string hostile_plane_path = "../data/img/RedAirplane_alpha.png";
-
-    float AA_width = 36;
-    float AA_height = 31;
-    const std::string friendly_AA_path = "../data/img/BlueAntiAircraft_alpha.png";
-    const std::string hostile_AA_path = "../data/img/RedAntiAircraft_alpha.png";
-
-    float hangar_width = 28;
-    float hangar_height = 26;
-    const std::string friendly_hangar_path = "../data/img/BlueHangar_alpha.png";
-    const std::string hostile_hangar_path = "../data/img/RedHangar_alpha.png";
-
-    float base_width = 76;
-    float base_height = 63;
-    const std::string friendly_base_path = "../data/img/BlueBase_alpha.png";
-    const std::string hostile_base_path = "../data/img/RedBase_alpha.png";
-
-    float tree_width = 27;
-    float tree_height = 36;
-    const std::string tree_path = "../data/img/tree_alpha.png";
-
-    float rock_width = 25;
-    float rock_height = 20;
-    const std::string rock_path = "../data/img/rock_alpha.png";
-
-    float ground_width = 100;
-    float ground_height = 100;
-    const std::string ground_path = "../data/img/grass.png";
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <map>
 namespace Game
 {
   extern const int WIDTH;
@@ -16,7 +17,7 @@ namespace Paths
       level_files,
       logs
     };
-  extern std::vector<std::string> Paths; /**< Use this command in data/img "ls -1 | sort | sed -e 's/$/",/' | sed -e 's/^/"/'" to get this output. */
+  extern std::vector<std::string> Paths;
   
 }
 
@@ -34,9 +35,10 @@ namespace Textures
       BlueHangar,
       BlueInfantry_alpha,
       BlueInfantry,
+      Bullet_alpha,
       erase,
-      grass,
-      grass_small,
+      Ground_alpha,
+      Ground,
       infantry,
       left_arrow,
       plane,
@@ -51,13 +53,14 @@ namespace Textures
       RedInfantry_alpha,
       RedInfantry,
       right_arrow,
-      rock_alpha,
-      rock,
+      Rock_alpha,
+      Rock,
       std_button,
-      tree_alpha,
-      tree,     
-      end
-      }; /**< Use this command in data/img "ls -1 | sort | sed -e 's/\..*$/,/'" to get this output. */
-  extern std::vector<std::string> TextureFiles; /**< Use this command in data/img "ls -1 | sort | sed -e 's/$/",/' | sed -e 's/^/"/'" to get this output. */
+      Tree_alpha,
+      Tree,
+      end      
+    };
+  extern std::vector<std::string> TextureFiles;
+extern std::map<std::string, Textures::ID> alphaTextures;
 }
 

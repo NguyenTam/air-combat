@@ -7,11 +7,15 @@
 
 #include "Entity.hpp"
 #include "PhysicsWorld.hpp"
+#include "ResourceManager.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <vector>
 #include <Box2D/Box2D.h>
+#include <fstream>
+#include <sstream>
+
 
 #define DEGTORAD 0.0174532925199432957f
 #define RADTODEG 57.295779513082320876f
@@ -33,21 +37,22 @@ public:
       *   @details creates variable for used window
       *   @param main_window RenderWindow which is used to display the game
       */
-	World(sf::RenderWindow *main_window);
+	World(sf::RenderWindow &main_window, ResourceManager &_resources);
 
 	/**
       *   @brief Adds given entity to the game
-      *   @param entity Pointer to the entity that is being added
+      *   @param type: string of entity's type, x: x-axis coordinate, y: y-axis coordinate, orientation: direction where the entity is facing, width: width of the entity, height: height of the entity
       *   @return Returns true if succesful, false if not
       */
-	bool add_entity(Entity *entity);
+
+	bool create_entity(std::string type, double x, double y, int orientation, double width, double height);
 
 	/**
       *   @brief Removes given entity from the game
       *   @param entity Pointer to the entity that is being removed
       *   @return Returns true if succesful, false if not
       */
-	bool remove_entity(Entity *entity);
+	bool remove_entity(std::shared_ptr<Entity> entity);
 
 	/**
       *   @brief Updates the world
@@ -55,8 +60,13 @@ public:
       */
 	void update();
 
+  bool read_level(std::string filename);
+
+  void clear_all();
+
 private:
   PhysicsWorld pworld;
-	sf::RenderWindow *window; /**< Window that is being used */
-	std::map<Entity*, b2Body*> objects; /**< Contains all the entities added */
+  ResourceManager &resources;
+	sf::RenderWindow &window; /**< Window that is being used */
+	std::vector<std::shared_ptr<Entity>> objects; /**< Contains all the entities added */
 };

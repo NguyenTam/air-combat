@@ -1,6 +1,7 @@
 #compiled files
 *.o
 *_test
+game
 #hidden files
 .*
 

@@ -33,24 +33,24 @@ GameEngine::GameEngine(sf::RenderWindow & rw) : renderWindow(rw), gameFont()
     try
     {
       /*Construct spdlogger*/
-      gameEngineLogger =spdlog::daily_logger_st("async_file_logger", Paths::Paths[Paths::PATHS::logs]+ "game-engine-log.txt");
-      
+      gameEngineLogger =spdlog::daily_logger_st("async_file_logger", Paths::Paths[Paths::PATHS::logs]+ "game-engine-log");
+
       /*Try to load texture from file*/
       if(!resources.init())
       {
         isGameEngineReady = false;
-        return;    
+        return;
       }
       /*If loading is success, then load font and set game info position on render window*/
       else {
         playerSprite.setTexture(resources.get(Textures::ID::BlueAirplane_alpha));
         playerSprite.setPosition(100.f,100.f);
-        
+
         gameFont.loadFromFile("../data/fonts/Sansation.ttf");
         gameInfo.setFont(gameFont);
         gameInfo.setPosition(10.f,10.f);
-        gameInfo.setCharacterSize(10);        
-        
+        gameInfo.setCharacterSize(10);
+
         isGameEngineReady = true;
       }
     }
@@ -79,9 +79,9 @@ void GameEngine::run()
     /*restart function returns elapsed time and reset the clock to zero to get elapsed time of next iteration.*/
     sf::Time elapsedTime = clock.restart();
     lastUpdateTime += elapsedTime;
-    
+
     /* Time to handle events, update world and display. */
-    while(lastUpdateTime > TIME_PER_FRAME)      
+    while(lastUpdateTime > TIME_PER_FRAME)
     {
       lastUpdateTime -= TIME_PER_FRAME;
       // Handle events
@@ -157,7 +157,7 @@ void GameEngine::update(sf::Time elapsedTime)
 
 
   playerSprite.move(moveTo * elapsedTime.asSeconds());
-  playerSprite.rotate(rotated);  
+  playerSprite.rotate(rotated);
 }
 
 void GameEngine::updateGameInfo()
