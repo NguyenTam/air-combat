@@ -28,12 +28,10 @@ const float Level::ground_height = 100.f;
 
 
 /* Constructor */
-Level::Level()
+Level::Level() : manager()
 {
   // Constuct empty LevelEntity
   current_entity = std::make_shared<LevelEntity>();
-  // init ResourceManager
-  manager.init();
 }
 
 /* Set level_y_limit */

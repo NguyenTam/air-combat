@@ -3,29 +3,16 @@
 
 ResourceManager::ResourceManager()
 {
-  if (resourceMap.size()==0)
-    {
-      init();
-    }
-}
-
-bool ResourceManager::init()
-{
-  //TODO: More resources, after we have decided image names
-  if (resourceMap.size()==0){
   try
+  {
+    for (int enum_value = 0; enum_value != Textures::ID::end; enum_value++)
     {
-      for (int enum_value = 0; enum_value != Textures::ID::end; enum_value++)
-	{
-	  load(static_cast<Textures::ID>(enum_value), Paths::Paths[Paths::PATHS::img] +Textures::TextureFiles[enum_value]);
-	}
-      return true;
+      load(static_cast<Textures::ID>(enum_value), Paths::Paths[Paths::PATHS::img] +Textures::TextureFiles[enum_value]);
     }
+  }
   catch (std::runtime_error& e)
-    {
-      std::cout << "Exception: " << e.what() << std::endl;
-      return false;
-    }
+  {
+    std::cout << "Exception: " << e.what() << std::endl;
   }
 }
 

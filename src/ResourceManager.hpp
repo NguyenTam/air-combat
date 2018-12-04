@@ -15,11 +15,6 @@ class ResourceManager{
 public:
   ResourceManager();
   /**
-   * @brief Load resources.
-   * @return true if all resources are loaded to resource map, a member variable. Otherwise return false.
-   */
-  bool init();
-  /**
    * @brief get a texture based on texture ID.
    * @param id, resource enum id.
    * @return a texture reference from the resource map.
