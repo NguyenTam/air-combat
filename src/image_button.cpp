@@ -278,3 +278,16 @@ void ImageButton::setScale(float scale)
   // Scale also the sprite
   image_sprite.setScale(scale, scale);
 }
+
+/*  Disable / enable outline */
+void ImageButton::enableOutline(bool enable)
+{
+  if (enable)
+  {
+    button_rect.setOutlineThickness(1);
+  }
+  else
+  {
+    button_rect.setOutlineThickness(0);
+  }
+}

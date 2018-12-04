@@ -3,7 +3,7 @@
 
 class Plane : public Entity {
   public:
-  Plane(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate);
+  Plane(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position);
     bool shoot();
 };
 
