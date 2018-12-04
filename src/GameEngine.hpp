@@ -63,7 +63,5 @@ class GameEngine : private sf::NonCopyable
 
   bool isGameEngineReady; /**< Is the game ended*/
   std::shared_ptr<spdlog::logger> gameEngineLogger; /**< Game engine logger. Logs are written to data folder.*/
-
-
   World world;
 };

@@ -26,8 +26,6 @@ const float GameEngine::PLAYER_ROTATION_DEGREE = 5.f;
 GameEngine::GameEngine(sf::RenderWindow & rw) : renderWindow(rw), resources(), gameFont(), world(rw, resources)
 {
   /* Construct a render window.*/
-  //renderWindow.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Air Combat 1", sf::Style::Titlebar | sf::Style::Close);
-
   renderWindow.setTitle("Air Combat 1");
 
   /* Try spdlogger */
@@ -68,8 +66,7 @@ void GameEngine::run(std::string &level_file)
   
   sf::Clock clock;
   sf::Time lastUpdateTime = sf::Time::Zero;
-
-  World world = World(renderWindow, resources);
+  
   world.read_level(level_file);
   /* While render window = game is on.*/
   while(renderWindow.isOpen())
