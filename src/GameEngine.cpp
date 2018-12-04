@@ -64,11 +64,12 @@ GameEngine::GameEngine(sf::RenderWindow & rw) : renderWindow(rw), resources(), g
 void GameEngine::run(std::string &level_file)
 {
   
-  sf::Clock clock;
   sf::Time lastUpdateTime = sf::Time::Zero;
   
   world.read_level(level_file);
-  /* While render window = game is on.*/
+
+  
+  sf::Clock clock;
   while(renderWindow.isOpen())
   {
     /*restart function returns elapsed time and reset the clock to zero to get elapsed time of next iteration.*/
