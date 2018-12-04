@@ -211,17 +211,19 @@ void World::update() {
 	pworld.get_world()->Step(timeStep, velocityIterations, positionIterations);
 
 	for (b2Contact* contact = pworld.get_world()->GetContactList(); contact;  contact = contact->GetNext()) {
-		b2Body* a_body = contact->GetFixtureA()->GetBody();
-		b2Body* b_body = contact->GetFixtureB()->GetBody();
+		if (contact->IsTouching()){
+			b2Body* a_body = contact->GetFixtureA()->GetBody();
+			b2Body* b_body = contact->GetFixtureB()->GetBody();
 
-		std::shared_ptr<Entity> a_entity;
-		std::shared_ptr<Entity> b_entity;
+			std::shared_ptr<Entity> a_entity;
+			std::shared_ptr<Entity> b_entity;
 
-		for (auto it = objects.begin(); it != objects.end(); it++) {
-			if (&(*it)->getB2Body() == a_body)
-				a_entity = *it;
-			else if (&(*it)->getB2Body() == b_body)
-				b_entity = *it;
+			for (auto it = objects.begin(); it != objects.end(); it++) {
+				if (&(*it)->getB2Body() == a_body)
+					a_entity = *it;
+				else if (&(*it)->getB2Body() == b_body)
+					b_entity = *it;
+			}
 		}
 
 
