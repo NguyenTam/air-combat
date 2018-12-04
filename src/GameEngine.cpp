@@ -1,5 +1,5 @@
 /**
-  *   @file Gameengine.cpp
+  *   @file GameEngine.cpp
   *   @brief Contains class GameEngine source
   */
 #include "Entity.hpp"
