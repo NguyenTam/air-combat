@@ -9,7 +9,9 @@
 
 /*  Constructor  */
 
-//change map's first element to template?
+World::World(sf::RenderWindow &main_window, ResourceManager &_resources) : pworld(), window(main_window), resources(_resources) {}
+
+/*  Parse level .txt file and create world's entities  */
 
 bool World::read_level(std::string& filename) {
 	//entity type; x; y; orientation; width; height
@@ -35,7 +37,7 @@ bool World::read_level(std::string& filename) {
 				while(getline(temp_stream, split_str, ';')) {
 					try {
 						switch (i) {
-							case 0:
+						  case 0:
 			                type = split_str;
 			                break;
 			              case 1:
@@ -71,7 +73,13 @@ bool World::read_level(std::string& filename) {
 				}
 				else {
 					//all ok
-					create_entity(type, x, y, orientation, width, height);
+					try {
+						Textures::ID id = Textures::alphaTextures.at(type);
+						create_entity(id, x, y, orientation, width, height);
+					}
+					catch (const std::out_of_range& er) {
+					    
+					}
 				}
 			}
 		}
@@ -79,24 +87,99 @@ bool World::read_level(std::string& filename) {
 	return true;
 }
 
-World::World(sf::RenderWindow &main_window, ResourceManager &_resources) : pworld(), window(main_window), resources(_resources) {
-}
+
+
+
+/*  Clears the world  */
+
+void World::clear_all() {}
 
 /*  Create entity  */
 
-bool World::create_entity(std::string type, double x, double y, int orientation, double width, double height) {
-	//b2Body* body = pworld.create_body()
-	//std::shared_ptr<Entity> entity = std::make_shared<Entity>(pworld, )
+bool World::create_entity(Textures::ID id, double x, double y, int orientation, double width, double height) {
+	sf::Texture tex = resources.get(id);
+	sf::Vector2f pos(x,y);
+	b2Body* body;
+	std::shared_ptr<Entity> entity;
+	
+	switch(id) {
+		case Textures::BlueAirplane_alpha: {
+			body = pworld.create_body_dynamic(x, y, width, height);
+			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);
+			break;
+		}
+		case Textures::BlueAntiAircraft_alpha: {
+			body = pworld.create_body_dynamic(x, y, width, height);
+			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos);
+			break;
+		}
+		case Textures::BlueBase_alpha: {
+			body = pworld.create_body_static(x, y, width, height);
+			break;
+		}
+		case Textures::BlueHangar_alpha: {
+			body = pworld.create_body_static(x, y, width, height);
+			break;
+		}
+		case Textures::BlueInfantry_alpha: {
+			body = pworld.create_body_dynamic(x, y, width, height);
+			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos);
+			break;
+		}
+		case Textures::Bullet_alpha: {
+			body = pworld.create_body_dynamic(x, y, width, height);
+			entity = std::make_shared<Bullet>(*pworld.get_world(), *body, tex, pos);
+			break;
+		}
+		case Textures::Ground_alpha: {
+			body = pworld.create_body_static(x, y, width, height);
+			break;
+		}
+		case Textures::RedAirplane_alpha: {
+			body = pworld.create_body_dynamic(x, y, width, height);
+			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);
+			break;
+		}
+		case Textures::RedAntiAircraft_alpha: {
+			body = pworld.create_body_dynamic(x, y, width, height);
+			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos);
+			break;
+		}
+		case Textures::RedBase_alpha: {
+			body = pworld.create_body_static(x, y, width, height);
+			break;
+		}
+		case Textures::RedHangar_alpha: {
+			body = pworld.create_body_static(x, y, width, height);
+			break;
+		}
+		case Textures::RedInfantry_alpha: {
+			body = pworld.create_body_dynamic(x, y, width, height);
+			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos);
+			break;
+		}
+		case Textures::Rock_alpha: {
+			body = pworld.create_body_static(x, y, width, height);
+			break;
+		}
+		case Textures::Tree_alpha: {
+			body = pworld.create_body_static(x, y, width, height);
+			break;
+		}
+		default:
+			std::cout << "id not found" << std::endl;
+			break;
+	}
 
-	/*if (std::find(objects.begin(), objects.end(), entity) != objects.end()) {
+	if (std::find(objects.begin(), objects.end(), entity) != objects.end()) {
+		std::cout << "test" << std::endl;
 		objects.push_back(entity);
 		return true;
 	}
 	//entity was already added
 	else {
 		return false;
-	}*/
-
+	}
 }
 
 /*  Remove entity  */
@@ -116,6 +199,7 @@ bool World::remove_entity(std::shared_ptr<Entity> entity) {
 	}
 	
 }
+
 /*  Update the world  */
 
 void World::update() {
@@ -125,8 +209,27 @@ void World::update() {
   	int32 positionIterations = 3;   //how strongly to correct position
 	
 	pworld.get_world()->Step(timeStep, velocityIterations, positionIterations);
-	
-	for (auto const& it : objects) {
+
+	for (b2Contact* contact = pworld.get_world()->GetContactList(); contact;  contact = contact->GetNext()) {
+		if (contact->IsTouching()){
+			b2Body* a_body = contact->GetFixtureA()->GetBody();
+			b2Body* b_body = contact->GetFixtureB()->GetBody();
+
+			std::shared_ptr<Entity> a_entity;
+			std::shared_ptr<Entity> b_entity;
+
+			for (auto it = objects.begin(); it != objects.end(); it++) {
+				if (&(*it)->getB2Body() == a_body)
+					a_entity = *it;
+				else if (&(*it)->getB2Body() == b_body)
+					b_entity = *it;
+			}
+		}
+
+
+	}
+
+	for (auto it : objects) {
 		if (it->getB2Body().GetType() == b2_dynamicBody) {
 
 			//new position for sprite
