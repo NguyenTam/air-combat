@@ -135,6 +135,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		case Textures::Ground_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Ground>(*pworld.get_world(), *body, tex, pos);
+			entity->setScale(width,height);
 			break;
 		}
 		case Textures::RedAirplane_alpha: {
@@ -235,15 +236,17 @@ void World::update() {
 	}
 	
 	for (auto it : objects) {
-		if (it->getB2Body().GetType() == b2_dynamicBody) {
-			//new position for sprite
-			sf::Vector2f newpos(Game::TOPIXELS*it->getB2Body().GetPosition().x, Game::TOPIXELS*it->getB2Body().GetPosition().y);
-			it->setPos(newpos);
-			
-			//set sfml sprite's angle from body's angle
-			it->setRot(it->getB2Body().GetAngle()*RADTODEG);
-		}
-
+		//new position for sprite
+		float x_corr = it->getSize().x/2;
+		float y_corr = it->getSize().y/2;
+		float x = Game::TOPIXELS*it->getB2Body().GetPosition().x-x_corr;
+		float y = Game::TOPIXELS*it->getB2Body().GetPosition().y-y_corr;
+		sf::Vector2f newpos(x,y); 
+		it->setPos(newpos);
+		
+		//set sfml sprite's angle from body's angle
+		it->setRot(it->getB2Body().GetAngle()*RADTODEG);
+		
 		it->drawTo(window);
 	}
 	
