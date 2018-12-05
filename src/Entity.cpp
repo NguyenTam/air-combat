@@ -1,15 +1,9 @@
 #include "Entity.hpp"
 
-Entity::Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp) : world(w), b2body(b)
+Entity::Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp) : moveSpeed(speed), numberOfBullets(bullets), numberOfBombs(bombs), rateOfFire(firerate), fireCountDown(0), hitPoints(hp), world(w), b2body(b)
 {
   entity.setTexture(t);
   entity.setPosition(position);
-  moveSpeed = speed;
-  numberOfBullets = bullets;
-  numberOfBombs = bombs;
-  rateOfFire = firerate;
-  fireCountDown = 0;
-  hitPoints = hp;
 }
 
 void Entity::drawTo(sf::RenderWindow &window)
