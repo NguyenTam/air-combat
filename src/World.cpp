@@ -72,9 +72,14 @@ bool World::read_level(std::string& filename) {
 				}
 				else {
 					//all ok
+					if (type == "InvisibleWall") {
+						pworld.create_body_static(x, y, width, height);
+					}
 					try {
 						Textures::ID id = Textures::alphaTextures.at(type);
-						create_entity(id, x, y, orientation, width, height, sf::Vector2f(1.0f, 0.0f));
+						if (x+width < Game::WIDTH) 
+							create_entity(id, x, y, orientation, width, height, sf::Vector2f(1.0f, 0.0f));
+
 					}
 					catch (const std::out_of_range& er) {
 					    
@@ -85,8 +90,6 @@ bool World::read_level(std::string& filename) {
 	}
 	return true;
 }
-
-
 
 
 /*  Clears the world  */

@@ -13,7 +13,7 @@
 
 LevelEditor::LevelEditor(sf::RenderWindow &render_window, sf::RenderWindow &dialog,
                         sf::RenderWindow &help):
-UI(render_window, dialog, help, sf::Color::White)
+UI(render_window, dialog, help, sf::Color(150, 200, 255, 255))
 {
   //createMainScreen();
   ui_view = window.getDefaultView();
@@ -1233,7 +1233,7 @@ void LevelEditor::writeLevel()
     texture_view.zoom(4); // zoom out ( make 1/ 4 of the normal size)
     texture_view.setCenter(level.getLevelWidth() / 2, Game::HEIGHT / 2);
     level_content.setView(texture_view);
-    level_content.clear(sf::Color::White);
+    level_content.clear(BackgoundColor);
     level.drawTexture(level_content);
     level_content.display();
     // The image is named as the level name + .png (and correct path to the folder)
