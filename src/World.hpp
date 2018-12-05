@@ -17,6 +17,7 @@
 #include "Stone.hpp"
 #include "Base.hpp"
 #include "Ground.hpp"
+#include "Hangar.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <algorithm>
