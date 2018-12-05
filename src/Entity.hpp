@@ -139,6 +139,11 @@ public:
    */
   bool setScale(float width, float height);
 
+  /**
+   * @brief Get texture size
+   */
+  sf::Vector2u getSize();
+
   /*
    *   @brief Puts scale for entitys body  
    */
