@@ -16,6 +16,7 @@
 #include "Tree.hpp"
 #include "Stone.hpp"
 #include "Base.hpp"
+#include "Ground.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <algorithm>

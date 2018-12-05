@@ -134,6 +134,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		}
 		case Textures::Ground_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
+			entity = std::make_shared<Ground>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::RedAirplane_alpha: {
