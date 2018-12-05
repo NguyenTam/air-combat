@@ -48,6 +48,7 @@ namespace Game
 	move_down,
 	shoot,
 	bomb,
+	nothing,
 	actions_end
       };
 }
