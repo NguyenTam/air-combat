@@ -13,6 +13,9 @@
 #include "Artillery.hpp"
 #include "Infantry.hpp"
 #include "Bullet.hpp"
+#include "Tree.hpp"
+#include "Stone.hpp"
+#include "Base.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <algorithm>
