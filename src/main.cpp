@@ -61,10 +61,11 @@ int main()
     if (exit_status == ExitStatus::STARTGAME)
     {
       std::string level_name = menu.getLevel();
-      std::cout << "Open this level in the base game: " << level_name << std::endl;
       // TODO : From game back to main menu.
+      window.setTitle("Air Combat 1");
       game.run(level_name);      
       exit_status = ExitStatus::MAINMENU;
+      window.setTitle("Main Menu");
     }
     if (exit_status == ExitStatus::QUIT)
     {

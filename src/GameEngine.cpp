@@ -25,8 +25,6 @@ const float GameEngine::PLAYER_ROTATION_DEGREE = 5.f;
 
 GameEngine::GameEngine(sf::RenderWindow & rw) : renderWindow(rw), resources(), gameFont(), world(rw, resources)
 {
-  /* Construct a render window.*/
-  renderWindow.setTitle("Air Combat 1");
 
   /* Try spdlogger */
     try
