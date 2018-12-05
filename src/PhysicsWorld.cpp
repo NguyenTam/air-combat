@@ -9,7 +9,7 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 	//creating a definition of a body
 	b2BodyDef BodyDef;
 	BodyDef.type = b2_dynamicBody; //creating a dynamic body
-	BodyDef.position = b2Vec2(x/Game::TOPIXELS, y/Game::TOPIXELS); //set initial position (meters, not pixels)
+	BodyDef.position = b2Vec2((x+(width/2))/Game::TOPIXELS, (y+(height/2))/Game::TOPIXELS); //set initial position (meters, not pixels)
 	BodyDef.angle = 0; //set initial angle (radians)
 
 	//creating a body
@@ -30,7 +30,7 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 b2Body* PhysicsWorld::create_body_static(double x, double y, double width, double height) {
 	b2BodyDef BodyDef;
 	BodyDef.type = b2_staticBody;
-	BodyDef.position = b2Vec2(x/Game::TOPIXELS, y/Game::TOPIXELS);
+	BodyDef.position = b2Vec2((x+(width/2))/Game::TOPIXELS, (y+(width/2))/Game::TOPIXELS);
 
 	b2Body* Body = World->CreateBody(&BodyDef);
 
