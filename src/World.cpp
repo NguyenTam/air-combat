@@ -4,7 +4,6 @@
   */
 
 #include "World.hpp"
-
 /*  Class World  */
 
 /*  Constructor  */
@@ -231,7 +230,7 @@ void World::update() {
 	for (auto it : objects) {
 		if (it->getB2Body().GetType() == b2_dynamicBody) {
 			//new position for sprite
-			sf::Vector2f newpos(TOPIXELS*it->getB2Body().GetPosition().x, TOPIXELS*it->getB2Body().GetPosition().y);
+			sf::Vector2f newpos(Game::TOPIXELS*it->getB2Body().GetPosition().x, Game::TOPIXELS*it->getB2Body().GetPosition().y);
 			it->setPos(newpos);
 			
 			//set sfml sprite's angle from body's angle

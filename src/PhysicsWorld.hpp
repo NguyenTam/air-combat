@@ -2,9 +2,6 @@
 
 #include <Box2D/Box2D.h>
 
-const float gravity = 9.8f;
-const float SCALE = 60.f;
-
 class PhysicsWorld {
 public:
 	PhysicsWorld();

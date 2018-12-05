@@ -1,7 +1,7 @@
 #include "PhysicsWorld.hpp"
-
+#include "CommonDefinitions.hpp"
 PhysicsWorld::PhysicsWorld() {
-	b2Vec2 gvector(0.0f, gravity);
+        b2Vec2 gvector(0.0f, Game::GRAVITY);
 	World = new b2World(gvector);
 }
 
@@ -9,7 +9,7 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 	//creating a definition of a body
 	b2BodyDef BodyDef;
 	BodyDef.type = b2_dynamicBody; //creating a dynamic body
-	BodyDef.position = b2Vec2(x/SCALE, y/SCALE); //set initial position (meters, not pixels)
+	BodyDef.position = b2Vec2(x/Game::TOPIXELS, y/Game::TOPIXELS); //set initial position (meters, not pixels)
 	BodyDef.angle = 0; //set initial angle (radians)
 
 	//creating a body
@@ -17,7 +17,7 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 
 	//creating fixture to an "invisible" body
 	b2PolygonShape boxShape; //hitbox that has a shape of a box
-	boxShape.SetAsBox((width/2)/SCALE, (height/2)/SCALE); 
+	boxShape.SetAsBox((width/2)/Game::TOPIXELS, (height/2)/Game::TOPIXELS); 
 
 	b2FixtureDef boxFixtureDef;
 	boxFixtureDef.shape = &boxShape;
@@ -30,12 +30,12 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 b2Body* PhysicsWorld::create_body_static(double x, double y, double width, double height) {
 	b2BodyDef BodyDef;
 	BodyDef.type = b2_staticBody;
-	BodyDef.position = b2Vec2(x/SCALE, y/SCALE);
+	BodyDef.position = b2Vec2(x/Game::TOPIXELS, y/Game::TOPIXELS);
 
 	b2Body* Body = World->CreateBody(&BodyDef);
 
 	b2PolygonShape Shape;
-	Shape.SetAsBox((width/2)/SCALE, (height/2)/SCALE); 
+	Shape.SetAsBox((width/2)/Game::TOPIXELS, (height/2)/Game::TOPIXELS); 
 
 	b2FixtureDef FixtureDef;
 	FixtureDef.density = 0.f;

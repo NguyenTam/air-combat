@@ -13,6 +13,9 @@ namespace Game
 {
   extern const int WIDTH;
   extern const int HEIGHT;
+  extern const float GRAVITY;
+  extern const float TOPIXELS;
+  extern const float TOMETERS;
 }
 
 namespace Paths
