@@ -1,7 +1,7 @@
 #include "CommonDefinitions.hpp"
 namespace Game
 {
-  const int WIDTH = 800;
+  const int WIDTH = 1200;
   const int HEIGHT = 600;
   const float GRAVITY = 0.1f;
   const float TOPIXELS = 5.f;
@@ -58,7 +58,7 @@ std::vector<std::string> TextureFiles {
       "Tree.png"
 };
 
-std::map<std::string, Textures::ID> alphaTextures
+  std::map<std::string, Textures::ID> alphaTextures
 {
   { "BlueAirplane", BlueAirplane_alpha },
   { "BlueAntiAircraft", BlueAntiAircraft_alpha },
