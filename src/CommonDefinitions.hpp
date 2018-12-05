@@ -16,6 +16,40 @@ namespace Game
   extern const float GRAVITY;
   extern const float TOPIXELS;
   extern const float TOMETERS;
+
+  enum TYPE_ID
+    {
+      airplane,
+      antiaircraft,
+      base,
+      hangar,
+      infantry,
+      bullet,
+      ground,
+      rock,
+      tree,
+      type_id_end
+    };
+  
+  enum TEAM_ID
+    {
+      all_friend,
+      all_enemy,
+      blue,
+      red,
+      team_id_end
+    };
+
+    enum ACTIONS
+      {
+	move_left,
+	move_right,
+	move_up,
+	move_down,
+	shoot,
+	bomb,
+	actions_end
+      };
 }
 
 namespace Paths
@@ -25,7 +59,8 @@ namespace Paths
       fonts,
       img,
       level_files,
-      logs
+      logs,
+      paths_end
     };
   extern std::vector<std::string> Paths;
   
@@ -68,7 +103,7 @@ namespace Textures
       std_button,
       Tree_alpha,
       Tree,
-      end      
+      id_end      
     };
   extern std::vector<std::string> TextureFiles;
 extern std::map<std::string, Textures::ID> alphaTextures;

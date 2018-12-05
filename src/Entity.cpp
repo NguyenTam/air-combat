@@ -64,6 +64,11 @@ float Entity::getSpeed()
   return moveSpeed;
 }
 
+sf::Vector2u Entity::getSize()
+{
+  return entity.getTexture()->getSize();
+}
+
 void Entity::move(sf::Vector2f direction){
   setPos(getPosition() + moveSpeed*direction);
 }
