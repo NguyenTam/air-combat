@@ -30,7 +30,7 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 b2Body* PhysicsWorld::create_body_static(double x, double y, double width, double height) {
 	b2BodyDef BodyDef;
 	BodyDef.type = b2_staticBody;
-	BodyDef.position = b2Vec2((x+(width/2))/Game::TOPIXELS, (y+(width/2))/Game::TOPIXELS);
+	BodyDef.position = b2Vec2((x+(width/2))/Game::TOPIXELS, (y+(height/2))/Game::TOPIXELS);
 
 	b2Body* Body = World->CreateBody(&BodyDef);
 
