@@ -8,7 +8,7 @@
 
 /*  Constructor  */
 
-World::World(sf::RenderWindow &main_window, ResourceManager &_resources) : pworld(), window(main_window), resources(_resources) {}
+World::World(sf::RenderWindow &main_window, ResourceManager &_resources) : pworld(), resources(_resources), window(main_window) {}
 
 /*  Parse level .txt file and create world's entities  */
 
@@ -74,7 +74,7 @@ bool World::read_level(std::string& filename) {
 					//all ok
 					try {
 						Textures::ID id = Textures::alphaTextures.at(type);
-						create_entity(id, x, y, orientation, width, height);
+						create_entity(id, x, y, orientation, width, height, sf::Vector2f(1.0f, 0.0f));
 					}
 					catch (const std::out_of_range& er) {
 					    
@@ -95,7 +95,7 @@ void World::clear_all() {}
 
 /*  Create entity  */
 
-bool World::create_entity(Textures::ID id, double x, double y, int orientation, double width, double height) {
+bool World::create_entity(Textures::ID id, double x, double y, int orientation, double width, double height, sf::Vector2f direct) {
 	sf::Texture &tex = resources.get(id);
 	sf::Vector2f pos(x,y);
 	b2Body* body;
@@ -104,62 +104,63 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 	switch(id) {
 		case Textures::BlueAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::blue);
 			break;
 		}
 		case Textures::BlueAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
 			break;
 		}
 		case Textures::BlueBase_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
-			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
 			break;
 		}
 		case Textures::BlueHangar_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
-			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
 			break;
 		}
 		case Textures::BlueInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
 			break;
 		}
 		case Textures::Bullet_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Bullet>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Bullet>(*pworld.get_world(), *body, tex, pos, direct);
 			break;
 		}
 		case Textures::Ground_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Ground>(*pworld.get_world(), *body, tex, pos);
+			entity->setScale(width,height);
 			break;
 		}
 		case Textures::RedAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
 			break;
 		}
 		case Textures::RedAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
 			break;
 		}
 		case Textures::RedBase_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
-			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
 			break;
 		}
 		case Textures::RedHangar_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
-			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
 			break;
 		}
 		case Textures::RedInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
 			break;
 		}
 		case Textures::Rock_alpha: {
@@ -235,15 +236,17 @@ void World::update() {
 	}
 	
 	for (auto it : objects) {
-		if (it->getB2Body().GetType() == b2_dynamicBody) {
-			//new position for sprite
-			sf::Vector2f newpos(Game::TOPIXELS*it->getB2Body().GetPosition().x, Game::TOPIXELS*it->getB2Body().GetPosition().y);
-			it->setPos(newpos);
-			
-			//set sfml sprite's angle from body's angle
-			it->setRot(it->getB2Body().GetAngle()*RADTODEG);
-		}
-
+		//new position for sprite
+		float x_corr = it->getSize().x/2;
+		float y_corr = it->getSize().y/2;
+		float x = Game::TOPIXELS*it->getB2Body().GetPosition().x-x_corr;
+		float y = Game::TOPIXELS*it->getB2Body().GetPosition().y-y_corr;
+		sf::Vector2f newpos(x,y); 
+		it->setPos(newpos);
+		
+		//set sfml sprite's angle from body's angle
+		it->setRot(it->getB2Body().GetAngle()*RADTODEG);
+		
 		it->drawTo(window);
 	}
 	

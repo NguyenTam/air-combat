@@ -1,6 +1,6 @@
 #include "Entity.hpp"
 
-Entity::Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp) : moveSpeed(speed), numberOfBullets(bullets), numberOfBombs(bombs), rateOfFire(firerate), fireCountDown(0), hitPoints(hp), world(w), b2body(b)
+Entity::Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team) : moveSpeed(speed), numberOfBullets(bullets), numberOfBombs(bombs), rateOfFire(firerate), fireCountDown(0), hitPoints(hp), direction(direct), teamId(team), world(w), b2body(b)
 {
   entity.setTexture(t);
   entity.setPosition(position);
@@ -100,6 +100,18 @@ bool Entity::setScale(float width, float height) {
 
 int Entity::getHitPoints(){
   return hitPoints;
+}
+
+void Entity::setDirection(sf::Vector2f direct){
+  direction = direct;
+}
+
+sf::Vector2f Entity::getDirection(){
+  return direction;
+}
+
+Game::TEAM_ID Entity::getTeamId(){
+  return teamId;
 }
 
 bool Entity::damage(int damage){
