@@ -9,7 +9,6 @@ int main()
 
   // Try to load resources
   ResourceManager textures;
-  textures.init();
 
   // Access resources
   sf::Sprite blueantiaircraft(textures.get(Textures::BlueAntiAircraft));
