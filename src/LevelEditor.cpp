@@ -81,14 +81,14 @@ void LevelEditor::HandleKeyPress(sf::Event event)
     // Close window
     CloseWindow();
   }
-  else if (event.key.code == sf::Keyboard::Right)
+  /*else if (event.key.code == sf::Keyboard::Right)
   {
     view_right_action();
   }
   else if (event.key.code == sf::Keyboard::Left)
   {
     view_left_action();
-  }
+  }*/
   else if (event.key.code == sf::Keyboard::BackSpace)
   {
     // Clear current_entity
@@ -492,6 +492,7 @@ void LevelEditor::CreateVerticalToolbar(unsigned window_height)
 
   // disable view_left (start view is the left most view)
   vertical_toolbar.view_left->setEnabled(false);
+  vertical_toolbar.view_right->setEnabled(false);
 
   // Set buttons uncheckable
   vertical_toolbar.view_left->setCheckable(false);
