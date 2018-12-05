@@ -23,7 +23,7 @@ class Artillery : public Entity {
    *   @param t Artillerys texture
    *   @param position Place as vector where artillery is created
    */
-  Artillery(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position);
+  Artillery(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, Game::TEAM_ID team);
 
     /**
      *   @brief give permission for object to shoot

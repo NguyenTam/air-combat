@@ -23,7 +23,7 @@ class Plane : public Entity {
    *   @param t Planes texture
    *   @param position Place as vector where Plane is created
    */
-  Plane(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position);
+  Plane(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team);
   
   /**
    *   @brief give permission for object to shoot

@@ -30,7 +30,7 @@ public:
    *   @param firerate How many frames does it take for the entity to shoot again, so 60 would mean shooting once per second.
    *   @param hp Hitpoint of this entity
    */
-  Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position,  float speed, int bullets, int bombs, int firerate, int hp);
+  Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position,  float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direction, Game::TEAM_ID team);
 
   /**
    *   @brief Draw to window
@@ -150,6 +150,12 @@ public:
    */
   bool damage(int damage);
 
+  void setDirection(sf::Vector2f direct);
+
+  sf::Vector2f getDirection();
+
+  Game::TEAM_ID getTeamId();
+
 protected:
 
     /*  Variables */
@@ -162,6 +168,8 @@ protected:
   int rateOfFire; /**< How many frames must pass until entity is able to fire again */
   int fireCountDown; /**< Value set to rateOfFire when entity shoots, every frame value drops by 1, when value 0 or lower, entity can fire */
   int hitPoints;
+  sf::Vector2f direction;
+  Game::TEAM_ID teamId; 
 
   private:
   b2World & world;
