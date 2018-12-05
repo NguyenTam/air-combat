@@ -16,6 +16,15 @@ namespace Game
   extern const float GRAVITY;
   extern const float TOPIXELS;
   extern const float TOMETERS;
+
+  enum TEAM_ID
+    {
+      all_friend,
+      all_enemy,
+      blue,
+      red,
+      end
+    }
 }
 
 namespace Paths

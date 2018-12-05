@@ -3,8 +3,8 @@ namespace Game
 {
   const int WIDTH = 800;
   const int HEIGHT = 600;
-  const float GRAVITY = 9.81f;
-  const float TOPIXELS = 60.f;
+  const float GRAVITY = 0.1f;
+  const float TOPIXELS = 5.f;
   const float TOMETERS = 1/TOPIXELS;
 }
 
