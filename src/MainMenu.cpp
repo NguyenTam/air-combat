@@ -227,7 +227,6 @@ void MainMenu::ActivateCurrentButton()
 
 void MainMenu::ClickCurrentButton()
 {
-  int i = 0;
   if ((current_button) > -1 && (current_button < MainMenu::MainMenuButtons))
   {
     buttons[current_button]->clickAction();
@@ -240,7 +239,7 @@ void MainMenu::select_level_action()
   CreateSelectLevel();
 }
 
-/*  Swicth to LevelEditor */
+/*  Switch to LevelEditor */
 void MainMenu::start_editor_action()
 {
   // Set correct exit status

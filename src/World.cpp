@@ -114,6 +114,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		}
 		case Textures::BlueBase_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
+			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::BlueHangar_alpha: {
@@ -132,6 +133,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		}
 		case Textures::Ground_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
+			entity = std::make_shared<Ground>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::RedAirplane_alpha: {
@@ -146,6 +148,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		}
 		case Textures::RedBase_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
+			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::RedHangar_alpha: {
@@ -159,10 +162,12 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		}
 		case Textures::Rock_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
+			entity = std::make_shared<Stone>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		case Textures::Tree_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
+			entity = std::make_shared<Tree>(*pworld.get_world(), *body, tex, pos);
 			break;
 		}
 		default:
