@@ -1,4 +1,5 @@
 #include "Entity.hpp"
+#include <iostream>
 
 Entity::Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team) : moveSpeed(speed), numberOfBullets(bullets), numberOfBombs(bombs), rateOfFire(firerate), fireCountDown(0), hitPoints(hp), direction(direct), teamId(team), world(w), b2body(b)
 {
@@ -66,7 +67,8 @@ float Entity::getSpeed()
 
 sf::Vector2u Entity::getSize()
 {
-  return entity.getTexture()->getSize();
+  sf::FloatRect rect =  entity.getGlobalBounds();
+  return sf::Vector2u(rect.width, rect.height);
 }
 
 void Entity::move(sf::Vector2f direction){
