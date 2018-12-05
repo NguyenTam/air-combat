@@ -5,7 +5,7 @@ ResourceManager::ResourceManager()
 {
   try
   {
-    for (int enum_value = 0; enum_value != Textures::ID::end; enum_value++)
+    for (int enum_value = 0; enum_value != Textures::ID::id_end; enum_value++)
     {
       load(static_cast<Textures::ID>(enum_value), Paths::Paths[Paths::PATHS::img] +Textures::TextureFiles[enum_value]);
     }
