@@ -126,7 +126,7 @@ void GameEngine::processEvents()
 
 void GameEngine::render()
 {
-  renderWindow.clear();
+  renderWindow.clear(sf::Color(150,200,255));
   //renderWindow.draw(playerSprite);
   //renderWindow.draw(gameInfo);
   world.update();
