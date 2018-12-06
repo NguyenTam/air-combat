@@ -263,3 +263,63 @@ void MainMenu::init()
   // Switch to the main menu screen
   screen_mode = MAINSCREEN;
 }
+
+/*  Finish creating the partially created (in UI) GameModeButtons */
+void MainMenu::CreateGameModeButtons()
+{
+  // Set click functions to the Buttons
+  level_select.single_player->setClickFunction(std::bind(&MainMenu::single_player_action, this));
+  level_select.multiplayer->setClickFunction(std::bind(&MainMenu::multiplayer_action, this));
+
+  // Set correct style for Buttons
+  level_select.single_player->setCheckable(true);
+  level_select.multiplayer->setCheckable(true);
+  level_select.single_player->setChecked();
+  level_select.single_player->setTextStyle(sf::Text::Bold, 14, sf::Color::Red);
+  level_select.multiplayer->setTextStyle(sf::Text::Bold, 14, sf::Color::Red);
+  level_select.single_player->enableClicking(false);
+  level_select.single_player->setCheckedColor(sf::Color::Blue);
+  level_select.multiplayer->setCheckedColor(sf::Color::Blue);
+
+  // Add Buttons to the container
+  level_select.buttons.push_back(level_select.single_player);
+  level_select.buttons.push_back(level_select.multiplayer);
+
+
+}
+
+/*  Set game_mode to SinglePlayer and update the GameModeButtons */
+void MainMenu::single_player_action()
+{
+  // allow user click only multiplayer
+  level_select.single_player->enableClicking(false);
+  level_select.multiplayer->enableClicking(true);
+  // Set multiplayer unchecked
+  level_select.multiplayer->setUnchecked();
+  level_select.single_player->setChecked();
+  // Set game_mode to SinglePlayer
+  game_mode = GameMode::SinglePlayer;
+}
+
+/*  Set game_mode to Multiplayer and update the GameModeButtons */
+void MainMenu::multiplayer_action()
+{
+  // allow user click only single_player
+  level_select.single_player->enableClicking(true);
+  level_select.multiplayer->enableClicking(false);
+  // Set single_player unchecked
+  level_select.single_player->setUnchecked();
+  level_select.multiplayer->setChecked();
+  // Set game_mode to Multiplayer
+  game_mode = GameMode::Multiplayer;
+}
+
+/*  Change checked Buttons & GameMode */
+void MainMenu::ChangeGameMode()
+{
+  if (level_select.single_player->getChecked())
+  {
+    multiplayer_action();
+  }
+  else single_player_action();
+}

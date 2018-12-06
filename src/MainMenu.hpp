@@ -73,6 +73,18 @@ class MainMenu: public UI
       */
     virtual void init();
 
+    /**
+      *   @brief Click action for single_player Button
+      *   @details game_mode -> SinglePlayer
+      */
+    void single_player_action();
+
+    /**
+      *   @brief Click action for multiplayer Button
+      *   @details game_mode -> Multiplayer
+      */
+    void multiplayer_action();
+
   protected:
 
     /**
@@ -134,6 +146,19 @@ class MainMenu: public UI
       */
     void ClickCurrentButton();
 
+    /**
+      *   @brief Create GameModeButtons
+      *   @remark Reimplemented from UI::CreateGameModeButtons
+      */
+    virtual void CreateGameModeButtons();
+
+    /**
+      *   @brief Change checked GameModeButton and game_mode
+      *   @details Calls single_player_action or multiplayer_action depending on
+      *   which Buttons is currently checked
+      *   @remark Reimplemented from UI::ChangeGameMode
+      */
+    virtual void ChangeGameMode();
 
     /*  Variables */
 
