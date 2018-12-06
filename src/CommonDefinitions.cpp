@@ -6,6 +6,17 @@ namespace Game
   const float GRAVITY = 0.1f;
   const float TOPIXELS = 5.f;
   const float TOMETERS = 1/TOPIXELS;
+
+  std::map<ACTIONS, sf::Vector2f> actions_and_directions
+    {
+      { ACTIONS::move_left, sf::Vector2f(-1.f, 0.f)},
+      { ACTIONS::move_right, sf::Vector2f(1.f, 0.f)},
+      {	ACTIONS::move_up, sf::Vector2f(0.f, -1.f)},
+      { ACTIONS::move_down,sf::Vector2f(0.f, 1.f)},
+      { ACTIONS::shoot, sf::Vector2f(-1.f, 0.f) },
+      {	ACTIONS::bomb, sf::Vector2f(0.f, 1.f) },
+      { ACTIONS::nothing,sf::Vector2f(0.f, 0.f) }
+    };
 }
 
 namespace Paths
