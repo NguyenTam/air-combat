@@ -155,12 +155,24 @@ public:
    */
   bool damage(int damage);
 
+  /*
+   *   @brief Set a direction for entity
+   */
   void setDirection(sf::Vector2f direct);
 
+  /*
+   *   @brief Gives the direction of entity
+   */
   sf::Vector2f getDirection();
 
+  /*
+   *   @brief Gives info if entity is players team, enemy team, neutral or projectile
+   */
   Game::TEAM_ID getTeamId();
 
+  /*
+   *   @brief Tells what entity subclass entity belongs to, for example stone, airplane or infantry
+   */
   Game::TYPE_ID getTypeId();
 
 protected:
