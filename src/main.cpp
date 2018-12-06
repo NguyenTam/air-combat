@@ -19,7 +19,7 @@ int main()
   sf::RenderWindow window;
   sf::RenderWindow dialog_window;
   sf::RenderWindow help_window;
-  
+
   // Create main window (size and name don't matter, MainMenu resizes and renames window)
   window.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Main Menu", sf::Style::Close);
 
@@ -61,9 +61,11 @@ int main()
     if (exit_status == ExitStatus::STARTGAME)
     {
       std::string level_name = menu.getLevel();
+      GameMode mode = menu.getGameMode();
+      std::cout << "GameMode: " << mode << std::endl;
       // TODO : From game back to main menu.
       window.setTitle("Air Combat 1");
-      game.run(level_name);      
+      game.run(level_name);
       exit_status = ExitStatus::MAINMENU;
       window.setTitle("Main Menu");
     }
