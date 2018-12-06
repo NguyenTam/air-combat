@@ -249,6 +249,12 @@ class Button: public sf::Drawable
         */
       void enableClicking(bool enable);
 
+      /**
+        *   @brief Set / change checked_color
+        *   @param color New checked_color
+        */
+      void setCheckedColor(sf::Color color);
+
   protected:
 
     /**

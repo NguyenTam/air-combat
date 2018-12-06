@@ -177,8 +177,8 @@ void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const
   }
   else if (enabled)
   {
-    target.draw(text, states);
     target.draw(checked_rect, states);
+    target.draw(text, states);
   }
 
 }
@@ -381,4 +381,11 @@ bool Button::getChecked()
 void Button::enableClicking(bool enable)
 {
   clicking_enabled = enable;
+}
+
+/*  Change checked_color */
+void Button::setCheckedColor(sf::Color color)
+{
+  checked_color = color;
+  checked_rect.setFillColor(checked_color);
 }
