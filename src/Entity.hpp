@@ -175,6 +175,7 @@ protected:
   int hitPoints;
   sf::Vector2f direction;
   Game::TEAM_ID teamId; 
+  Game::TYPE_ID typeId;
 
   private:
   b2World & world;
