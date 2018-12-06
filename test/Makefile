@@ -15,7 +15,7 @@ UI_OBJECTS = UI.o button.o image_button.o CommonDefinitions.o ResourceManager.o 
 
 SRC = ../src/
 
-all:	World_test Menu_test Editor_test LevelEntity_test ResourceManager_test GameEngine_test
+all:	World_test Menu_test Editor_test LevelEntity_test ResourceManager_test GameEngine_test Stats_test
 
 run: Menu_test
 	./Menu_test
@@ -36,6 +36,9 @@ ResourceManager_test: CommonDefinitions.o ResourceManager.o ResourceManager_test
 	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
 GameEngine_test: $(OBJECTS) CommonDefinitions.o ResourceManager.o GameEngine.o GameEngine_test.cpp
+	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
+
+Stats_test:	$(UI_OBJECTS) Stats.o Stats_test.cpp
 	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
 # Instruction to compile from cpp-files in src-folder to object-files.
