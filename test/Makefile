@@ -10,7 +10,8 @@ CC = g++
 CFLAGS = -Wall -Wextra -pedantic -g -std=c++17
 LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system -lstdc++fs -lBox2D
 
-OBJECTS = PhysicsWorld.o Plane.o Artillery.o Infantry.o Bullet.o World.o Entity.o button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o TextInput.o CommonDefinitions.o ResourceManager.o
+OBJECTS = PhysicsWorld.o Plane.o Artillery.o Infantry.o Bullet.o World.o Entity.o button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o TextInput.o CommonDefinitions.o ResourceManager.o Plane.o Artillery.o Infantry.o Bullet.o World.o PhysicsWorld.o GameEngine.o Tree.o Stone.o Ground.o Base.o Hangar.o
+UI_OBJECTS = UI.o button.o image_button.o CommonDefinitions.o ResourceManager.o TextInput.o
 
 SRC = ../src/
 
@@ -19,13 +20,13 @@ all:	World_test Menu_test Editor_test LevelEntity_test ResourceManager_test Game
 run: Menu_test
 	./Menu_test
 
-Menu_test: $(OBJECTS) MainMenu_test.cpp
+Menu_test:	$(UI_OBJECTS) MainMenu.o MainMenu_test.cpp
 	$(CC) $(CFLAGS)  $^  $(LINKER) -o $@
 
-World_test:$(OBJECTS) Plane.o Artillery.o Infantry.o Bullet.o World.o PhysicsWorld.o GameEngine.o Tree.o Stone.o Ground.o Base.o Hangar.o World_test.cpp
+World_test:$(OBJECTS)  World_test.cpp
 	$(CC) $(CFLAGS)  $^  $(LINKER) -o $@
 
-Editor_test: $(OBJECTS) LevelEditor_test.cpp
+Editor_test:  $(UI_OBJECTS) LevelEntity.o Level.o LevelEditor.o LevelEditor_test.cpp
 	$(CC) $(CFLAGS) $^ $(LINKER) -o $@
 
 LevelEntity_test: LevelEntity.o LevelEntity_test.cpp
