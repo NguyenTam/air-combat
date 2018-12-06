@@ -29,6 +29,8 @@ public:
    *   @param bombs Number of bombs this entity can drop
    *   @param firerate How many frames does it take for the entity to shoot again, so 60 would mean shooting once per second.
    *   @param hp Hitpoint of this entity
+   *   @param direction Direction where entity is moving
+   *   @param team The team entity belongs to: blue, red, obstacle or projectile
    */
   Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position,  float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direction, Game::TEAM_ID team);
 
@@ -180,19 +182,19 @@ protected:
     /*  Variables */
 
   //sf::RectangleShape entity;
-  sf::Sprite entity;
-  float moveSpeed;
-  int numberOfBullets;
-  int numberOfBombs;
-  int rateOfFire; /**< How many frames must pass until entity is able to fire again */
+  sf::Sprite entity; /**< Entitys sprite */
+  float moveSpeed; /**< Entitys speed */
+  int numberOfBullets; /**< Number of bullets entity has left */
+  int numberOfBombs; /**< Number of bombs entity has left */
+  int rateOfFire; /**< Number of frames that must pass until entity is able to fire again */
   int fireCountDown; /**< Value set to rateOfFire when entity shoots, every frame value drops by 1, when value 0 or lower, entity can fire */
-  int hitPoints;
-  sf::Vector2f direction;
-  Game::TEAM_ID teamId; 
-  Game::TYPE_ID typeId;
+  int hitPoints; /**< Hitpoints of entity, if they are zero or lower entity is destroyed */
+  sf::Vector2f direction; /**< Diretion of entitys movement */
+  Game::TEAM_ID teamId; /**< Tells if entity is in blue or red team, obstacle or projetile */
+  Game::TYPE_ID typeId; /**< Tells what entity subclass entity belongs to, for example stone, airplane or infantry */
 
   private:
-  b2World & world;
-  b2Body& b2body;
-  Textures::ID type;
+  b2World & world; /**< World where entity exists */
+  b2Body& b2body; /**< Entitys body */
+  Textures::ID type; /**< Textures file name without extension */
 };
