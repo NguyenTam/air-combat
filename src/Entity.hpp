@@ -161,6 +161,8 @@ public:
 
   Game::TEAM_ID getTeamId();
 
+  Game::TYPE_ID getTypeId();
+
 protected:
 
     /*  Variables */
