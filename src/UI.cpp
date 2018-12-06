@@ -283,6 +283,13 @@ void UI::HandleResize(sf::Event event)
    level_select.buttons.push_back(cancel);
    level_select.buttons.push_back(select);
 
+   // Create GameMode related Buttons
+   level_select.single_player = std::make_shared<Button> ("Single player", sf::Color(0, 0, 255, 100), 140, 20);
+   level_select.multiplayer = std::make_shared<Button> ("Multiplayer", sf::Color(0, 0, 255, 100), 140, 20);
+   level_select.single_player->setPosition(50, 300);
+   level_select.multiplayer->setPosition(50, 340);
+   CreateGameModeButtons();
+
    // Create ImageButtons to switch shown level
    std::shared_ptr<ImageButton> left = std::make_shared<ImageButton> ("", "../data/img/left_arrow.png", 100, 100);
    std::shared_ptr<ImageButton> right = std::make_shared<ImageButton> ("", "../data/img/right_arrow.png", 100, 100);
@@ -296,7 +303,7 @@ void UI::HandleResize(sf::Event event)
    right->setCheckable(false);
    // Set ouline disabled
    right->enableOutline(false);
-   left->enableOutline(false); 
+   left->enableOutline(false);
 
    // Add to the container
    level_select.image_buttons.push_back(left);
@@ -438,6 +445,10 @@ void UI::UpdateLevelSelect(sf::Event event)
     else if (event.key.code == sf::Keyboard::Right)
     {
       LevelSelectNext();
+    }
+    else if (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Down)
+    {
+      ChangeGameMode();
     }
     else if (event.key.code == sf::Keyboard::Tab)
     {
@@ -625,4 +636,18 @@ void UI::ClearLevelSelectContainers()
   {
     level_select.level_names.clear();
   }
+}
+
+/*  Create Buttons to change GameMode, Reimplemented in MainMenu */
+void UI::CreateGameModeButtons()
+{
+  // Disable GameModeButtons
+  level_select.single_player->setEnabled(false);
+  level_select.multiplayer->setEnabled(false);
+}
+
+/*  Return game_mode */
+GameMode UI::getGameMode()
+{
+  return game_mode;
 }

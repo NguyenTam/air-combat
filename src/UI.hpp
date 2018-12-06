@@ -54,6 +54,12 @@ enum ExitStatus
   MAINMENU,
 };
 
+enum GameMode
+{
+  SinglePlayer,
+  Multiplayer,
+};
+
 /**
   *   @struct LevelSelect
   *   @brief Struct used to draw Level select window
@@ -72,6 +78,9 @@ struct LevelSelect
   int curr_level = -1; /**< Tells index for currently selected level */
   int max_level = -1; /**< Tells index for the last level available */
   int curr_button = -1; /**< Tells which buttons is currently active */
+
+  std::shared_ptr<Button> single_player;
+  std::shared_ptr<Button> multiplayer;
 
 };
 
@@ -140,6 +149,12 @@ class UI
       *   @remark Pure virtual method, needs to be implemented in lower classes
       */
     virtual void init() = 0;
+
+    /**
+      *   @brief Get GameMode user has selected
+      *   @return Returns game_mode (enum GameMode)
+      */
+    GameMode getGameMode();
 
   protected:
 
@@ -299,6 +314,20 @@ class UI
       */
     void ClearLevelSelectContainers();
 
+    /**
+      *   @brief Finish creating GameModeButtons
+      *   @remark LevelEditor doesn't show those Buttons so it uses this standard implementation
+      *   which hides the Buttons
+      *   @see MainMenu::CreateGameModeButtons
+      */
+    virtual void CreateGameModeButtons();
+
+    /**
+      *   @brief Empty ChangeGameMode for LevelEditor
+      *   @remark This is reimplemented in MainMenu @see MainMenu::ChangeGameMode
+      */
+    virtual void ChangeGameMode(){}
+
 
     /*  Variables */
 
@@ -316,6 +345,7 @@ class UI
     int exit_status;
     LevelSelect level_select;
     std::string level_selected; /**< Level name which user selected */
+    GameMode game_mode = SinglePlayer;
     sf::Text help_text;
     sf::Text help_title;
     sf::Font help_font;
