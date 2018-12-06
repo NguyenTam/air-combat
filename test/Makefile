@@ -22,7 +22,7 @@ run: Menu_test
 Menu_test: $(OBJECTS) MainMenu_test.cpp
 	$(CC) $(CFLAGS)  $^  $(LINKER) -o $@
 
-World_test:$(OBJECTS) Plane.o Artillery.o Infantry.o Bullet.o World.o PhysicsWorld.o GameEngine.o World_test.cpp
+World_test:$(OBJECTS) Plane.o Artillery.o Infantry.o Bullet.o World.o PhysicsWorld.o GameEngine.o Tree.o Stone.o Ground.o Base.o Hangar.o World_test.cpp
 	$(CC) $(CFLAGS)  $^  $(LINKER) -o $@
 
 Editor_test: $(OBJECTS) LevelEditor_test.cpp

@@ -116,6 +116,10 @@ Game::TEAM_ID Entity::getTeamId(){
   return teamId;
 }
 
+Game::TYPE_ID Entity::getTypeId(){
+  return typeId;
+}
+
 bool Entity::damage(int damage){
   if (hitPoints <= 0) {
     return true;
