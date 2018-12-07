@@ -61,7 +61,7 @@ GameEngine::GameEngine(sf::RenderWindow & rw) : renderWindow(rw), resources(), g
  */
 void GameEngine::run(std::string &level_file)
 {
-  
+  world.clear_all();
   sf::Time lastUpdateTime = sf::Time::Zero;
   
   world.read_level(level_file);
