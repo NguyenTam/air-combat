@@ -16,8 +16,9 @@ int main()
   sf::RenderWindow window;
   window.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Main Menu", sf::Style::Close);
   Stats stats = Stats(window);
-  
+
   // Update Stats until user exits Stats
+  stats.createStats();
   stats.update();
   // Get ExitStatus from Stats
   int exit_status = stats.getExitStatus();
