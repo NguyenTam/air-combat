@@ -23,22 +23,22 @@ namespace AI
     int current_worse_enemy_priority;
     sf::Vector2f my_position = me.getPosition();
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
-    if( my_position.x < 10 || my_position.x > 0.1 * Game::WIDTH || my_position.y < 10 || my_position.x > 0.6 * Game::HEIGHT ||  current_worse_enemy_priority == priority_list[Game::TYPE_ID::ground] )
+    if( my_position.x < Game::LEFT_LIMIT || my_position.x > Game::RIGHT_LIMIT || my_position.y < Game::LOWER_LIMIT || my_position.x > Game::UPPER_LIMIT ||  current_worse_enemy_priority == priority_list[Game::TYPE_ID::ground] )
       {
       
-	if ( my_position.x < 10 )
+	if ( my_position.x < Game::LEFT_LIMIT )
 	  {
 	    return std::make_tuple(Game::ACTIONS::move_right, Game::actions_and_directions[Game::ACTIONS::move_right]);
 	  }
-	else if ( my_position.x > 0.1 * Game::WIDTH )
+	else if ( my_position.x > Game::RIGHT_LIMIT )
 	  {
 	    return std::make_tuple(Game::ACTIONS::move_left, Game::actions_and_directions[Game::ACTIONS::move_left]);
 	  }
-	else if ( my_position.y < 10 )
+	else if ( my_position.y < Game::LOWER_LIMIT )
 	  {
 	    return std::make_tuple(Game::ACTIONS::move_down, Game::actions_and_directions[Game::ACTIONS::move_down]);
 	  }
-	else if ( my_position.y > 0.6 * Game::HEIGHT )
+	else if ( my_position.y > Game::UPPER_LIMIT )
 	  {
 	    return std::make_tuple(Game::ACTIONS::move_up, Game::actions_and_directions[Game::ACTIONS::move_up]);
 	  }
@@ -89,14 +89,14 @@ namespace AI
     int current_worse_enemy_priority;
     sf::Vector2f my_position = me.getPosition();
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
-    if( my_position.x < 10 || my_position.x > 0.1 * Game::WIDTH || my_position.y < 10 || my_position.x > 0.6 * Game::HEIGHT ||  current_worse_enemy_priority == priority_list[Game::TYPE_ID::ground] )
+    if( my_position.x < Game::LEFT_LIMIT || my_position.x > Game::RIGHT_LIMIT ||  current_worse_enemy_priority == priority_list[Game::TYPE_ID::ground] )
       {
       
-	if ( my_position.x < 10 )
+	if ( my_position.x < Game::LEFT_LIMIT )
 	  {
 	    return std::make_tuple(Game::ACTIONS::move_right, Game::actions_and_directions[Game::ACTIONS::move_right]);
 	  }
-	else if ( my_position.x > 0.1 * Game::WIDTH )
+	else if ( my_position.x > Game::RIGHT_LIMIT )
 	  {
 	    return std::make_tuple(Game::ACTIONS::move_left, Game::actions_and_directions[Game::ACTIONS::move_left]);
 	  }
