@@ -1,5 +1,5 @@
 #include "Plane.hpp"
-#define FORCE 20
+#define FORCE 0.008f
 Plane::Plane(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team):Entity(w, b, t, position, 20, 400, 6, 10, 20, direct, team){
   typeId = Game::TYPE_ID::airplane;
   }

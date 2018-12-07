@@ -37,26 +37,45 @@ namespace AI
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
     if( my_position.x < Game::LEFT_LIMIT || my_position.x > Game::RIGHT_LIMIT || my_position.y < Game::LOWER_LIMIT || my_position.x > Game::UPPER_LIMIT ||  current_worse_enemy_priority == priority_list[Game::TYPE_ID::ground] )
       {
-      
+
 	if ( my_position.x < Game::LEFT_LIMIT )
 	  {
+	    me.moveRight();
 	    return std::make_tuple(Game::ACTIONS::move_right, Game::actions_and_directions[Game::ACTIONS::move_right]);
 	  }
 	else if ( my_position.x > Game::RIGHT_LIMIT )
 	  {
+	    me.moveLeft();
 	    return std::make_tuple(Game::ACTIONS::move_left, Game::actions_and_directions[Game::ACTIONS::move_left]);
 	  }
 	else if ( my_position.y < Game::LOWER_LIMIT )
 	  {
+	    me.moveDown();
 	    return std::make_tuple(Game::ACTIONS::move_down, Game::actions_and_directions[Game::ACTIONS::move_down]);
 	  }
 	else if ( my_position.y > Game::UPPER_LIMIT )
 	  {
+	    me.moveUp();
 	    return std::make_tuple(Game::ACTIONS::move_up, Game::actions_and_directions[Game::ACTIONS::move_up]);
 	  }
 	else
 	  {
 	    Game::ACTIONS movement_action = static_cast<Game::ACTIONS>(random()%4);
+	    switch (movement_action)
+	      {
+	      case Game::ACTIONS::move_left:
+		me.moveLeft();
+		break;
+	      case Game::ACTIONS::move_right:
+		me.moveRight();
+		break;
+	      case Game::ACTIONS::move_up:
+		me.moveUp();
+		break;
+	      default:
+		me.moveDown();
+		break;
+	      }
 	    return std::make_tuple(movement_action, Game::actions_and_directions[movement_action] );
 	  }
       }
@@ -73,7 +92,7 @@ namespace AI
 	    {
 	      return std::make_tuple(Game::ACTIONS::bomb, Game::actions_and_directions[Game::ACTIONS::bomb]);
 	    }
-	  }      
+	  }
       }
     return std::make_tuple(Game::ACTIONS::nothing, Game::actions_and_directions[Game::ACTIONS::nothing]);
   }
@@ -100,18 +119,29 @@ namespace AI
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
     if( my_position.x < Game::LEFT_LIMIT || my_position.x > Game::RIGHT_LIMIT ||  current_worse_enemy_priority == priority_list[Game::TYPE_ID::ground] )
       {
-      
+
 	if ( my_position.x < Game::LEFT_LIMIT )
 	  {
+	    me.moveRight();
 	    return std::make_tuple(Game::ACTIONS::move_right, Game::actions_and_directions[Game::ACTIONS::move_right]);
 	  }
 	else if ( my_position.x > Game::RIGHT_LIMIT )
 	  {
+	    me.moveLeft();
 	    return std::make_tuple(Game::ACTIONS::move_left, Game::actions_and_directions[Game::ACTIONS::move_left]);
 	  }
 	else
 	  {
 	    Game::ACTIONS movement_action = static_cast<Game::ACTIONS>(random()%2);
+	    switch (movement_action)
+	      {
+	      case Game::ACTIONS::move_left:
+		me.moveLeft();
+		break;
+	      default:
+		me.moveRight();
+		break;
+	      }
 	    return std::make_tuple(movement_action, Game::actions_and_directions[movement_action] );
 	  }
       }
@@ -122,7 +152,7 @@ namespace AI
       }
     else {return std::make_tuple(Game::ACTIONS::nothing, Game::actions_and_directions[Game::ACTIONS::nothing]);}
   }
-  
+
   void set_target(Entity& me, std::list<Entity*> &surroundings, Entity* current_worse_enemy, int &current_worse_enemy_priority)
   {
     current_worse_enemy = nullptr;
