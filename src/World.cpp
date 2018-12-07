@@ -96,6 +96,8 @@ bool World::read_level(std::string& filename) {
 
 void World::clear_all() {
 	objects.clear();
+	for (b2Body* b = pworld.get_world()->GetBodyList(); b; b = b->GetNext())
+		pworld.get_world()->DestroyBody(b);
 }
 
 /*  Create entity  */
@@ -111,6 +113,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::blue);
 			body->SetUserData(&(*entity));
+			body->SetGravityScale(0); //gravity 0 for plane
 			break;
 		}
 		case Textures::BlueAntiAircraft_alpha: {
@@ -154,6 +157,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
 			body->SetUserData(&(*entity));
+			body->SetGravityScale(0); //gravity 0 for plane
 			break;
 		}
 		case Textures::RedAntiAircraft_alpha: {
