@@ -43,10 +43,14 @@ void LevelEditor::createMainScreen()
   CreateHorizontalToolbar(window_width);
 
   // Create another view for level (it's crusial to make divisions with floats)
-  float level_width = (float)Game::WIDTH / (float) window_width;
-  float level_height = (float) Game::HEIGHT / (float) window_height;
-  float level_x = (float) vertical_toolbar_width / (float) window_width;
-  float level_y = (float) horizontal_toolbar_height / (float) window_height;
+  float level_width =
+      static_cast<float>(Game::WIDTH) / static_cast<float>(window_width);
+  float level_height =
+      static_cast<float>(Game::HEIGHT) / static_cast<float>(window_height);
+  float level_x = static_cast<float>(vertical_toolbar_width) /
+                  static_cast<float>(window_width);
+  float level_y = static_cast<float>(horizontal_toolbar_height) /
+                  static_cast<float>(window_height);
   level_view.setViewport(sf::FloatRect(level_x, level_y, level_width, level_height));
   level_view.setSize(sf::Vector2f(Game::WIDTH, Game::HEIGHT));
   level_view.setCenter(sf::Vector2f(Game::WIDTH / 2, Game::HEIGHT / 2));
@@ -112,10 +116,8 @@ void LevelEditor::HandleMouseMove(sf::Event event)
     if (horizontal_toolbar.mode == ESSENTIALS_MODE)
     {
       // Check only essentials container
-      for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
-      {
-        if ((*it)->tryActivate(x, y))
-        {
+      for (auto &essential : horizontal_toolbar.essentials) {
+        if (essential->tryActivate(x, y)) {
           // Skip unnecessary checks (mouse can only be at one position)
           activated = true;
           break;
@@ -125,10 +127,8 @@ void LevelEditor::HandleMouseMove(sf::Event event)
     else if (horizontal_toolbar.mode == OBJECTIVES_MODE)
     {
       // Check only objectives container
-      for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
-      {
-        if ((*it)->tryActivate(x, y))
-        {
+      for (auto &objective : horizontal_toolbar.objectives) {
+        if (objective->tryActivate(x, y)) {
           // Skip unnecessary checks (mouse can only be at one position)
           activated = true;
           break;
@@ -138,10 +138,8 @@ void LevelEditor::HandleMouseMove(sf::Event event)
     else if (horizontal_toolbar.mode == BARRIERS_MODE)
     {
       // Check only barriers container
-      for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
-      {
-        if ((*it)->tryActivate(x, y))
-        {
+      for (auto &barrier : horizontal_toolbar.barriers) {
+        if (barrier->tryActivate(x, y)) {
           // Skip unnecessary checks (mouse can only be at one position)
           activated = true;
           break;
@@ -163,10 +161,8 @@ void LevelEditor::HandleMouseMove(sf::Event event)
 
     if (! activated)
     {
-      for (auto it = vtoolbar_buttons.begin(); it != vtoolbar_buttons.end(); it++)
-      {
-        if ( (*it)->tryActivate(x, y))
-        {
+      for (auto &vtoolbar_button : vtoolbar_buttons) {
+        if (vtoolbar_button->tryActivate(x, y)) {
           activated = true;
           break;
         }
@@ -196,7 +192,8 @@ void LevelEditor::HandleMouseMove(sf::Event event)
     // Mouse hovers on the Level
 
     // Move current LevelEntity, use Level coordinates
-    float level_x = x - vertical_toolbar_width + view * (float) Game::WIDTH;
+    float level_x =
+        x - vertical_toolbar_width + view * static_cast<float>(Game::WIDTH);
     float level_y = y - horizontal_toolbar_height;
     level.moveCurrentEntity(level_x, level_y);
   }
@@ -224,16 +221,13 @@ void LevelEditor::HandleMousePress(sf::Event event)
       {
         // Check only essential buttons
 
-        for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
-        {
-          if ( (*it)->checkClicked(x, y) )
-          {
+        for (auto &essential : horizontal_toolbar.essentials) {
+          if (essential->checkClicked(x, y)) {
             clicked = true;
-            if ((*it)->getChecked())
-            {
+            if (essential->getChecked()) {
               // User checked the button
               // store pointer to the clicked button
-              clicked_button = it->get();
+              clicked_button = essential.get();
             }
             else
             {
@@ -249,16 +243,13 @@ void LevelEditor::HandleMousePress(sf::Event event)
       {
         // Check only objectives container
 
-        for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
-        {
-          if ( (*it)->checkClicked(x, y) )
-          {
+        for (auto &objective : horizontal_toolbar.objectives) {
+          if (objective->checkClicked(x, y)) {
             clicked = true;
-            if ((*it)->getChecked())
-            {
+            if (objective->getChecked()) {
               // User checked the button
               // store pointer to the clicked button
-              clicked_button = it->get();
+              clicked_button = objective.get();
             }
             else
             {
@@ -274,16 +265,13 @@ void LevelEditor::HandleMousePress(sf::Event event)
       {
 
         // Check only barries container
-        for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
-        {
-          if ( (*it)->checkClicked(x, y) )
-          {
+        for (auto &barrier : horizontal_toolbar.barriers) {
+          if (barrier->checkClicked(x, y)) {
             clicked = true;
-            if ((*it)->getChecked())
-            {
+            if (barrier->getChecked()) {
               // User checked the button
               // store pointer to the clicked button
-              clicked_button = it->get();
+              clicked_button = barrier.get();
             }
             else
             {
@@ -314,10 +302,8 @@ void LevelEditor::HandleMousePress(sf::Event event)
       {
 
         // Go through vertical_toolbar buttons
-        for (auto it = vtoolbar_buttons.begin(); it != vtoolbar_buttons.end(); it++)
-        {
-          if( (*it)->checkClicked(x, y) )
-          {
+        for (auto &vtoolbar_button : vtoolbar_buttons) {
+          if (vtoolbar_button->checkClicked(x, y)) {
             clicked = true;
           }
         }
@@ -354,7 +340,8 @@ void LevelEditor::HandleMousePress(sf::Event event)
 
       // Place or create new LevelEntity
       // Notice that coordinate system origin differs in Level realative to LevelEditor
-      float level_x = x - vertical_toolbar_width + view * (float) Game::WIDTH;
+      float level_x =
+          x - vertical_toolbar_width + view * static_cast<float>(Game::WIDTH);
       float level_y = y - horizontal_toolbar_height;
 
       level.addEntity(level_x, level_y, current_entity_type);
@@ -368,7 +355,8 @@ void LevelEditor::HandleMousePress(sf::Event event)
     {
       // Try to flip LevelEntity
       // Notice that coordinate system origin differs in Level realative to LevelEditor
-      float level_x = x - vertical_toolbar_width + view * (float) Game::WIDTH;
+      float level_x =
+          x - vertical_toolbar_width + view * static_cast<float>(Game::WIDTH);
       float level_y = y - horizontal_toolbar_height;
 
       level.flipEntity(level_x, level_y);
@@ -385,11 +373,9 @@ void LevelEditor::UncheckImageButtons(ImageButton *button)
   if (horizontal_toolbar.mode == ESSENTIALS_MODE)
   {
     // Go through only essentials container
-    for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
-    {
-      if (it->get() != button)
-      {
-        (*it)->setUnchecked();
+    for (auto &essential : horizontal_toolbar.essentials) {
+      if (essential.get() != button) {
+        essential->setUnchecked();
       }
     }
   }
@@ -397,11 +383,9 @@ void LevelEditor::UncheckImageButtons(ImageButton *button)
   else if (horizontal_toolbar.mode == OBJECTIVES_MODE)
   {
     // Go through only objectives container
-    for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
-    {
-      if (it->get() != button)
-      {
-        (*it)->setUnchecked();
+    for (auto &objective : horizontal_toolbar.objectives) {
+      if (objective.get() != button) {
+        objective->setUnchecked();
       }
     }
   }
@@ -409,11 +393,9 @@ void LevelEditor::UncheckImageButtons(ImageButton *button)
   else if (horizontal_toolbar.mode == BARRIERS_MODE)
   {
     // Go through only barriers container
-    for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
-    {
-      if (it->get() != button)
-      {
-        (*it)->setUnchecked();
+    for (auto &barrier : horizontal_toolbar.barriers) {
+      if (barrier.get() != button) {
+        barrier->setUnchecked();
       }
     }
   }
@@ -569,9 +551,8 @@ void LevelEditor::DrawVerticalToolbar()
   window.draw(vertical_toolbar.rect);
 
   // Draw Buttons
-  for (auto it = vtoolbar_buttons.begin(); it != vtoolbar_buttons.end(); it++)
-  {
-    window.draw(**it);
+  for (auto &vtoolbar_button : vtoolbar_buttons) {
+    window.draw(*vtoolbar_button);
   }
 }
 
@@ -772,25 +753,22 @@ void LevelEditor::DrawHorizontalToolbar()
   if (horizontal_toolbar.mode == ESSENTIALS_MODE)
   {
     // Draw essentials container buttons
-    for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
-    {
-      window.draw(** it);
+    for (auto &essential : horizontal_toolbar.essentials) {
+      window.draw(*essential);
     }
   }
   else if (horizontal_toolbar.mode == OBJECTIVES_MODE)
   {
     // Draw buttons in objectives container
-    for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
-    {
-      window.draw(** it);
+    for (auto &objective : horizontal_toolbar.objectives) {
+      window.draw(*objective);
     }
   }
   else if (horizontal_toolbar.mode == BARRIERS_MODE)
   {
     // Draw buttons in barriers container
-    for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
-    {
-      window.draw(** it);
+    for (auto &barrier : horizontal_toolbar.barriers) {
+      window.draw(*barrier);
     }
     // Draw ground realated Buttons
     window.draw(* horizontal_toolbar.place_ground);
@@ -870,9 +848,8 @@ void LevelEditor::add_ground_action()
 {
   // Disable clicking from all visible toolbar buttons except place_ground and
   // cancel_ground
-  for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
-  {
-    (*it)->enableClicking(false);
+  for (auto &barrier : horizontal_toolbar.barriers) {
+    barrier->enableClicking(false);
   }
   horizontal_toolbar.show_essentials->enableClicking(false);
   horizontal_toolbar.show_objectives->enableClicking(false);
@@ -899,9 +876,8 @@ void LevelEditor::place_ground_action()
 void LevelEditor::cancel_ground_action()
 {
   // Enable clicking for all buttons which clikcing was disabled
-  for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
-  {
-    (*it)->enableClicking(true);
+  for (auto &barrier : horizontal_toolbar.barriers) {
+    barrier->enableClicking(true);
   }
   horizontal_toolbar.show_essentials->enableClicking(true);
   horizontal_toolbar.show_objectives->enableClicking(true);
@@ -923,13 +899,11 @@ void LevelEditor::show_essentials_action()
   current_entity_type = NO_ENTITY;
   level.removeCurrent();
   // Set all objectives and barriers buttons unchecked
-  for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
-  {
-    (*it)->setUnchecked();
+  for (auto &objective : horizontal_toolbar.objectives) {
+    objective->setUnchecked();
   }
-  for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
-  {
-    (*it)->setUnchecked();
+  for (auto &barrier : horizontal_toolbar.barriers) {
+    barrier->setUnchecked();
   }
 }
 
@@ -940,13 +914,11 @@ void LevelEditor::show_objectives_action()
   current_entity_type = NO_ENTITY;
   level.removeCurrent();
   // Set all essentials and barriers buttons unchecked
-  for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
-  {
-    (*it)->setUnchecked();
+  for (auto &essential : horizontal_toolbar.essentials) {
+    essential->setUnchecked();
   }
-  for (auto it = horizontal_toolbar.barriers.begin(); it != horizontal_toolbar.barriers.end(); it++)
-  {
-    (*it)->setUnchecked();
+  for (auto &barrier : horizontal_toolbar.barriers) {
+    barrier->setUnchecked();
   }
 
 }
@@ -958,13 +930,11 @@ void LevelEditor::show_barriers_action()
   current_entity_type = NO_ENTITY;
   level.removeCurrent();
   // Set all essentials and objectives buttons unchecked
-  for (auto it = horizontal_toolbar.essentials.begin(); it != horizontal_toolbar.essentials.end(); it++)
-  {
-    (*it)->setUnchecked();
+  for (auto &essential : horizontal_toolbar.essentials) {
+    essential->setUnchecked();
   }
-  for (auto it = horizontal_toolbar.objectives.begin(); it != horizontal_toolbar.objectives.end(); it++)
-  {
-    (*it)->setUnchecked();
+  for (auto &objective : horizontal_toolbar.objectives) {
+    objective->setUnchecked();
   }
 }
 
@@ -974,7 +944,9 @@ void LevelEditor::view_left_action()
   if (view > 0)
   {
     view --;
-    level_view.setCenter(sf::Vector2f((float) Game::WIDTH * (0.5 + view), (float) Game::HEIGHT / 2));
+    level_view.setCenter(
+        sf::Vector2f(static_cast<float>(Game::WIDTH) * (0.5 + view),
+                     static_cast<float>(Game::HEIGHT) / 2));
     if (view == 0.f)
     {
       // Disable left_arrow (inpossible to move left)
@@ -989,7 +961,9 @@ void LevelEditor::view_right_action()
   // Enable left_arrow
   vertical_toolbar.view_left->setEnabled(true);
   view ++;
-  level_view.setCenter(sf::Vector2f((float) Game::WIDTH * (0.5 + view), (float) Game::HEIGHT / 2));
+  level_view.setCenter(
+      sf::Vector2f(static_cast<float>(Game::WIDTH) * (0.5 + view),
+                   static_cast<float>(Game::HEIGHT) / 2));
 }
 
 
@@ -1081,8 +1055,8 @@ void LevelEditor::HandleDialogMousePress(sf::Event event)
 {
   if (event.mouseButton.button == sf::Mouse::Left)
   {
-    float x = (float) event.mouseButton.x;
-    float y = (float) event.mouseButton.y;
+    auto x = static_cast<float>(event.mouseButton.x);
+    auto y = static_cast<float>(event.mouseButton.y);
 
     if (messagebox.active)
     {
@@ -1105,10 +1079,8 @@ void LevelEditor::HandleDialogMousePress(sf::Event event)
       else
       {
         // Check buttons
-        for (auto it = saveUI.buttons.begin(); it != saveUI.buttons.end(); it++)
-        {
-          if ((*it)->checkClicked(x, y))
-          {
+        for (auto &button : saveUI.buttons) {
+          if (button->checkClicked(x, y)) {
             break;
           }
         }
@@ -1122,8 +1094,8 @@ void LevelEditor::HandleDialogMousePress(sf::Event event)
 /*  Handle dialog_window mouse movement */
 void LevelEditor::HandleDialogMouseMove(sf::Event event)
 {
-  float x = (float) event.mouseMove.x;
-  float y = (float) event.mouseMove.y;
+  auto x = static_cast<float>(event.mouseMove.x);
+  auto y = static_cast<float>(event.mouseMove.y);
 
   if (messagebox.active)
   {
@@ -1133,10 +1105,8 @@ void LevelEditor::HandleDialogMouseMove(sf::Event event)
   else
   {
     // Handle mouse move in level save
-    for (auto it = saveUI.buttons.begin(); it != saveUI.buttons.end(); it++)
-    {
-      if ((*it)->tryActivate(x, y))
-      {
+    for (auto &button : saveUI.buttons) {
+      if (button->tryActivate(x, y)) {
         break;
       }
     }
@@ -1179,9 +1149,8 @@ void LevelEditor::DrawDialog()
       dialog_window.draw(saveUI.fail_text);
     }
     // Draw all buttons
-    for (auto it = saveUI.buttons.begin(); it != saveUI.buttons.end(); it++)
-    {
-      dialog_window.draw(**it);
+    for (auto &button : saveUI.buttons) {
+      dialog_window.draw(*button);
     }
 
   }
@@ -1208,8 +1177,8 @@ void LevelEditor::writeLevel()
   saveUI.description_input.deactivate();
   // Overwrite old level if user has set name matching level_selected
   int ret_value = -1;
-  if (saveUI.name_input.getInputText() == level_selected && level_selected != "")
-  {
+  if (saveUI.name_input.getInputText() == level_selected &&
+      !level_selected.empty()) {
     // Truncate the old level
     ret_value = level.saveToFile(saveUI.name_input.getInputText(), saveUI.description_input.getInputText(), true);
   }
@@ -1218,8 +1187,7 @@ void LevelEditor::writeLevel()
     // Don't truncate (overwrite)
     ret_value = level.saveToFile(saveUI.name_input.getInputText(), saveUI.description_input.getInputText(), false);
   }
-  if (ret_value)
-  {
+  if (ret_value != 0) {
     // Successfully saved
 
     horizontal_toolbar.info_text.setString("Level succesfully saved");
