@@ -19,7 +19,7 @@ bool World::read_level(std::string& filename) {
   	std::string type;
 	std::ifstream file(filename);
 	if (file.is_open()) {
-		//clear all
+		clear_all();
 		bool comments_read = false;
 		std::string line;
 		while(getline(file,line)) {
@@ -67,7 +67,7 @@ bool World::read_level(std::string& filename) {
 
 				if (i != 6) {
 					//failed
-					//clear all
+					clear_all();
 					return false;
 				}
 				else {
@@ -94,7 +94,9 @@ bool World::read_level(std::string& filename) {
 
 /*  Clears the world  */
 
-void World::clear_all() {}
+void World::clear_all() {
+	objects.clear();
+}
 
 /*  Create entity  */
 
@@ -108,72 +110,86 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		case Textures::BlueAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::blue);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::BlueAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::BlueBase_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::BlueHangar_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::BlueInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::Bullet_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Bullet>(*pworld.get_world(), *body, tex, pos, direct);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::Ground_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Ground>(*pworld.get_world(), *body, tex, pos);
 			entity->setScale(width,height);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::RedAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::RedAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::RedBase_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::RedHangar_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::RedInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::Rock_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Stone>(*pworld.get_world(), *body, tex, pos);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		case Textures::Tree_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Tree>(*pworld.get_world(), *body, tex, pos);
+			body->SetUserData(&(*entity));
 			break;
 		}
 		default:
@@ -229,23 +245,14 @@ void World::update() {
 			b2Fixture* a_fixture = contact->GetFixtureA();
 			b2Fixture* b_fixture = contact->GetFixtureB();
 
-			Entity* a_entity;
-			Entity* b_entity;
-
 			b2Body* a_body = a_fixture->GetBody();
 			b2Body* b_body = b_fixture->GetBody();
 
+			Entity* a_entity = static_cast<Entity*>(a_body->GetUserData());
+			Entity* b_entity = static_cast<Entity*>(b_body->GetUserData());
+
 			bool a_sensor = a_fixture->IsSensor();
 			bool b_sensor = b_fixture->IsSensor();
-
-			for (auto it : objects) {
-				if (&it->getB2Body() == a_body)
-					a_entity = &(*it);
-
-				if (&it->getB2Body() == b_body)
-					b_entity = &(*it);
-
-			}
 
 			//only one was a sensor
 			if (a_sensor ^ b_sensor) {
@@ -263,10 +270,12 @@ void World::update() {
 		
 	}
 	
+
+
 	//updating the world
 	for (auto it : objects) {
 		//1. send ai information
-	  std::tuple<Game::ACTIONS, sf::Vector2f> tuple = AI::get_action(*it, it->get_surroundings());
+	  	std::tuple<Game::ACTIONS, sf::Vector2f> tuple = AI::get_action(*it, it->get_surroundings());
 		//do something with ai information
 
 		//2. update new positions
