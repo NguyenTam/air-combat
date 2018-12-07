@@ -75,7 +75,7 @@ namespace AI
 	    }
 	  }      
       }
-    else {return std::make_tuple(Game::ACTIONS::nothing, Game::actions_and_directions[Game::ACTIONS::nothing]);}
+    return std::make_tuple(Game::ACTIONS::nothing, Game::actions_and_directions[Game::ACTIONS::nothing]);
   }
 
   std::tuple<Game::ACTIONS, sf::Vector2f> get_antiaircraft_action(Entity& me, std::list<Entity*> &surroundings)
@@ -89,10 +89,7 @@ namespace AI
 	sf::Vector2f direction = my_position - current_worse_enemy->getPosition();
 	return std::make_tuple(Game::ACTIONS::shoot, direction);
       }
-    else
-      {
-	return std::make_tuple(Game::ACTIONS::nothing, Game::actions_and_directions[Game::ACTIONS::nothing]);
-      }
+      return std::make_tuple(Game::ACTIONS::nothing, Game::actions_and_directions[Game::ACTIONS::nothing]);
   }
 
   std::tuple<Game::ACTIONS, sf::Vector2f> get_infantry_action(Entity& me, std::list<Entity*> &surroundings)
@@ -144,4 +141,4 @@ namespace AI
 	  }
       }
   }
-}
+} // namespace AI

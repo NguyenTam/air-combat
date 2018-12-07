@@ -290,11 +290,8 @@ bool Button::tryActivate(float x, float y)
     button_rect.setFillColor(active_color);
     return true;
   }
-  else
-  {
-    button_rect.setFillColor(normal_color);
-    return false;
-  }
+  button_rect.setFillColor(normal_color);
+  return false;
 
 }
 

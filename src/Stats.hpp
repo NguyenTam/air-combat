@@ -8,6 +8,8 @@
 /*  Includes */
 #include <SFML/Window.hpp>
 #include <vector>
+#include <tuple>
+#include <algorithm>
 #include "UI.hpp"
 #include "button.hpp"
 #include "image_button.hpp"
@@ -46,12 +48,33 @@ class Stats
       */
     int getExitStatus();
 
+    /**
+      *   @brief Sort texs by name
+      */
+    void sortByName();
+
+    /**
+      *   @brief Sort texts by time
+      */
+    void sortByTime();
+
+    /**
+      *   @brief Sort texts by score
+      */
+    void sortByScore();
+
+    /**
+      *   @brief Create Stats from log file
+      *   @remark This should be called from main.cpp after Stats is activated
+      */
+    void createStats();
+
 
   private:
     /**
-      *   @brief Create all Buttons needed in Stats
+      *   @brief Create all Buttons needed in Stats and views
       */
-    void CreateButtons();
+    void CreateUI();
 
     /**
       *   @brief Draw all Buttons and text objects to the window
@@ -76,12 +99,36 @@ class Stats
       */
     void HandleMouseMove(sf::Event &event);
 
+    /**
+      *   @brief Create sf::Text to texts
+      *   @param name User name
+      *   @param score Game score
+      *   @param time_str Timestamp
+      */
+    void CreateText(std::string name, std::string score, std::string time_str);
+
+    /**
+      *   @brief Update Text positions to match vector indexing
+      *   @remark This should be called after vector is sorted
+      */
+    void UpdateTextPositions();
 
     /*  Variables */
     sf::RenderWindow &window;
     std::vector<std::shared_ptr<Button>> buttons;
+    //std::vector<std::shared_ptr<sf::RectangleShape>> rects;
+    std::vector< std::tuple <std::unique_ptr<sf::Text>, std::unique_ptr<sf::Text>, std::unique_ptr<sf::Text>>> texts;
     int exit_status;
     bool active = true;
+    sf::Color ButtonColor;
+    sf::Color ButtonActiveColor;
+    sf::Color BackgroundColor;
+    sf::View ui_view;
+    sf::View stats_view;
+    float button_width;
+    float button_dist;
+    sf::Font font;
+    sf::Text test;
 
 
 };

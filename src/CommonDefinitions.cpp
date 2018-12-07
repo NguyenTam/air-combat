@@ -22,7 +22,7 @@ namespace Game
       {	ACTIONS::bomb, sf::Vector2f(0.f, 1.f) },
       { ACTIONS::nothing,sf::Vector2f(0.f, 0.f) }
     };
-}
+} // namespace Game
 
 namespace Paths
 {
@@ -33,7 +33,7 @@ std::vector<std::string> Paths
       "../data/level_files/",
       "../data/logs/"      
       };
-}
+} // namespace Paths
 
 namespace Textures
 {
@@ -91,7 +91,7 @@ std::vector<std::string> TextureFiles {
   { "Rock", Rock_alpha },
   { "Tree", Tree_alpha }     
 };
-}
+} // namespace Textures
 
 namespace Fonts
 {
@@ -101,4 +101,4 @@ namespace Fonts
     {FONTS::courier, "Courier.ttf" },
     {FONTS::sansation, "Sansation.ttf" }
   };
-}
+} // namespace Fonts
