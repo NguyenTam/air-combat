@@ -273,8 +273,6 @@ void World::update() {
 		}
 		
 	}
-	
-
 
 	//updating the world
 	for (auto it : objects) {
@@ -297,4 +295,9 @@ void World::update() {
 		it->drawTo(window);
 	}
 	
+}
+
+std::vector<std::shared_ptr<Entity>>& World::get_all_entities()
+{
+  return objects;
 }

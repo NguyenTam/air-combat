@@ -79,9 +79,11 @@ public:
 
   void clear_all();
 
+  std::vector<std::shared_ptr<Entity>>& get_all_entities();
+
 private:
   PhysicsWorld pworld;
   ResourceManager &resources;
-	sf::RenderWindow &window; /**< Window that is being used */
-	std::vector<std::shared_ptr<Entity>> objects; /**< Contains all the entities added */
+  sf::RenderWindow &window; /**< Window that is being used */
+  std::vector<std::shared_ptr<Entity>> objects; /**< Contains all the entities added */
 };
