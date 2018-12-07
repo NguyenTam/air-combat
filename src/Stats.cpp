@@ -60,7 +60,7 @@ void Stats::CreateUI()
   // Create the views
   ui_view = window.getDefaultView();
   stats_view = sf::View();
-  stats_view.setSize(Game::WIDTH - width - button_dist, Game::HEIGHT - height);
+  stats_view.setSize(Game::WIDTH - width - button_dist, Game::HEIGHT - height - button_dist);
   stats_view.setCenter(stats_view.getSize().x / 2, stats_view.getSize().y / 2);
   stats_view.setViewport(sf::FloatRect((width + button_dist) / Game::WIDTH, height / Game::HEIGHT, stats_view.getSize().x / Game::WIDTH, stats_view.getSize().y / Game::HEIGHT));
 }
@@ -135,7 +135,6 @@ void Stats::DrawWindow()
     window.draw(*std::get<1>(text));
     window.draw(*std::get<2>(text));
   }
-  window.draw(test);
   window.setView(ui_view);
 }
 
@@ -237,6 +236,8 @@ void Stats::sortByTime()
       button->setUnchecked();
     }
   }
+  // Just parse texts again from the file, they are in time
+  createStats();
 }
 
 /*  Sort Stats by score */
@@ -267,29 +268,16 @@ void Stats::sortByScore()
 void Stats::CreateText(std::string name, std::string score, std::string time_str)
 {
 
-  texts.push_back(std::make_tuple(std::make_unique<sf::Text>(name, font, 14), std::make_unique<sf::Text>(score, font, 14),
+  texts.push_front(std::make_tuple(std::make_unique<sf::Text>(name, font, 14), std::make_unique<sf::Text>(score, font, 14),
               std::make_unique<sf::Text>(time_str, font, 14)));
   // Set correct positions for the texts
-  auto &new_entry = texts.back();
+  auto &new_entry = texts.front();
   std::get<0>(new_entry)->setPosition(button_dist, button_dist + 40 * (texts.size() - 1));
   std::get<0>(new_entry)->setColor(sf::Color::Red);
   std::get<1>(new_entry)->setPosition(button_dist * 2 + button_width, button_dist + 40 * (texts.size() - 1));
   std::get<1>(new_entry)->setColor(sf::Color::Red);
   std::get<2>(new_entry)->setPosition(button_dist * 3 + button_width * 2, button_dist + 40 * (texts.size() - 1));
   std::get<2>(new_entry)->setColor(sf::Color::Red);
-}
-
-/*  Create Stats */
-void Stats::createStats()
-{
-  test.setColor(sf::Color::Red);
-  test.setPosition(0, 0);
-  CreateText(std::string("Lauri 1."), std::string("100"), std::string("2018-07-12 13:56:45"));
-  CreateText(std::string("AAA"), std::string("50"), std::string("2018-07-13-74"));
-  CreateText(std::string("Hello "), std::string("200"), std::string("2018-07-12 14:56:45"));
-  CreateText(std::string("dD"), std::string("hhf"), std::string("2018-07-12 14:56:45"));
-  ParseLog();
-
 }
 
 /*  Update Texts positions */
@@ -313,7 +301,7 @@ void Stats::ViewUp()
   {
     // Change current_view and update view center
     current_view --;
-    stats_view.setCenter(stats_view.getSize().x / 2, current_view * (stats_view.getSize().y / 2));
+    stats_view.setCenter(stats_view.getSize().x / 2, stats_view.getSize().y / 2 + (current_view -1) * (stats_view.getSize().y));
   }
 }
 
@@ -322,11 +310,80 @@ void Stats::ViewDown()
 {
   // Change current_view and update view center
   current_view ++;
-  stats_view.setCenter(stats_view.getSize().x / 2, current_view * (stats_view.getSize().y / 2));
+  stats_view.setCenter(stats_view.getSize().x / 2, stats_view.getSize().y / 2 + (current_view -1) * (stats_view.getSize().y));
 }
 
-/*  Parse log file */
-void Stats::ParseLog()
+/*  Parse log file and create stats */
+void Stats::createStats()
 {
-  std::cout << Paths::Paths[Paths::PATHS::stats_log] << std::endl;
+  // open ../data/misc/stats.txt
+  std::ifstream file(Paths::Paths[Paths::PATHS::stats_log]);
+  if (file.is_open())
+  {
+    // Clear old entries
+    ClearTexts();
+    std::string line;
+    std::string time_str, name, score;
+
+    while(getline(file, line))
+    {
+      // Read all lines and convert to string stream. Then split content to split_str
+      std::istringstream temp_stream(line);
+      std::string split_str;
+      int i = 0;
+      while(getline(temp_stream, split_str, '['))
+      {
+        try
+        {
+          std::size_t index = split_str.find(']');
+          if (index != std::string::npos)
+          {
+            split_str.erase(index);
+
+            // Add str to specific string
+            // Format should be : time Stats info name score
+            switch (i)
+            {
+              case 0:
+                time_str = split_str;
+                break;
+              case 3:
+                name = split_str;
+                break;
+              case 4:
+                score = split_str;
+                break;
+              default:
+                break;
+            }
+            i++;
+          }
+
+
+        } catch (std::exception &e)
+        {
+          // Fail, return
+          return;
+        }
+      }
+      if (i == 5 )
+      {
+        // ok, create new Text
+        CreateText(name, score, time_str);
+        // Update positions to match timestamps (newer first)
+        UpdateTextPositions();
+      }
+      else return;
+    }
+  }
+
+}
+
+/*  Clear texts */
+void Stats::ClearTexts()
+{
+  if (! texts.empty())
+  {
+    texts.clear();
+  }
 }

@@ -8,8 +8,11 @@
 /*  Includes */
 #include <SFML/Window.hpp>
 #include <vector>
+#include <deque>
 #include <tuple>
 #include <algorithm>
+#include <fstream>
+#include <sstream>
 #include "UI.hpp"
 #include "button.hpp"
 #include "image_button.hpp"
@@ -66,6 +69,8 @@ class Stats
     /**
       *   @brief Create Stats from log file
       *   @remark This should be called from main.cpp after Stats is activated
+      *   @details Parse log file from ../data/misc/stats.txt. Creates container
+      *   so that newer entries are at the beginning of the deque
       */
     void createStats();
 
@@ -130,15 +135,14 @@ class Stats
     void ViewDown();
 
     /**
-      *   @brief Parse log file from ../data/misc/stats.txt
+      *   @brief Clear all Texts from texts
       */
-    void ParseLog();
+    void ClearTexts();
 
     /*  Variables */
     sf::RenderWindow &window;
     std::vector<std::shared_ptr<Button>> buttons;
-    //std::vector<std::shared_ptr<sf::RectangleShape>> rects;
-    std::vector< std::tuple <std::unique_ptr<sf::Text>, std::unique_ptr<sf::Text>, std::unique_ptr<sf::Text>>> texts;
+    std::deque< std::tuple <std::unique_ptr<sf::Text>, std::unique_ptr<sf::Text>, std::unique_ptr<sf::Text>>> texts;
     int exit_status;
     bool active = true;
     sf::Color ButtonColor;
@@ -149,7 +153,6 @@ class Stats
     float button_width;
     float button_dist;
     sf::Font font;
-    sf::Text test;
     int current_view = 1;
 
 
