@@ -10,13 +10,10 @@ Infantry::Infantry(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector
           fireCountDown = rateOfFire;
           numberOfBullets-=1;
           return true;  
-        } else {
-          return false;
         }
-    } else {
-      fireCountDown-=1;
-      return false;
     }
+    fireCountDown-=1;
+    return false;
 }
 
 

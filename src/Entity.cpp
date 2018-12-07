@@ -68,7 +68,7 @@ float Entity::getSpeed()
 sf::Vector2u Entity::getSize()
 {
   sf::FloatRect rect =  entity.getGlobalBounds();
-  return sf::Vector2u(rect.width, rect.height);
+  return {rect.width, rect.height};
 }
 
 void Entity::move(sf::Vector2f direction){
