@@ -130,3 +130,15 @@ bool Entity::damage(int damage){
     return true;
   }
 }
+
+void Entity::insert_surrounding(Entity* entity) {
+  surrounding.push_back(entity);
+}
+
+void Entity::erase_surroundings() {
+  surrounding.clear();
+}
+
+std::list<Entity*>& Entity::get_surroundings() {
+  return surrounding;
+}

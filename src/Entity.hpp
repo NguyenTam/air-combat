@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <Box2D/Box2D.h>
 #include "CommonDefinitions.hpp"
+#include <list>
 
 /**
   *   @class Entity
@@ -177,6 +178,12 @@ public:
    */
   Game::TYPE_ID getTypeId();
 
+  void insert_surrounding(Entity* entity);
+
+  void erase_surroundings();
+
+  std::list<Entity*>& get_surroundings();
+
 protected:
 
     /*  Variables */
@@ -197,4 +204,5 @@ protected:
   b2World & world; /**< World where entity exists */
   b2Body& b2body; /**< Entitys body */
   Textures::ID type; /**< Textures file name without extension */
+  std::list<Entity*> surrounding;
 };

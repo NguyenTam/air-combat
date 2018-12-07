@@ -18,6 +18,8 @@
 #include "Base.hpp"
 #include "Ground.hpp"
 #include "Hangar.hpp"
+#include "AI.hpp"
+
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <algorithm>
@@ -25,6 +27,7 @@
 #include <Box2D/Box2D.h>
 #include <fstream>
 #include <sstream>
+#include <list>
 
 
 #define DEGTORAD 0.0174532925199432957f
@@ -79,6 +82,7 @@ public:
 private:
   PhysicsWorld pworld;
   ResourceManager &resources;
+  AI ai;
 	sf::RenderWindow &window; /**< Window that is being used */
 	std::vector<std::shared_ptr<Entity>> objects; /**< Contains all the entities added */
 };

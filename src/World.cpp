@@ -219,26 +219,57 @@ void World::update() {
 	
 	pworld.get_world()->Step(timeStep, velocityIterations, positionIterations);
 
+	for (auto it : objects) {
+		it->erase_surroundings();
+	}
+
+	//collision detection
 	for (b2Contact* contact = pworld.get_world()->GetContactList(); contact;  contact = contact->GetNext()) {
 		if (contact->IsTouching()){
-			b2Body* a_body = contact->GetFixtureA()->GetBody();
-			b2Body* b_body = contact->GetFixtureB()->GetBody();
+			b2Fixture* a_fixture = contact->GetFixtureA();
+			b2Fixture* b_fixture = contact->GetFixtureB();
 
-			std::shared_ptr<Entity> a_entity;
-			std::shared_ptr<Entity> b_entity;
+			Entity* a_entity;
+			Entity* b_entity;
 
-			for (auto it = objects.begin(); it != objects.end(); it++) {
-				if (&(*it)->getB2Body() == a_body)
-					a_entity = *it;
-				else if (&(*it)->getB2Body() == b_body)
-					b_entity = *it;
+			b2Body* a_body = a_fixture->GetBody();
+			b2Body* b_body = b_fixture->GetBody();
+
+			bool a_sensor = a_fixture->IsSensor();
+			bool b_sensor = b_fixture->IsSensor();
+
+			for (auto it : objects) {
+				if (&it->getB2Body() == a_body)
+					a_entity = &(*it);
+
+				if (&it->getB2Body() == b_body)
+					b_entity = &(*it);
+
 			}
+
+			//only one was a sensor
+			if (a_sensor ^ b_sensor) {
+				if (a_sensor) {
+					a_entity->insert_surrounding(b_entity);
+				}
+
+				else {
+					b_entity->insert_surrounding(a_entity);
+				}
+			}
+
+		
 		}
-
-
+		
 	}
 	
+	//updating the world
 	for (auto it : objects) {
+		//1. send ai information
+		std::tuple<Game::ACTIONS, sf::Vector2f> tuple = ai.get_action(*it, it->get_surroundings());
+		//do something with ai information
+
+		//2. update new positions
 		//new position for sprite
 		float x_corr = it->getSize().x/2;
 		float y_corr = it->getSize().y/2;
