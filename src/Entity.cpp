@@ -12,35 +12,26 @@ void Entity::drawTo(sf::RenderWindow &window)
   window.draw(entity);
 }
 
-void Entity::moveUp()
-{
-  entity.move({0,-moveSpeed});
-}
+// Does not move by default
+void Entity::moveUp(){}
 
-void Entity::moveDown()
-{
-  entity.move({0, moveSpeed});
-}
+// Does not move by default
+void Entity::moveDown(){}
 
-void Entity::moveLeft()
-{
-  entity.move({-moveSpeed,0});
-}
+// Does not move by default
+void Entity::moveLeft(){}
 
-void Entity::moveRight()
-{
-  entity.move({moveSpeed,0});
-}
+// Does not move by default
+void Entity::moveRight(){}
 
+// Does not move by default
 void Entity::rotateClockWise()
 {
-  entity.rotate(5.f);
+  // entity.rotate(5.f);
 }
 
-void Entity::rotateCounterClockWise()
-{
-  entity.rotate(-5.f);
-}
+// Does not move by default
+void Entity::rotateCounterClockWise(){}
 
 sf::Vector2f Entity::getPosition() const{
   return entity.getPosition();
@@ -76,11 +67,13 @@ void Entity::move(sf::Vector2f direction){
 }
 
 bool Entity::shoot() {
+
   if(numberOfBullets>0){
     numberOfBullets-=1;
     return true;
   } 
   return false;
+
 }
 
 void Entity::setType(Textures::ID t){
