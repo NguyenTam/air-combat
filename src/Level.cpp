@@ -443,7 +443,7 @@ std::ostream& operator<<(std::ostream &os, const Level &level)
 /*  Save Level to file */
 bool Level::saveToFile(std::string level_name, std::string description, bool truncate)
 {
-  if (level_name == "")
+  if (level_name.empty())
   {
     // This check is needed to make sure .txt file isn't created
     return false;

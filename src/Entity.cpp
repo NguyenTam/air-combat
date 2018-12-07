@@ -79,7 +79,8 @@ bool Entity::shoot() {
   if(numberOfBullets>0){
     numberOfBullets-=1;
     return true;
-  } else {return false;}
+  } 
+  return false;
 }
 
 void Entity::setType(Textures::ID t){
