@@ -31,8 +31,8 @@ namespace AI
 
   std::tuple<Game::ACTIONS, sf::Vector2f> get_airplane_action(Entity& me, std::list<Entity*> &surroundings)
   {
-    Entity* current_worse_enemy;
-    int current_worse_enemy_priority;
+    Entity* current_worse_enemy = nullptr;
+    int current_worse_enemy_priority = -1;
     sf::Vector2f my_position = me.getPosition();
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
     if( my_position.x < Game::LEFT_LIMIT || my_position.x > Game::RIGHT_LIMIT || my_position.y < Game::LOWER_LIMIT || my_position.x > Game::UPPER_LIMIT ||  current_worse_enemy_priority == priority_list[Game::TYPE_ID::ground] )
@@ -99,8 +99,8 @@ namespace AI
 
   std::tuple<Game::ACTIONS, sf::Vector2f> get_antiaircraft_action(Entity& me, std::list<Entity*> &surroundings)
   {
-    Entity* current_worse_enemy;
-    int current_worse_enemy_priority;
+    Entity* current_worse_enemy = nullptr;
+    int current_worse_enemy_priority = -1;
     sf::Vector2f my_position = me.getPosition();
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
     if ((current_worse_enemy != nullptr) && (current_worse_enemy->getTypeId() == Game::TYPE_ID::airplane))
@@ -113,8 +113,8 @@ namespace AI
 
   std::tuple<Game::ACTIONS, sf::Vector2f> get_infantry_action(Entity& me, std::list<Entity*> &surroundings)
   {
-    Entity* current_worse_enemy;
-    int current_worse_enemy_priority;
+    Entity* current_worse_enemy = nullptr;
+    int current_worse_enemy_priority = -1;
     sf::Vector2f my_position = me.getPosition();
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
     if( my_position.x < Game::LEFT_LIMIT || my_position.x > Game::RIGHT_LIMIT ||  current_worse_enemy_priority == priority_list[Game::TYPE_ID::ground] )
@@ -155,8 +155,8 @@ namespace AI
 
   void set_target(Entity& me, std::list<Entity*> &surroundings, Entity* current_worse_enemy, int &current_worse_enemy_priority)
   {
-    current_worse_enemy = nullptr;
-    current_worse_enemy_priority = -1;
+    current_worse_enemy;
+    current_worse_enemy_priority;
     for ( auto const& e : surroundings )
       {
 	Game::TYPE_ID surrounding_type = e->getTypeId();
