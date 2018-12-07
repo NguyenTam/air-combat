@@ -2,19 +2,19 @@
   *   @file GameEngine.cpp
   *   @brief Contains class GameEngine source
   */
-#include "Entity.hpp"
 #include "GameEngine.hpp"
 #include "CommonDefinitions.hpp"
+#include "Entity.hpp"
 #include "ResourceManager.hpp"
-#include <iostream>
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
-#include <Box2D/Box2D.h>
-#include <math.h>
-#include <cstdlib>
-#include <sstream>
 #include "World.hpp"
+#include <Box2D/Box2D.h>
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
+#include <SFML/Window.hpp>
+#include <cstdlib>
+#include <iostream>
+#include <math.h>
+#include <sstream>
 
 /* Initialize members*/
 const float GameEngine::METERS_PER_PIXEL = 60.f;
@@ -23,8 +23,8 @@ const sf::Time GameEngine::TIME_PER_FRAME = sf::seconds(1.f/FPS);
 const float GameEngine::PLAYER_SPEED = 100.f;
 const float GameEngine::PLAYER_ROTATION_DEGREE = 5.f;
 
-GameEngine::GameEngine(sf::RenderWindow & rw) : renderWindow(rw), resources(), gameFont(), world(rw, resources)
-{
+GameEngine::GameEngine(sf::RenderWindow &rw)
+    : renderWindow(rw), world(rw, resources) {
 
   /* Try spdlogger */
     try
@@ -79,7 +79,7 @@ void GameEngine::run(std::string &level_file)
     {
       lastUpdateTime -= TIME_PER_FRAME;
       // Handle events
-      sf::Event event;
+      sf::Event event{};
       while(renderWindow.pollEvent(event))
       {
         if(event.type == sf::Event::KeyPressed)
@@ -100,7 +100,7 @@ void GameEngine::run(std::string &level_file)
 
 void GameEngine::processEvents()
 {
-  sf::Event event;
+  sf::Event event{};
   while(renderWindow.pollEvent(event))
   {
     switch(event.type)
@@ -137,19 +137,24 @@ void GameEngine::update(sf::Time elapsedTime)
 
   sf::Vector2f moveTo(0.f,0.f);
   float rotated = 0.f;
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
     moveTo.y -= PLAYER_SPEED;
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
     moveTo.y += PLAYER_SPEED;
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
     moveTo.x -= PLAYER_SPEED;
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
     moveTo.x += PLAYER_SPEED;
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::N))
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
     rotated += PLAYER_ROTATION_DEGREE;
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
     rotated -= PLAYER_ROTATION_DEGREE;
-
+  }
 
   playerSprite.move(moveTo * elapsedTime.asSeconds());
   playerSprite.rotate(rotated);
