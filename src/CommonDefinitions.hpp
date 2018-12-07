@@ -62,6 +62,10 @@ namespace Game
   extern const float GRAVITY;
   extern const float TOPIXELS;
   extern const float TOMETERS;
+  extern const int LEFT_LIMIT;
+  extern const int RIGHT_LIMIT;
+  extern const int UPPER_LIMIT;
+  extern const int LOWER_LIMIT;
 
 
   enum TYPE_ID
@@ -115,4 +119,16 @@ namespace Paths
     };
   extern std::vector<std::string> Paths;
   
+}
+
+namespace Fonts
+{
+  enum FONTS
+    {
+      arial,
+      courier,
+      sansation
+    };
+
+    extern std::map<FONTS, std::string> font_files;
 }
