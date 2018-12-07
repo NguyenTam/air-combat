@@ -74,22 +74,22 @@ public:
   /*
    *   @brief Move entity directly upward with it's maximum speed  
    */
-  void moveUp();
+  virtual void moveUp();
 
   /*
    *   @brief Move entity directly upward with it's maximum speed  
    */
-  void moveDown();
+  virtual void moveDown();
 
   /*
    *   @brief Move entity directly left with it's maximum speed  
    */
-  void moveLeft();
+  virtual void moveLeft();
 
   /*
    *   @brief Move entity directly right with it's maximum speed  
    */
-  void moveRight();
+  virtual void moveRight();
 
   /*
    *   @brief Rotates entity clockwise  
@@ -120,7 +120,7 @@ public:
   /*
    *   @brief General shoot function for entity, more defined version in subclasses
    */
-  bool shoot();
+  virtual bool shoot();
 
   /*
    *   @brief Gives a type for entity  
@@ -200,7 +200,7 @@ protected:
   Game::TEAM_ID teamId; /**< Tells if entity is in blue or red team, obstacle or projetile */
   Game::TYPE_ID typeId; /**< Tells what entity subclass entity belongs to, for example stone, airplane or infantry */
 
-  private:
+  
   b2World & world; /**< World where entity exists */
   b2Body& b2body; /**< Entitys body */
   Textures::ID type; /**< Textures file name without extension */
