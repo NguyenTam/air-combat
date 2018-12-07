@@ -99,6 +99,10 @@ void Stats::update()
           HandleMouseMove(event);
           break;
 
+        case sf::Event::KeyPressed:
+          HandleKeyPress(event);
+          break;
+
         default:
           break;
 
@@ -182,6 +186,19 @@ void Stats::HandleMouseMove(sf::Event &event)
   for (auto it = buttons.begin(); it != buttons.end(); it++)
   {
     (*it)->tryActivate(x, y);
+  }
+}
+
+/*  Handle KeyPress Events */
+void Stats::HandleKeyPress(sf::Event &event)
+{
+  if (event.key.code == sf::Keyboard::Up)
+  {
+    ViewUp();
+  }
+  else if (event.key.code == sf::Keyboard::Down)
+  {
+    ViewDown();
   }
 }
 
@@ -271,6 +288,7 @@ void Stats::createStats()
   CreateText(std::string("AAA"), std::string("50"), std::string("2018-07-13-74"));
   CreateText(std::string("Hello "), std::string("200"), std::string("2018-07-12 14:56:45"));
   CreateText(std::string("dD"), std::string("hhf"), std::string("2018-07-12 14:56:45"));
+  ParseLog();
 
 }
 
@@ -286,4 +304,29 @@ void Stats::UpdateTextPositions()
     std::get<2>(text)->setPosition(button_dist * 3 + button_width * 2, button_dist + 40 * i);
     i++;
   }
+}
+
+/*  Move stats_view up */
+void Stats::ViewUp()
+{
+  if (current_view > 1)
+  {
+    // Change current_view and update view center
+    current_view --;
+    stats_view.setCenter(stats_view.getSize().x / 2, current_view * (stats_view.getSize().y / 2));
+  }
+}
+
+/*  Move stats_view down */
+void Stats::ViewDown()
+{
+  // Change current_view and update view center
+  current_view ++;
+  stats_view.setCenter(stats_view.getSize().x / 2, current_view * (stats_view.getSize().y / 2));
+}
+
+/*  Parse log file */
+void Stats::ParseLog()
+{
+  std::cout << Paths::Paths[Paths::PATHS::stats_log] << std::endl;
 }

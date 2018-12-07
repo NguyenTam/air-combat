@@ -147,9 +147,10 @@ class Level
       *   @param level_name is filename (.txt added by Level)
       *   @param description Level description (saved to the file)
       *   @param truncate Whether file is truncated or not if it exists
-      *   @return On success, returns true. Otherwise false
+      *   @return On success, returns 1. If file realated problem, returns -1
+      *   and if level is missing planes, returns 0
       */
-    bool saveToFile(std::string level_name, std::string description, bool truncate);
+    int saveToFile(std::string level_name, std::string description, bool truncate);
 
     /**
       *   @brief Finish adding ground entity
@@ -285,6 +286,13 @@ class Level
       *   @param str Input string which is converted
       */
     int ConvertStrToType(std::string &str);
+
+    /**
+      *   @brief Count specific LevelEntities
+      *   @param entity_type LevelEntity type
+      *   @return Returns amount of the especific ntities
+      */
+    int CountEntities(int entity_type);
 
     /*  Variables */
     float level_y_limit = 0; /**< Tells level y limit (i.e. the lowest allowed point to place entities) */

@@ -441,12 +441,17 @@ std::ostream& operator<<(std::ostream &os, const Level &level)
 }
 
 /*  Save Level to file */
-bool Level::saveToFile(std::string level_name, std::string description, bool truncate)
+int Level::saveToFile(std::string level_name, std::string description, bool truncate)
 {
   if (level_name.empty())
   {
     // This check is needed to make sure .txt file isn't created
-    return false;
+    return -1;
+  }
+  // Check level contains one blue plane and at least one red plane
+  if (CountEntities(FRIENDLY_PLANE) != 1 || CountEntities(HOSTILE_PLANE) < 1)
+  {
+    return 0;
   }
   std::ofstream file;
   std::string filename = "../data/level_files/" + level_name + ".txt";
@@ -462,7 +467,7 @@ bool Level::saveToFile(std::string level_name, std::string description, bool tru
     if (std::experimental::filesystem::exists(filename))
     {
       // File already exists
-      return false;
+      return -1;
     }
     file.open(filename,  std::ios::out);
   }
@@ -478,11 +483,11 @@ bool Level::saveToFile(std::string level_name, std::string description, bool tru
     file << *this;
     file.close();
 
-    return true;
+    return 1;
   }
 
   // File opening failed
-  return false;
+  return -1;
 
 }
 
@@ -875,4 +880,18 @@ int Level::ConvertStrToType(std::string &str)
   else if (str == "Rock") return ROCK_ENTITY;
   else if (str == "Ground") return GROUND_ENTITY;
   return NO_ENTITY;
+}
+
+/*  Count specific entities */
+int Level::CountEntities(int entity_type)
+{
+  int count = 0;
+  for (auto entity : level_entities)
+  {
+    if (entity->getType() == entity_type)
+    {
+      count ++;
+    }
+  }
+  return count;
 }

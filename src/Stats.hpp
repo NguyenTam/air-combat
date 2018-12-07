@@ -100,6 +100,12 @@ class Stats
     void HandleMouseMove(sf::Event &event);
 
     /**
+      *   @brief Handle sfml KeyPress events
+      *   @param event KeyPress Event
+      */
+    void HandleKeyPress(sf::Event &event);
+
+    /**
       *   @brief Create sf::Text to texts
       *   @param name User name
       *   @param score Game score
@@ -112,6 +118,21 @@ class Stats
       *   @remark This should be called after vector is sorted
       */
     void UpdateTextPositions();
+
+    /**
+      *   @brief Move stats_view up
+      */
+    void ViewUp();
+
+    /**
+      *   @brief Move stats_view down
+      */
+    void ViewDown();
+
+    /**
+      *   @brief Parse log file from ../data/misc/stats.txt
+      */
+    void ParseLog();
 
     /*  Variables */
     sf::RenderWindow &window;
@@ -129,6 +150,7 @@ class Stats
     float button_dist;
     sf::Font font;
     sf::Text test;
+    int current_view = 1;
 
 
 };

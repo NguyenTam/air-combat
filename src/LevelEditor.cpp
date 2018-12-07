@@ -534,7 +534,7 @@ void LevelEditor::help_button_action()
 
   // Load text from file
   std::string help_content;
-  std::ifstream file("../data/config/help.txt");
+  std::ifstream file("../data/misc/help.txt");
   if (file.is_open())
   {
     std::string line;
@@ -1207,7 +1207,7 @@ void LevelEditor::writeLevel()
   saveUI.name_input.deactivate();
   saveUI.description_input.deactivate();
   // Overwrite old level if user has set name matching level_selected
-  bool ret_value = false;
+  int ret_value = -1;
   if (saveUI.name_input.getInputText() == level_selected && level_selected != "")
   {
     // Truncate the old level
@@ -1241,9 +1241,16 @@ void LevelEditor::writeLevel()
     level_content.getTexture().copyToImage().saveToFile(image_name);
     cancelSaving();
   }
+  else if (ret_value == -1)
+  {
+    // Saving failed, file related error
+    saveUI.fail_text.setString("Level saving failed: incorrect level name");
+    saveUI.saving_failed = true;
+  }
   else
   {
-    // Saving failed
+    // Saving failed to level missing planes
+    saveUI.fail_text.setString("Level cannot be saved: add 1 blue and at least 1 red plane");
     saveUI.saving_failed = true;
   }
 

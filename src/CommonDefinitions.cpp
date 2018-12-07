@@ -6,7 +6,7 @@ namespace Game
   const float GRAVITY = 0.1f;
   const float TOPIXELS = 5.f;
   const float TOMETERS = 1/TOPIXELS;
-  const int LEFT_LIMIT = int(0.01*WIDTH+0.5);       //limit as percentage from the limits of the map. 
+  const int LEFT_LIMIT = int(0.01*WIDTH+0.5);       //limit as percentage from the limits of the map.
   const int RIGHT_LIMIT = int((1-0.01)*WIDTH+0.5);  //these 3 values should be between 0.01 and 0.25.
   const int UPPER_LIMIT = int((1-0.01)*HEIGHT+0.5);
   const int LOWER_LIMIT = int(0.3*HEIGHT+0.5);      //LOWER_LIMIT should be atleast 0.3.
@@ -31,7 +31,8 @@ std::vector<std::string> Paths
   "../data/fonts/",
       "../data/img/",
       "../data/level_files/",
-      "../data/logs/"      
+      "../data/logs/" ,
+      "../data/misc/stats.txt"     
       };
 } // namespace Paths
 
@@ -89,7 +90,7 @@ std::vector<std::string> TextureFiles {
   { "RedHangar", RedHangar_alpha },
   { "RedInfantry", RedInfantry_alpha },
   { "Rock", Rock_alpha },
-  { "Tree", Tree_alpha }     
+  { "Tree", Tree_alpha }
 };
 } // namespace Textures
 

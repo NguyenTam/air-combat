@@ -48,7 +48,7 @@ namespace Textures
       std_button,
       Tree_alpha,
       Tree,
-      id_end      
+      id_end
     };
   extern std::vector<std::string> TextureFiles;
   extern std::map<std::string, Textures::ID> alphaTextures;
@@ -81,7 +81,7 @@ namespace Game
       tree,
       type_id_end
     };
-  
+
   enum TEAM_ID
     {
       all_friend,
@@ -102,7 +102,7 @@ namespace Game
 	nothing,
 	actions_end
       };
-  
+
 
   extern std::map<ACTIONS, sf::Vector2f> actions_and_directions;
 }
@@ -115,10 +115,11 @@ namespace Paths
       img,
       level_files,
       logs,
+      stats_log,
       paths_end
     };
   extern std::vector<std::string> Paths;
-  
+
 }
 
 namespace Fonts
