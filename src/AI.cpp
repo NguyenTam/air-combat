@@ -1,7 +1,7 @@
 #include "AI.hpp"
 std::tuple<Game::ACTIONS, sf::Vector2f> AI::get_action(Entity& me, std::list<Entity*> &surroundings)
 {
-  srand(time(NULL));
+  srand(time(nullptr));
   switch (me.getTypeId())
     {
     case Game::TYPE_ID::airplane:
