@@ -19,10 +19,21 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 	b2PolygonShape boxShape; //hitbox that has a shape of a box
 	boxShape.SetAsBox((width/2)/Game::TOPIXELS, (height/2)/Game::TOPIXELS); 
 
-	b2FixtureDef boxFixtureDef;
-	boxFixtureDef.shape = &boxShape;
-	boxFixtureDef.density = 1; //mass of the body is AREA * density
-	Body->CreateFixture(&boxFixtureDef);
+	b2FixtureDef FixtureDef;
+	FixtureDef.shape = &boxShape;
+	FixtureDef.density = 1; //mass of the body is AREA * density
+	Body->CreateFixture(&FixtureDef);
+
+	//sensor
+	b2CircleShape radarshape;
+	b2FixtureDef radar;
+	radarshape.m_radius = 5; //radius of the sensor
+	radar.shape = &radarshape;
+	radar.isSensor = true;
+	radar.filter.categoryBits = 0x0002; //id for dynamic body
+	radar.filter.maskBits = 0x0002; //make radar only detect dynamic bodies
+
+	Body->CreateFixture(&radar);
 
 	return Body; 
 }
