@@ -62,6 +62,10 @@ namespace Game
   extern const float GRAVITY;
   extern const float TOPIXELS;
   extern const float TOMETERS;
+  extern const int LEFT_LIMIT;
+  extern const int RIGHT_LIMIT;
+  extern const int UPPER_LIMIT;
+  extern const int LOWER_LIMIT;
 
 
   enum TYPE_ID

@@ -6,6 +6,11 @@ namespace Game
   const float GRAVITY = 0.1f;
   const float TOPIXELS = 5.f;
   const float TOMETERS = 1/TOPIXELS;
+  const int LEFT_LIMIT = int(0.01*WIDTH+0.5);       //limit as percentage from the limits of the map. 
+  const int RIGHT_LIMIT = int((1-0.01)*WIDTH+0.5);  //these 3 values should be between 0.01 and 0.25.
+  const int UPPER_LIMIT = int((1-0.01)*HEIGHT+0.5);
+  const int LOWER_LIMIT = int(0.3*HEIGHT+0.5);      //LOWER_LIMIT should be atleast 0.3.
+
 
   std::map<ACTIONS, sf::Vector2f> actions_and_directions
     {
