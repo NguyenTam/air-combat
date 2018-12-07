@@ -10,8 +10,6 @@ bool Artillery::shoot(){
           fireCountDown = rateOfFire;
           numberOfBullets-=1;
           return true;  
-        } else {
-          return false;
         }
     } else {
       fireCountDown-=1;
