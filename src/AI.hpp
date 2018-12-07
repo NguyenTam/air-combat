@@ -5,7 +5,8 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <list>
-class AI {
+
+namespace AI {
   std::map<Game::TYPE_ID, int> priority_list
   {
     { Game::TYPE_ID::airplane, 10 },
@@ -19,11 +20,10 @@ class AI {
     { Game::TYPE_ID::tree, 1 }
   };
 
-public:
+
   std::tuple<Game::ACTIONS, sf::Vector2f> get_action(Entity& me, std::list<Entity*> &surroundings);
-private:
   std::tuple<Game::ACTIONS, sf::Vector2f> get_airplane_action(Entity& me, std::list<Entity*> &surroundings);
   std::tuple<Game::ACTIONS, sf::Vector2f> get_antiaircraft_action(Entity& me, std::list<Entity*> &surroundings);
   std::tuple<Game::ACTIONS, sf::Vector2f> get_infantry_action(Entity& me, std::list<Entity*> &surroundings);
   void set_target(Entity& me, std::list<Entity*> &surroundings, Entity* current_worse_enemy, int &current_worse_enemy_priority);
-};
+}

@@ -92,3 +92,13 @@ std::vector<std::string> TextureFiles {
   { "Tree", Tree_alpha }     
 };
 }
+
+namespace Fonts
+{
+  std::map<FONTS, std::string> font_files
+  {
+    {FONTS::arial, "arial.ttf" },
+    {FONTS::courier, "Courier.ttf" },
+    {FONTS::sansation, "Sansation.ttf" }
+  };
+}
