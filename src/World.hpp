@@ -82,7 +82,6 @@ public:
 private:
   PhysicsWorld pworld;
   ResourceManager &resources;
-  AI ai;
 	sf::RenderWindow &window; /**< Window that is being used */
 	std::vector<std::shared_ptr<Entity>> objects; /**< Contains all the entities added */
 };

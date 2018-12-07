@@ -266,7 +266,7 @@ void World::update() {
 	//updating the world
 	for (auto it : objects) {
 		//1. send ai information
-		std::tuple<Game::ACTIONS, sf::Vector2f> tuple = ai.get_action(*it, it->get_surroundings());
+	  std::tuple<Game::ACTIONS, sf::Vector2f> tuple = AI::get_action(*it, it->get_surroundings());
 		//do something with ai information
 
 		//2. update new positions
