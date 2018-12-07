@@ -124,7 +124,7 @@ namespace Fonts
       arial,
       courier,
       sansation
-    }
+    };
 
     extern std::map<FONTS, std::string> font_files;
 }

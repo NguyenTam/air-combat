@@ -93,7 +93,7 @@ namespace Fonts
   std::map<FONTS, std::string> font_files
   {
     {FONTS::arial, "arial.ttf" },
-    {FONTS::courial, "Courier.ttf" },
+    {FONTS::courier, "Courier.ttf" },
     {FONTS::sansation, "Sansation.ttf" }
-  }
+  };
 }
