@@ -14,7 +14,7 @@ int main()
 {
   // Create RenderWindow and construct Stats
   sf::RenderWindow window;
-  window.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Main Menu", sf::Style::Close);
+  window.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Stats", sf::Style::Close);
   Stats stats = Stats(window);
 
   // Update Stats until user exits Stats
