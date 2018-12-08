@@ -58,6 +58,7 @@ class Stats
 
     /**
       *   @brief Sort texts by time
+      *   @remark Sorts newer first
       */
     void sortByTime();
 
@@ -65,6 +66,11 @@ class Stats
       *   @brief Sort texts by score
       */
     void sortByScore();
+
+    /**
+      *   @brief Sort texts by level name
+      */
+    void sortByLevel();
 
     /**
       *   @brief Create Stats from log file
@@ -113,8 +119,9 @@ class Stats
       *   @param name User name
       *   @param score Game score
       *   @param time_str Timestamp
+      *   @param level Level name (no .txt nor path)
       */
-    void CreateText(std::string name, std::string score, std::string time_str);
+    void CreateText(std::string name, std::string score, std::string level, std::string time_str);
 
     /**
       *   @brief Update Text positions to match vector indexing
@@ -142,10 +149,25 @@ class Stats
       */
     void ClearTexts();
 
+    /**
+      *   @brief Activate / deactivate current button
+      *   @param activate true -> activate , false -> deactivate
+      */
+    void ActivateCurrentButton(bool activate);
+    /**
+      *   @brief Swicth current_button
+      */
+    void SwitchCurrentButton();
+
+    /**
+      *   @brief Click current_button
+      */
+    void ClickCurrentButton();
+
     /*  Variables */
     sf::RenderWindow &window;
     std::vector<std::shared_ptr<Button>> buttons;
-    std::deque< std::tuple <std::unique_ptr<sf::Text>, std::unique_ptr<sf::Text>, std::unique_ptr<sf::Text>>> texts;
+    std::deque< std::tuple <std::unique_ptr<sf::Text>, std::unique_ptr<sf::Text>, std::unique_ptr<sf::Text>, std::unique_ptr<sf::Text>>> texts;
     int exit_status;
     bool active = true;
     sf::Color ButtonColor;
@@ -157,6 +179,8 @@ class Stats
     float button_dist;
     sf::Font font;
     int current_view = 1;
+    int current_button = 0;
+    bool current_button_dir = true; // Tells in which direction current_button is moved (true -> right, false -> left)
 
 
 };
