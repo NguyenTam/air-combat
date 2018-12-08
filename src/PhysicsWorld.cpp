@@ -22,16 +22,17 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 	b2FixtureDef FixtureDef;
 	FixtureDef.shape = &boxShape;
 	FixtureDef.density = 1; //mass of the body is AREA * density
+	FixtureDef.filter.categoryBits = 0x0004;
 	Body->CreateFixture(&FixtureDef);
 
 	//sensor
 	b2CircleShape radarshape;
 	b2FixtureDef radar;
-	radarshape.m_radius = 5; //radius of the sensor
+	radarshape.m_radius = 50; //radius of the sensor
 	radar.shape = &radarshape;
 	radar.isSensor = true;
 	radar.filter.categoryBits = 0x0002; //id for dynamic body
-	radar.filter.maskBits = 0x0002; //make radar only detect dynamic bodies
+	radar.filter.maskBits = 0x0004; //make radar only detect dynamic bodies
 
 	Body->CreateFixture(&radar);
 
