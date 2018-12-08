@@ -79,6 +79,7 @@ namespace AI
 	    return std::make_tuple(movement_action, Game::actions_and_directions[movement_action] );
 	  }
       }
+    // If worse enemy is visible
     else if (current_worse_enemy != nullptr)
       {
 	switch (current_worse_enemy->getTypeId())
@@ -86,10 +87,12 @@ namespace AI
 	  case Game::TYPE_ID::airplane :
 	    {
 	      sf::Vector2f direction = my_position - current_worse_enemy->getPosition();
+	      me.shoot(direction);
 	      return std::make_tuple(Game::ACTIONS::shoot, direction);
 	    }
 	  default:
 	    {
+	      me.shoot({0.f,-1.f});
 	      return std::make_tuple(Game::ACTIONS::bomb, Game::actions_and_directions[Game::ACTIONS::bomb]);
 	    }
 	  }
@@ -106,6 +109,7 @@ namespace AI
     if ((current_worse_enemy != nullptr) && (current_worse_enemy->getTypeId() == Game::TYPE_ID::airplane))
       {
 	sf::Vector2f direction = my_position - current_worse_enemy->getPosition();
+	me.shoot(direction);
 	return std::make_tuple(Game::ACTIONS::shoot, direction);
       }
       return std::make_tuple(Game::ACTIONS::nothing, Game::actions_and_directions[Game::ACTIONS::nothing]);
@@ -148,9 +152,22 @@ namespace AI
     else if (current_worse_enemy != nullptr)
       {
 	sf::Vector2f direction = my_position - current_worse_enemy->getPosition();
+	me.shoot(direction);
 	return std::make_tuple(Game::ACTIONS::shoot, direction);
       }
-    else {return std::make_tuple(Game::ACTIONS::nothing, Game::actions_and_directions[Game::ACTIONS::nothing]);}
+    else {
+      	    Game::ACTIONS movement_action = static_cast<Game::ACTIONS>(random()%2);
+	    switch (movement_action)
+	      {
+	      case Game::ACTIONS::move_left:
+		me.moveLeft();
+		break;
+	      default:
+		me.moveRight();
+		break;
+	      }
+      return std::make_tuple(movement_action, Game::actions_and_directions[Game::ACTIONS::nothing]);
+    }
   }
 
   void set_target(Entity& me, std::list<Entity*> &surroundings, Entity* current_worse_enemy, int &current_worse_enemy_priority)
