@@ -177,27 +177,27 @@ void MainMenu::CreateMainMenu()
   unsigned height = select_level->getHeight();
   std::shared_ptr<Button> start_editor = std::make_shared<Button>("Editor",
                                     sf::Color::Blue, width, height);
-  std::shared_ptr<Button> button3 = std::make_shared<Button>("Stats",
+  std::shared_ptr<Button> start_stats = std::make_shared<Button>("Stats",
                                     sf::Color::Blue, width, height);
   std::shared_ptr<Button> quit = std::make_shared<Button>("Quit",
                                     sf::Color::Blue, width, height);
   start_editor->setPosition(100, 200);
   buttons.push_back(start_editor);
-  button3->setPosition(100, 300);
-  buttons.push_back(button3);
+  start_stats->setPosition(100, 300);
+  buttons.push_back(start_stats);
   quit->setPosition(100, 400);
   buttons.push_back(quit);
 
   // Set click_actions IMPORTANT
   select_level->setClickFunction(std::bind(&MainMenu::select_level_action, this));
   start_editor->setClickFunction(std::bind(&MainMenu::start_editor_action, this));
-  button3->setClickFunction(std::bind(&MainMenu::Test3, this));
+  start_stats->setClickFunction(std::bind(&MainMenu::start_stats_action, this));
   quit->setClickFunction(std::bind(&MainMenu::CloseWindow, this));
 
   // Set active colors
   select_level->setActiveColor(sf::Color(15, 10, 75));
   start_editor->setActiveColor(sf::Color(15, 10, 75));
-  button3->setActiveColor(sf::Color(15, 10, 75));
+  start_stats->setActiveColor(sf::Color(15, 10, 75));
   quit->setActiveColor(sf::Color(15, 10, 75));
 
 
@@ -241,8 +241,15 @@ void MainMenu::start_editor_action()
 {
   // Set correct exit status
   exit_status = ExitStatus::STARTEDITOR;
-  // Clear all Buttons
 
+  window_status = false;
+}
+
+/*  Switch to Stats */
+void MainMenu::start_stats_action()
+{
+  // Set correct exit_status
+  exit_status = ExitStatus::STATS;
   window_status = false;
 }
 

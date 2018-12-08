@@ -62,8 +62,11 @@ class MainMenu: public UI
       */
     void start_editor_action();
 
-    /*  Only for testing */
-    void Test3(){std::cout << "BUTTON3____________CLICKED" << std::endl;}
+    /**
+      *   @brief Action for start_stats Button
+      *   @details Switch to Stats
+      */
+    void start_stats_action();
 
     /**
       *   @brief Init MainMenu to safe state to restart it
