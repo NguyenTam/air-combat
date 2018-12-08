@@ -15,6 +15,8 @@
 #include <iostream>
 #include <math.h>
 #include <sstream>
+#include <fstream>
+#include <ctime>
 
 /* Initialize members*/
 const float GameEngine::METERS_PER_PIXEL = 60.f;
@@ -32,8 +34,6 @@ GameEngine::GameEngine(sf::RenderWindow &rw)
       /* Construct spdloggers */
       gameEngineLogger =spdlog::daily_logger_st("async_file_logger", Paths::Paths[Paths::PATHS::logs]+ "game-engine-log");
 
-        stats_logger = spdlog::basic_logger_st("Stats", Paths::Paths[Paths::PATHS::stats_log]);
-        stats_logger->flush_on(spdlog::level::info); // This will flush the entries to disk every time
       /*Try to load texture from file*/
 
         playerSprite.setTexture(resources.get(Textures::ID::BlueAirplane_alpha));
@@ -67,7 +67,7 @@ void GameEngine::run(std::string &level_file)
 
   world.read_level(level_file);
 
-
+  createGameOver(true);
   sf::Clock clock;
   while(renderWindow.isOpen())
   {
@@ -276,8 +276,20 @@ void GameEngine::logStats(std::string level_path, std::string user_name, int sco
   // Construct a log message, format: [name] [score] [level]
   std::string log_msg = "[" + user_name + "] [" + std::to_string(score) + "] [" + level_path + "]";
 
-  // Write the message via spdlog
-  stats_logger->info(log_msg);
+  // Get current time and create a string from it
+  std::time_t time_now = std::time(nullptr);
+  std::string time_str = std::asctime(std::localtime(&time_now));
+  // These kind of format is used because initially spdlog was used (didn't work on older Ubuntu machines)
+  std::string message = "[" + time_str.erase(time_str.size() -1) + "] [Stats] [Entry] " + log_msg;
+
+  // Write message to the log
+  std::ofstream file;
+  file.open(Paths::Paths[Paths::PATHS::stats_log], std::ios_base::app);
+  if (file.is_open())
+  {
+    file << message << std::endl;
+  }
+
 }
 
 void GameEngine::setGameMode(Game::GameMode gameMode)

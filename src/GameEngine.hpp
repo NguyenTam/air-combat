@@ -109,5 +109,4 @@ class GameEngine : private sf::NonCopyable
   TextInput name_input; /**< Used to get user name when single player game is over */
   sf::Text game_over_text;
   sf::Text name_input_info;
-  std::shared_ptr<spdlog::logger> stats_logger;
 };
