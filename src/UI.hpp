@@ -41,9 +41,6 @@ enum ScreenMode
 {
   MAINSCREEN,
   LEVELSELECT,
-  SETTINGS,
-  STATS,
-
 };
 
 enum ExitStatus
@@ -52,6 +49,7 @@ enum ExitStatus
   STARTGAME,
   STARTEDITOR,
   MAINMENU,
+  STATS,
 };
 
 enum GameMode
