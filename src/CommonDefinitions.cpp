@@ -4,12 +4,12 @@ namespace Game
   const int WIDTH = 1200;
   const int HEIGHT = 600;
   const float GRAVITY = 0.1f;
-  const float TOPIXELS = 5.f;
-  const float TOMETERS = 1/TOPIXELS;
-  const int LEFT_LIMIT = static_cast<int>(0.01*WIDTH);       //limit as percentage from the limits of the map.
-  const int RIGHT_LIMIT = static_cast<int>((1-0.01)*WIDTH);  //these 3 values should be between 0.01 and 0.25.
-  const int UPPER_LIMIT = static_cast<int>((1-0.01)*HEIGHT);
-  const int LOWER_LIMIT = static_cast<int>(0.3*HEIGHT);      //LOWER_LIMIT should be atleast 0.3.
+  constexpr float TOPIXELS = 5.f;
+  constexpr float TOMETERS = 1/TOPIXELS;
+  constexpr int LEFT_LIMIT = static_cast<int>(0.01*WIDTH);       //limit as percentage from the limits of the map.
+  constexpr int RIGHT_LIMIT = static_cast<int>((1-0.01)*WIDTH);  //these 3 values should be between 0.01 and 0.25.
+  constexpr int UPPER_LIMIT = static_cast<int>((1-0.01)*HEIGHT);
+  constexpr int LOWER_LIMIT = static_cast<int>(0.3*HEIGHT);      //LOWER_LIMIT should be atleast 0.3.
 
 
   std::map<ACTIONS, sf::Vector2f> actions_and_directions
