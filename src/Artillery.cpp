@@ -4,7 +4,7 @@ Artillery::Artillery(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vec
   typeId = Game::TYPE_ID::antiaircraft;
   }
 
-bool Artillery::shoot(){
+bool Artillery::shoot(sf::Vector2f direction){
       if (fireCountDown <= 0) {
         if (numberOfBullets > 0) {
           fireCountDown = rateOfFire;
