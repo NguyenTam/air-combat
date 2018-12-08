@@ -44,10 +44,9 @@ void MainMenu::createMainScreen()
 
 void MainMenu::DrawUI()
 {
-  for(auto button = buttons.begin(); button != buttons.end(); button++)
-  {
+  for (auto &button : buttons) {
     // Draw buttons
-    window.draw(**button);
+    window.draw(*button);
   }
 }
 
@@ -86,8 +85,8 @@ void MainMenu::DrawUI()
 
  void MainMenu::HandleMouseMove(sf::Event event)
  {
-   float x = (float) event.mouseMove.x;
-   float y = (float) event.mouseMove.y;
+   auto x = static_cast<float>(event.mouseMove.x);
+   auto y = static_cast<float>(event.mouseMove.y);
 
    int i = 0;
    for (auto it = buttons.begin(); it != buttons.end(); it++)
@@ -97,12 +96,11 @@ void MainMenu::DrawUI()
        // Correct current_button
        current_button = i;
        int j = 0;
-       for (auto it = buttons.begin(); it != buttons.end(); it++)
-       {
+       for (auto &button : buttons) {
          // Deactivate other buttons
          if (j != i)
          {
-           (*it)->activate(false);
+           button->activate(false);
          }
          j ++;
        }
@@ -124,13 +122,11 @@ void MainMenu::DrawUI()
  {
    if (event.mouseButton.button == sf::Mouse::Left)
    {
-     float x = (float) event.mouseButton.x;
-     float y = (float) event.mouseButton.y;
-     for (auto it = buttons.begin(); it != buttons.end(); it++)
-     {
+     auto x = static_cast<float>(event.mouseButton.x);
+     auto y = static_cast<float>(event.mouseButton.y);
+     for (auto &button : buttons) {
        // Check if clicked
-       (*it)->checkClicked(x, y);
-
+       button->checkClicked(x, y);
      }
    }
 
@@ -159,8 +155,9 @@ void MainMenu::DrawUI()
    if (current_button < MainMenu::MainMenuButtons - 1)
    {
      current_button ++;
+   } else {
+     current_button = 0;
    }
-   else current_button = 0;
    // Activate Button
    ActivateCurrentButton();
 
@@ -212,13 +209,13 @@ void MainMenu::CreateMainMenu()
 void MainMenu::ActivateCurrentButton()
 {
   int i = 0;
-  for (auto it = buttons.begin(); it != buttons.end(); it++)
-  {
+  for (auto &button : buttons) {
     if (i != current_button)
     {
-      (*it)->activate(false);
+      button->activate(false);
+    } else {
+      button->activate(true);
     }
-    else (*it)->activate(true);
     i++;
   }
 }
@@ -254,9 +251,8 @@ void MainMenu::init()
 {
   ClearLevelSelectContainers();
   // Set Main menu buttons to non-actived
-  for (auto it = buttons.begin(); it != buttons.end(); it++)
-  {
-    (*it)->activate(false);
+  for (auto &button : buttons) {
+    button->activate(false);
   }
   level_select.curr_button = -1;
   current_button = -1;
@@ -320,6 +316,7 @@ void MainMenu::ChangeGameMode()
   if (level_select.single_player->getChecked())
   {
     multiplayer_action();
+  } else {
+    single_player_action();
   }
-  else single_player_action();
 }

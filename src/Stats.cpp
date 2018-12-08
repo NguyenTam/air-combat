@@ -122,9 +122,8 @@ void Stats::update()
 void Stats::DrawWindow()
 {
   // Draw all Buttons
-  for (auto it = buttons.begin(); it != buttons.end(); it ++)
-  {
-    window.draw(**it);
+  for (auto &button : buttons) {
+    window.draw(*button);
   }
 
   // Draw stats texts
@@ -163,10 +162,8 @@ void Stats::HandleMousePress(sf::Event &event)
     float y = event.mouseButton.y;
 
     // Go through all Buttons and try to click those
-    for (auto it = buttons.begin(); it != buttons.end(); it++)
-    {
-      if ((*it)->checkClicked(x, y))
-      {
+    for (auto &button : buttons) {
+      if (button->checkClicked(x, y)) {
         // Button clicked
         break;
       }
@@ -182,9 +179,8 @@ void Stats::HandleMouseMove(sf::Event &event)
   float y = event.mouseMove.y;
 
   // Try to activate Buttons
-  for (auto it = buttons.begin(); it != buttons.end(); it++)
-  {
-    (*it)->tryActivate(x, y);
+  for (auto &button : buttons) {
+    button->tryActivate(x, y);
   }
 }
 
@@ -205,8 +201,7 @@ void Stats::HandleKeyPress(sf::Event &event)
 void Stats::sortByName()
 {
   // Uncheck other Buttons
-  for (auto button : buttons)
-  {
+  for (const auto &button : buttons) {
     if (button->getText().getString() != "Name")
     {
       button->setUnchecked();
@@ -229,8 +224,7 @@ void Stats::sortByName()
 void Stats::sortByTime()
 {
   // Uncheck other Buttons
-  for (auto button : buttons)
-  {
+  for (const auto &button : buttons) {
     if (button->getText().getString() != "Time")
     {
       button->setUnchecked();
@@ -244,8 +238,7 @@ void Stats::sortByTime()
 void Stats::sortByScore()
 {
   // Uncheck other Buttons
-  for (auto button : buttons)
-  {
+  for (const auto &button : buttons) {
     if (button->getText().getString() != "Score")
     {
       button->setUnchecked();
@@ -381,8 +374,9 @@ void Stats::ParseStats()
         CreateText(name, score, time_str);
         // Update positions to match timestamps (newer first)
         UpdateTextPositions();
+      } else {
+        return;
       }
-      else return;
     }
   }
 

@@ -6,6 +6,7 @@
 
 #include "image_button.hpp"
 
+#include <utility>
 
 /* Empty constructor */
 
@@ -19,9 +20,9 @@ ImageButton::ImageButton(): Button("ImageButton", sf::Color::Transparent, 50, 50
 
 
 /* Constructor for ImageButton */
-ImageButton::ImageButton(std::string button_name, std::string img_path, unsigned width, unsigned height)
-: Button(button_name, sf::Color::Transparent, width, height)
-{
+ImageButton::ImageButton(std::string button_name, std::string img_path,
+                         unsigned width, unsigned height)
+    : Button(button_name, sf::Color::Transparent, width, height) {
   checkable = true;
   image_path = img_path;
   ConstructImageButton();
@@ -105,7 +106,8 @@ void ImageButton::setPosition(sf::Vector2f new_pos)
   button_rect.setPosition(position);
   checked_rect.setPosition(position);
   // If texture is bigger than size it's visible only partially
-  image_sprite.setTextureRect(sf::Rect<int>(0, 0, (int) width, (int) height));
+  image_sprite.setTextureRect(
+      sf::Rect<int>(0, 0, static_cast<int>(width), static_cast<int>(height)));
 
   SetImagePosition();
   SetTextPosition();
@@ -167,11 +169,9 @@ bool ImageButton::tryActivate(float x, float y)
     active = true;
     return true;
   }
-  else
-  {
+
     active = false;
     return false;
-  }
 }
 
 /*  Activate/deactivate button */
@@ -192,7 +192,7 @@ void ImageButton::activate(bool activate)
 void ImageButton::SetTextPosition()
 {
   float x = position.x;//+ (float) width / 2;
-  float y = position.y + (float) height;
+  float y = position.y + static_cast<float>(height);
   text.setPosition(x, y);
 }
 
@@ -211,8 +211,7 @@ bool ImageButton::checkClicked(float x, float y)
         checked = false;
         return true;
       }
-      else
-      {
+
         if (checkable)
         {
           checked = true;
@@ -221,7 +220,6 @@ bool ImageButton::checkClicked(float x, float y)
         // Call click_action
         click_action();
         return true;
-      }
     }
   }
 
@@ -268,10 +266,10 @@ void ImageButton::setUnchecked()
 void ImageButton::setScale(float scale)
 {
 
-  float tmp_width = (float) width * scale;
-  float tmp_height = (float) height * scale;
-  width = (unsigned) tmp_width;
-  height = (unsigned) tmp_height;
+  float tmp_width = static_cast<float>(width) * scale;
+  float tmp_height = static_cast<float>(height) * scale;
+  width = static_cast<unsigned>(tmp_width);
+  height = static_cast<unsigned>(tmp_height);
   button_rect.setSize(sf::Vector2f(width, height));
   checked_rect.setSize(sf::Vector2f(width, height));
 
