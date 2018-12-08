@@ -112,88 +112,88 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		case Textures::BlueAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::blue);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			body->SetGravityScale(0); //gravity 0 for plane
 			break;
 		}
 		case Textures::BlueAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::BlueBase_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::BlueHangar_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::BlueInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::Bullet_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Bullet>(*pworld.get_world(), *body, tex, pos, direct);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::Ground_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Ground>(*pworld.get_world(), *body, tex, pos);
 			entity->setScale(width,height);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::RedAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			body->SetGravityScale(0); //gravity 0 for plane
 			break;
 		}
 		case Textures::RedAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::RedBase_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::RedHangar_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::RedInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::Rock_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Stone>(*pworld.get_world(), *body, tex, pos);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::Tree_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Tree>(*pworld.get_world(), *body, tex, pos);
-			body->SetUserData(&(*entity));
+			body->SetUserData(entity.get());
 			break;
 		}
 		default:
@@ -268,8 +268,6 @@ void World::update() {
 					b_entity->insert_surrounding(a_entity);
 				}
 			}
-
-		
 		}
 		
 	}
