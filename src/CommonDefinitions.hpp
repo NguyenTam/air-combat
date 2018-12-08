@@ -105,6 +105,12 @@ namespace Game
 
 
   extern std::map<ACTIONS, sf::Vector2f> actions_and_directions;
+
+  enum GameMode
+  {
+    SinglePlayer,
+    Multiplayer,
+  };
 }
 
 namespace Paths
