@@ -82,8 +82,8 @@ void LevelEditor::HandleKeyPress(sf::Event event)
 {
   if (event.key.code == sf::Keyboard::Escape)
   {
-    // Close window
-    CloseWindow();
+    // Go back to main menu
+    quit_button_action();
   }
   /*else if (event.key.code == sf::Keyboard::Right)
   {
