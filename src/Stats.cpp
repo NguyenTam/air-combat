@@ -237,7 +237,7 @@ void Stats::sortByTime()
     }
   }
   // Just parse texts again from the file, they are in time
-  createStats();
+  ParseStats();
 }
 
 /*  Sort Stats by score */
@@ -294,6 +294,15 @@ void Stats::UpdateTextPositions()
   }
 }
 
+/*  Create stats and stats window */
+void Stats::createStats()
+{
+  // Set correct window title
+  window.setTitle("Stats");
+  // Parse stats 
+  ParseStats();
+}
+
 /*  Move stats_view up */
 void Stats::ViewUp()
 {
@@ -314,7 +323,7 @@ void Stats::ViewDown()
 }
 
 /*  Parse log file and create stats */
-void Stats::createStats()
+void Stats::ParseStats()
 {
   // open ../data/misc/stats.txt
   std::ifstream file(Paths::Paths[Paths::PATHS::stats_log]);

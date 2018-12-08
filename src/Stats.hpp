@@ -69,8 +69,6 @@ class Stats
     /**
       *   @brief Create Stats from log file
       *   @remark This should be called from main.cpp after Stats is activated
-      *   @details Parse log file from ../data/misc/stats.txt. Creates container
-      *   so that newer entries are at the beginning of the deque
       */
     void createStats();
 
@@ -133,6 +131,11 @@ class Stats
       *   @brief Move stats_view down
       */
     void ViewDown();
+
+    /**   @details Parse log file from ../data/misc/stats.txt. Creates container
+      *   so that newer entries are at the beginning of the deque
+      */
+    void ParseStats();
 
     /**
       *   @brief Clear all Texts from texts
