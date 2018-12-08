@@ -120,7 +120,7 @@ public:
   /*
    *   @brief General shoot function for entity, more defined version in subclasses
    */
-  virtual bool shoot();
+  virtual bool shoot(sf::Vector2f direction);
 
   /*
    *   @brief Gives a type for entity  
