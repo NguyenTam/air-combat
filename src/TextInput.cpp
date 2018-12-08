@@ -211,6 +211,13 @@ void TextInput::addChar(char32_t new_char)
 
 }
 
+/*  Activate */
+void TextInput::activate()
+{
+  active = true;
+  frame.setFillColor(active_color);
+}
+
 /*  Deactivate */
 void TextInput::deactivate()
 {
