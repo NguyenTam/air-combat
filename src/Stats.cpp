@@ -32,8 +32,10 @@ void Stats::CreateUI()
   name->setPosition(width + button_dist, 0);
   std::shared_ptr<Button> score = std::make_shared<Button> ("Score", ButtonColor, button_width, height);
   score->setPosition(width + 2 * button_dist + button_width, 0);
+  std::shared_ptr<Button> level = std::make_shared<Button> ("Level", ButtonColor, button_width, height);
+  level->setPosition(width + 3 * button_dist + 2 * button_width, 0);
   std::shared_ptr<Button> time_button = std::make_shared<Button> ("Time", ButtonColor, button_width, height);
-  time_button->setPosition(width + 3 * button_dist + 2 * button_width, 0);
+  time_button->setPosition(width + 4 * button_dist + 3 * button_width, 0);
 
   // Set Button style
   menu->setActiveColor(ButtonActiveColor);
@@ -44,17 +46,21 @@ void Stats::CreateUI()
   time_button->setCheckable(true);
   time_button->setActiveColor(ButtonActiveColor);
   time_button->setChecked();
+  level->setActiveColor(ButtonActiveColor);
+  level->setCheckable(true);
 
   // Set click functions
   menu->setClickFunction(std::bind(&Stats::menu_action, this));
   name->setClickFunction(std::bind(&Stats::sortByName, this));
   score->setClickFunction(std::bind(&Stats::sortByScore, this));
   time_button->setClickFunction(std::bind(&Stats::sortByTime, this));
+  level->setClickFunction(std::bind(&Stats::sortByLevel, this));
 
   // Add Buttons to the container
   buttons.push_back(menu);
   buttons.push_back(name);
   buttons.push_back(score);
+  buttons.push_back(level);
   buttons.push_back(time_button);
 
   // Create the views
@@ -133,6 +139,7 @@ void Stats::DrawWindow()
     window.draw(*std::get<0>(text));
     window.draw(*std::get<1>(text));
     window.draw(*std::get<2>(text));
+    window.draw(*std::get<3>(text));
   }
   window.setView(ui_view);
 }
@@ -179,8 +186,21 @@ void Stats::HandleMouseMove(sf::Event &event)
   float y = event.mouseMove.y;
 
   // Try to activate Buttons
+  int i = 0;
   for (auto &button : buttons) {
-    button->tryActivate(x, y);
+    if (button->tryActivate(x, y))
+    {
+      // Deactivate old Button
+      if (current_button != i)
+      {
+        ActivateCurrentButton(false);
+      }
+      // Update current_button
+      current_button = i;
+      break;
+    }
+    i++;
+
   }
 }
 
@@ -194,6 +214,19 @@ void Stats::HandleKeyPress(sf::Event &event)
   else if (event.key.code == sf::Keyboard::Down)
   {
     ViewDown();
+  }
+  else if (event.key.code == sf::Keyboard::Tab)
+  {
+    // deactivate old current_button
+    ActivateCurrentButton(false);
+    // activate new current_button
+    SwitchCurrentButton();
+    ActivateCurrentButton(true);
+  }
+  else if (event.key.code == sf::Keyboard::Return)
+  {
+    // click current_button
+    ClickCurrentButton();
   }
 }
 
@@ -257,12 +290,40 @@ void Stats::sortByScore()
   UpdateTextPositions();
 }
 
+/*  Sort texts by level name */
+void Stats::sortByLevel()
+{
+  // Uncheck other Buttons
+  for (const auto &button : buttons) {
+    if (button->getText().getString() != "Level")
+    {
+      button->setUnchecked();
+    }
+  }
+  // Sort texts
+  std::sort(texts.begin(), texts.end(), [] (auto &tuple1, auto &tuple2) {
+     //return std::get<3>(tuple1)->getString() < std::get<3>(tuple2)->getString();
+    if ( std::get<2>(tuple1)->getString() == std::get<2>(tuple2)->getString())
+    {
+      // Sort by score (same names)
+      try {
+        return std::stoi(std::get<1>(tuple1)->getString().toAnsiString()) > std::stoi(std::get<1>(tuple2)->getString().toAnsiString());
+      } catch (std::invalid_argument) {
+        return true;
+      }
+    }
+    else return std::get<2>(tuple1)->getString() < std::get<2>(tuple2)->getString();});
+
+    // Update text positions
+    UpdateTextPositions();
+}
+
 /*  Add item to texts */
-void Stats::CreateText(std::string name, std::string score, std::string time_str)
+void Stats::CreateText(std::string name, std::string score, std::string level, std::string time_str)
 {
 
   texts.push_front(std::make_tuple(std::make_unique<sf::Text>(name, font, 14), std::make_unique<sf::Text>(score, font, 14),
-              std::make_unique<sf::Text>(time_str, font, 14)));
+              std::make_unique<sf::Text>(level, font, 14), std::make_unique<sf::Text>(time_str, font, 14)));
   // Set correct positions for the texts
   auto &new_entry = texts.front();
   std::get<0>(new_entry)->setPosition(button_dist, button_dist + 40 * (texts.size() - 1));
@@ -271,6 +332,8 @@ void Stats::CreateText(std::string name, std::string score, std::string time_str
   std::get<1>(new_entry)->setColor(sf::Color::Red);
   std::get<2>(new_entry)->setPosition(button_dist * 3 + button_width * 2, button_dist + 40 * (texts.size() - 1));
   std::get<2>(new_entry)->setColor(sf::Color::Red);
+  std::get<3>(new_entry)->setPosition(button_dist * 4 + button_width * 3, button_dist + 40 * (texts.size() - 1));
+  std::get<3>(new_entry)->setColor(sf::Color::Red);
 }
 
 /*  Update Texts positions */
@@ -283,6 +346,7 @@ void Stats::UpdateTextPositions()
     std::get<0>(text)->setPosition(button_dist, button_dist + 40 * i);
     std::get<1>(text)->setPosition(button_dist * 2 + button_width, button_dist + 40 * i);
     std::get<2>(text)->setPosition(button_dist * 3 + button_width * 2, button_dist + 40 * i);
+    std::get<3>(text)->setPosition(button_dist * 4 + button_width * 3, button_dist + 40 * i);
     i++;
   }
 }
@@ -292,7 +356,7 @@ void Stats::createStats()
 {
   // Set correct window title
   window.setTitle("Stats");
-  // Parse stats 
+  // Parse stats
   ParseStats();
 }
 
@@ -325,7 +389,7 @@ void Stats::ParseStats()
     // Clear old entries
     ClearTexts();
     std::string line;
-    std::string time_str, name, score;
+    std::string time_str, name, score, level;
 
     while(getline(file, line))
     {
@@ -343,7 +407,7 @@ void Stats::ParseStats()
             split_str.erase(index);
 
             // Add str to specific string
-            // Format should be : time Stats info name score
+            // Format should be : time Stats info name score level
             switch (i)
             {
               case 0:
@@ -355,6 +419,8 @@ void Stats::ParseStats()
               case 4:
                 score = split_str;
                 break;
+              case 5:
+                level = split_str;
               default:
                 break;
             }
@@ -368,10 +434,10 @@ void Stats::ParseStats()
           return;
         }
       }
-      if (i == 5 )
+      if (i == 6 )
       {
         // ok, create new Text
-        CreateText(name, score, time_str);
+        CreateText(name, score, level, time_str);
         // Update positions to match timestamps (newer first)
         UpdateTextPositions();
       } else {
@@ -388,5 +454,36 @@ void Stats::ClearTexts()
   if (! texts.empty())
   {
     texts.clear();
+  }
+}
+
+/*  Activate / deactivate current_button */
+void Stats::ActivateCurrentButton(bool activate)
+{
+  // Check current_button value is ok
+  if ((current_button > -1) && (current_button < static_cast<int>(buttons.size())))
+  {
+    buttons[current_button]->activate(activate);
+  }
+}
+
+/*  Switch current_button value */
+void Stats::SwitchCurrentButton()
+{
+  if (current_button <= 0) current_button_dir = true;
+  else if (current_button >= static_cast<int>(buttons.size()) - 1)  current_button_dir = false;
+
+  // current_button_dir == true -> right, otherwise left
+  if (current_button_dir) current_button++;
+  else current_button--;
+}
+
+/*  Click current_button */
+void Stats::ClickCurrentButton()
+{
+  // Check current_button value is ok
+  if ((current_button > -1) && (current_button < static_cast<int>(buttons.size())))
+  {
+    buttons[current_button]->clickAction();
   }
 }
