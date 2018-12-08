@@ -1,5 +1,6 @@
 #include "Entity.hpp"
 #include <iostream>
+#include <assert.h>
 
 Entity::Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team) : moveSpeed(speed), numberOfBullets(bullets), numberOfBombs(bombs), rateOfFire(firerate), fireCountDown(0), hitPoints(hp), direction(direct), teamId(team), world(w), b2body(b)
 {
@@ -39,9 +40,10 @@ sf::Vector2f Entity::getPosition() const{
 
 void Entity::setPos(sf::Vector2f newPos)
 {
+  assert (newPos.x >= 0 && newPos.x <= Game::WIDTH);
+  assert (newPos.y >= 0 && newPos.y <= Game::HEIGHT);
   entity.setPosition(newPos);
 }
-
 
 void Entity::setRot(float angle) {
   entity.setRotation(angle);
