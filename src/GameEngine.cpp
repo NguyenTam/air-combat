@@ -67,7 +67,6 @@ void GameEngine::run(std::string &level_file)
 
   world.read_level(level_file);
 
-  createGameOver(true);
   sf::Clock clock;
   while(renderWindow.isOpen())
   {
