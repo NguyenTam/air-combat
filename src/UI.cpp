@@ -92,7 +92,8 @@ void UI::updateUI()
             break;
 
           default:
-            std::cout << "Other sf::Event" << std::endl;
+	    break;
+            //std::cout << "Other sf::Event" << std::endl;
         }
       }
       else if (screen_mode == LEVELSELECT)
