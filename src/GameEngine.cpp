@@ -29,16 +29,16 @@ GameEngine::GameEngine(sf::RenderWindow &rw)
   /* Try spdlogger */
     try
     {
-      /*Construct spdlogger*/
+      /* Construct spdloggers */
       gameEngineLogger =spdlog::daily_logger_st("async_file_logger", Paths::Paths[Paths::PATHS::logs]+ "game-engine-log");
 
+        stats_logger = spdlog::basic_logger_st("Stats", Paths::Paths[Paths::PATHS::stats_log]);
+        stats_logger->flush_on(spdlog::level::info); // This will flush the entries to disk every time
       /*Try to load texture from file*/
 
         playerSprite.setTexture(resources.get(Textures::ID::BlueAirplane_alpha));
         playerSprite.setPosition(100.f,100.f);
 
-	std::cout << playerSprite.getTexture()->getSize().x << std::endl;
-	std::cout << playerSprite.getTexture()->getSize().y << std::endl;
         gameFont.loadFromFile("../data/fonts/Sansation.ttf");
         gameInfo.setFont(gameFont);
         gameInfo.setPosition(10.f,10.f);
@@ -67,6 +67,7 @@ void GameEngine::run(std::string &level_file)
 
   world.read_level(level_file);
 
+  createGameOver(false);
 
   sf::Clock clock;
   while(renderWindow.isOpen())
@@ -263,7 +264,21 @@ void GameEngine::drawGameOver()
 
 void GameEngine::logStats(std::string level_path, std::string user_name, int score)
 {
+  // Get level name from level_path
+  const std::string cmp1 = "../data/level_files/";
+  const std::string cmp2 = ".txt";
+  if (level_path.size() >= cmp1.size() + cmp2.size())
+  {
+    // Erase ../data/level_files/
+    level_path.erase(0, cmp1.size());
+    // Erase .txt
+    level_path.erase(level_path.size() - 4);
+  }
+  // Construct a log message, format: [name] [score] [level]
+  std::string log_msg = "[" + user_name + "] [" + std::to_string(score) + "] [" + level_path + "]";
 
+  // Write the message via spdlog
+  stats_logger->info(log_msg);
 }
 
 void GameEngine::setGameMode(Game::GameMode gameMode)
