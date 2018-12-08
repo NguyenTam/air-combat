@@ -78,6 +78,12 @@ class Stats
       */
     void createStats();
 
+    /**
+      *   @brief Init Stats to safe state
+      *   @remark Called from main.cpp after user moves to MainMenu
+      */
+    void init();
+
 
   private:
     /**

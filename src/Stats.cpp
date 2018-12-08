@@ -76,7 +76,6 @@ void Stats::menu_action()
 {
   // Set correct exit_status
   exit_status = ExitStatus::MAINMENU;
-  // Clear all texts TODO
   // set active false
   active = false;
 }
@@ -227,6 +226,11 @@ void Stats::HandleKeyPress(sf::Event &event)
   {
     // click current_button
     ClickCurrentButton();
+  }
+  else if (event.key.code == sf::Keyboard::Escape)
+  {
+    // Return to main menu
+    menu_action();
   }
 }
 
@@ -486,4 +490,16 @@ void Stats::ClickCurrentButton()
   {
     buttons[current_button]->clickAction();
   }
+}
+
+/*  Init Stats */
+void Stats::init()
+{
+  // Reactivate
+  active = true;
+  // Init view and current_button and then draw it
+  current_view = 1;
+  current_button = 0;
+  stats_view.setCenter(stats_view.getSize().x / 2, stats_view.getSize().y / 2);
+
 }
