@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include "World.hpp"
 #include "ResourceManager.hpp"
+#include "TextInput.hpp"
 class GameEngine : private sf::NonCopyable
 {
  public:
@@ -18,7 +19,7 @@ class GameEngine : private sf::NonCopyable
   /**
    * @brief Run game engine.
    */
-  void run(std::string &level_file); 
+  void run(std::string &level_file);
 
   static const int FPS = 60; /**< Frames Per Second.*/
   static const float METERS_PER_PIXEL; /**< To convert from pixels to meters.*/
@@ -26,7 +27,13 @@ class GameEngine : private sf::NonCopyable
   static const sf::Time TIME_PER_FRAME; /**< Time Per Frame, e.g. Seconds Per Frame.*/
   static const float PLAYER_SPEED; /**< Player movement speed per input. */
   static const float PLAYER_ROTATION_DEGREE; /**< Player rotation degree.*/
-  
+
+  /**
+    *   @brief Set gameMode
+    *   @param gameMode true -> single_player, false -> multiplayer
+    */
+  void setGameMode(Game::GameMode gameMode);
+
  private:
   /**
    *@brief Process all events and inputs from the user.
@@ -52,8 +59,40 @@ class GameEngine : private sf::NonCopyable
    * @see processEvents()
    */
 
-  
-  
+
+   /**
+    *   @brief Special handler which processes events when game is over
+    *   @param event sf::Event
+    *   @param level_path Current level path from main.cpp
+    *   @return Returns true if the game should return to main menu
+    */
+   bool gameOverHandler(sf::Event &event, std::string &level_path);
+
+   /**
+    *   @brief Create window for game over
+    *   @param game_mode true -> single_player, false -> multiplayer
+    *   @param blue_won pass true if blue_won. Otherwise false
+    *   @details Creates user_input if single_player has ended
+    */
+   void createGameOver(bool blue_won);
+
+   /**
+    *   @brief Draw window when game is over
+    *   @remark Normal game level isn't drawn
+    */
+   void drawGameOver();
+
+   /**
+    *   @brief Log game stats when game is over
+    *   @param level_path Level path (should be what run gets from main.cpp)
+    *   @param user_name name_input content (name user set)
+    *   @param score Player score
+    *   @remark This should be only called when single_player has ended
+    */
+   void logStats(std::string level_path, std::string user_name, int score);
+
+
+
   sf::RenderWindow &renderWindow; /**< Display window for game engine */
   ResourceManager resources;
   sf::Texture playerTexture; /**< Player texture like aircraft image */
@@ -64,4 +103,10 @@ class GameEngine : private sf::NonCopyable
   bool isGameEngineReady; /**< Is the game ended*/
   std::shared_ptr<spdlog::logger> gameEngineLogger; /**< Game engine logger. Logs are written to data folder.*/
   World world;
+
+  bool GameOver; /**< Game over -> show TextInput */
+  Game::GameMode gameMode;
+  TextInput name_input; /**< Used to get user name when single player game is over */
+  sf::Text game_over_text;
+  sf::Text name_input_info;
 };
