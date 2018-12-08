@@ -8,6 +8,7 @@
 #include "LevelEditor.hpp"
 #include "CommonDefinitions.hpp"
 #include "GameEngine.hpp"
+#include "Stats.hpp"
 #include <memory>
 /**
   *   @brief Main for Air combat
@@ -29,6 +30,9 @@ int main()
   // Create objects
   MainMenu menu = MainMenu(window, dialog_window, help_window);
   LevelEditor editor = LevelEditor(window, dialog_window, help_window);
+  // Create Stats
+  Stats stats = Stats(window);
+
   int exit_status = ExitStatus::MAINMENU;
 
   while(true)
@@ -72,6 +76,16 @@ int main()
     if (exit_status == ExitStatus::QUIT)
     {
       break;
+    }
+    if (exit_status == ExitStatus::STATS)
+    {
+      // Update Stats until user exits Stats
+      stats.createStats();
+      stats.update();
+      // Get ExitStatus from Stats
+      exit_status = stats.getExitStatus();
+      // Init Stats
+      stats.init();
     }
   }
 
