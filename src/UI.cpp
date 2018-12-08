@@ -648,7 +648,7 @@ void UI::CreateGameModeButtons()
 }
 
 /*  Return game_mode */
-GameMode UI::getGameMode()
+Game::GameMode UI::getGameMode()
 {
   return game_mode;
 }
