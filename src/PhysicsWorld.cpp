@@ -28,7 +28,7 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 	//sensor
 	b2CircleShape radarshape;
 	b2FixtureDef radar;
-	radarshape.m_radius = 50; //radius of the sensor
+	radarshape.m_radius = 20; //radius of the sensor
 	radar.shape = &radarshape;
 	radar.isSensor = true;
 	radar.filter.categoryBits = 0x0002; //id for dynamic body
