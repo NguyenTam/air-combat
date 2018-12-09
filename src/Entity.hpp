@@ -215,7 +215,12 @@ public:
   /*
    *   @brief Puts the sprite of entity to face right
    */
-  void faceRight();  
+  void faceRight();
+
+  /*
+   *   @brief Returns active bullets of this entity
+   */
+  std::list<Entity>& get_active_bullets();
 
 protected:
 
@@ -238,4 +243,5 @@ protected:
   b2Body& b2body; /**< Entitys body */
   Textures::ID type; /**< Textures file name without extension */
   std::list<Entity*> surrounding;
+  std::list<Entity> active_bullets;
 };
