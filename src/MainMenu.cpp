@@ -8,7 +8,7 @@
 
 
 // Assign the class variable to match the amount of buttons
-int MainMenu::MainMenuButtons = 4;
+int MainMenu::MainMenuButtons = 5;
 
 
 
@@ -174,7 +174,7 @@ void MainMenu::CreateMainMenu()
   // Create Buttons
   // First create the button with longest text and match other widths to it
   std::shared_ptr<Button> select_level = std::make_shared<Button>("Start Game", sf::Color::Blue);
-  select_level->setPosition(100, 100);
+  select_level->setPosition(100, 80);
   buttons.push_back(select_level);
   unsigned width = select_level->getWidth();
   unsigned height = select_level->getHeight();
@@ -182,25 +182,31 @@ void MainMenu::CreateMainMenu()
                                     sf::Color::Blue, width, height);
   std::shared_ptr<Button> start_stats = std::make_shared<Button>("Stats",
                                     sf::Color::Blue, width, height);
+  std::shared_ptr<Button> controls = std::make_shared<Button>("Controls",
+                                    sf::Color::Blue, width, height);
   std::shared_ptr<Button> quit = std::make_shared<Button>("Quit",
                                     sf::Color::Blue, width, height);
-  start_editor->setPosition(100, 200);
+  start_editor->setPosition(100, 180);
   buttons.push_back(start_editor);
-  start_stats->setPosition(100, 300);
+  start_stats->setPosition(100, 280);
   buttons.push_back(start_stats);
-  quit->setPosition(100, 400);
+  controls->setPosition(100, 380);
+  buttons.push_back(controls);
+  quit->setPosition(100, 480);
   buttons.push_back(quit);
 
   // Set click_actions IMPORTANT
   select_level->setClickFunction(std::bind(&MainMenu::select_level_action, this));
   start_editor->setClickFunction(std::bind(&MainMenu::start_editor_action, this));
   start_stats->setClickFunction(std::bind(&MainMenu::start_stats_action, this));
+  controls->setClickFunction(std::bind(&MainMenu::controls_action, this));
   quit->setClickFunction(std::bind(&MainMenu::CloseWindow, this));
 
   // Set active colors
   select_level->setActiveColor(sf::Color(15, 10, 75));
   start_editor->setActiveColor(sf::Color(15, 10, 75));
   start_stats->setActiveColor(sf::Color(15, 10, 75));
+  controls->setActiveColor(sf::Color(15, 10, 75));
   quit->setActiveColor(sf::Color(15, 10, 75));
 
 
@@ -256,6 +262,48 @@ void MainMenu::start_stats_action()
   window_status = false;
 }
 
+/*  Construct and show controls help screen */
+void MainMenu::controls_action()
+{
+  // Create and activate help window
+  help_window.create(sf::VideoMode(400, 500), "Help", sf::Style::Close);
+  help_font.loadFromFile(FONT_ARIAL);
+  help_title = sf::Text("Controls" , help_font, 30);
+  help_title.setStyle(sf::Text::Bold | sf::Text::Underlined);
+  help_title.setPosition(100, 20);
+  help_title.setColor(sf::Color::Blue);
+
+  help_text = sf::Text("Sorry, Controls unavailable", help_font, 12);
+  help_text.setPosition(50, 70);
+  help_text.setColor(sf::Color::Black);
+
+  // Load text from file
+  std::string help_content;
+  std::ifstream file("../data/misc/controls.txt");
+  if (file.is_open())
+  {
+    std::string line;
+    while(getline(file, line))
+    {
+      // Read all lines to help_content
+      help_content += line;
+      help_content += "\n";
+    }
+    help_text.setString(help_content);
+  }
+  // Set control buttons non-active (otherwise remains active)
+  for (auto it : buttons)
+  {
+    if (it->getText().getString() == "Controls")
+    {
+      it->activate(false);
+    }
+  }
+
+  help_active = true;
+
+}
+
 /*  Init MainMenu */
 void MainMenu::init()
 {
@@ -268,6 +316,8 @@ void MainMenu::init()
   current_button = -1;
   // Switch to the main menu screen
   screen_mode = MAINSCREEN;
+  // Close possible help window
+  CloseHelp();
 }
 
 /*  Finish creating the partially created (in UI) GameModeButtons */

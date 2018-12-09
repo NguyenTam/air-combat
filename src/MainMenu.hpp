@@ -69,6 +69,12 @@ class MainMenu: public UI
     void start_stats_action();
 
     /**
+      *   @brief Action for controls Button
+      *   @details Construct & show controls help window
+      */
+    void controls_action();
+
+    /**
       *   @brief Init MainMenu to safe state to restart it
       *   @details Currently the menu buttons aren't cleared
       *   because those aren't recreated (like LevelEditor recreates Toolbars)
