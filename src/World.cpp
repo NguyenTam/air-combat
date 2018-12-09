@@ -116,6 +116,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		case Textures::BlueAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::blue);
+			entity->setType(Textures::BlueAirplane_alpha);
 			body->SetUserData(entity.get());
 			body->SetGravityScale(0); //gravity 0 for plane
 			// add BlueAirplane to player_planes[0] (controlled by player not by AI)
@@ -125,36 +126,42 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		case Textures::BlueAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
+			entity->setType(Textures::BlueAntiAircraft_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::BlueBase_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
+			entity->setType(Textures::BlueBase_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::BlueHangar_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
+			entity->setType(Textures::BlueHangar_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::BlueInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
+			entity->setType(Textures::BlueInfantry_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::Bullet_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Bullet>(*pworld.get_world(), *body, tex, pos, direct);
+			entity->setType(Textures::Bullet_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::Ground_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Ground>(*pworld.get_world(), *body, tex, pos);
+			entity->setType(Textures::Ground_alpha);
 			entity->setScale(width,height);
 			body->SetUserData(entity.get());
 			break;
@@ -164,6 +171,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 				// add RedAirplanes to the normal container (controlled by AI)
 				body = pworld.create_body_dynamic(x, y, width, height);
 				entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
+				entity->setType(Textures::RedAirplane_alpha);
 				body->SetUserData(entity.get());
 				body->SetGravityScale(0); //gravity 0 for plane
 				objects.push_back(std::move(entity));
@@ -175,6 +183,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 						// only one RedAirplane is alowed and it needs to be at player_planes[1]
 						body = pworld.create_body_dynamic(x, y, width, height);
 						entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
+						entity->setType(Textures::RedAirplane_alpha);
 						body->SetUserData(entity.get());
 						body->SetGravityScale(0); //gravity 0 for plane
 						player_planes.push_back(std::move(entity));
@@ -183,6 +192,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 				else if (player_planes.size() == 0) {
 					body = pworld.create_body_dynamic(x, y, width, height);
 					entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
+					entity->setType(Textures::RedAirplane_alpha);
 					body->SetUserData(entity.get());
 					body->SetGravityScale(0); //gravity 0 for plane
 					player_planes.push_back(std::move(entity));
@@ -193,36 +203,42 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		case Textures::RedAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
+			entity->setType(Textures::RedAntiAircraft_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::RedBase_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
+			entity->setType(Textures::RedBase_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::RedHangar_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
+			entity->setType(Textures::RedHangar_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::RedInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
+			entity->setType(Textures::RedInfantry_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::Rock_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Stone>(*pworld.get_world(), *body, tex, pos);
+			entity->setType(Textures::Rock_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::Tree_alpha: {
 			body = pworld.create_body_static(x, y, width, height);
 			entity = std::make_shared<Tree>(*pworld.get_world(), *body, tex, pos);
+			entity->setType(Textures::Tree_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
@@ -285,7 +301,7 @@ void World::update() {
 			Entity* a_entity = static_cast<Entity*>(a_body->GetUserData());
 			Entity* b_entity = static_cast<Entity*>(b_body->GetUserData());
 
-		
+
 
 			bool a_sensor = a_fixture->IsSensor();
 			bool b_sensor = b_fixture->IsSensor();
@@ -301,6 +317,10 @@ void World::update() {
 				}
 			}
 			
+			if ((a_entity->getType() == Textures::Bullet_alpha) || (b_entity->getType() == Textures::Bullet_alpha)){
+				std::cout << "Hit by a bullet" << std::endl;
+			}
+
 		}
 
 	}
@@ -381,7 +401,7 @@ std::deque<std::shared_ptr<Entity>>& World::get_player_planes()
 	return player_planes;
 }
 
-std::vector<std::shared_ptr<Entity>>& World::get_bullets() 
+std::vector<std::shared_ptr<Entity>>& World::get_bullets()
 {
 	return bullets;
 }
