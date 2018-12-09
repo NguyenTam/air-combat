@@ -8,8 +8,8 @@ namespace Game
   constexpr float TOMETERS = 1/TOPIXELS;
   constexpr int LEFT_LIMIT = static_cast<int>(0.01*WIDTH);       //limit as percentage from the limits of the map.
   constexpr int RIGHT_LIMIT = static_cast<int>((1-0.01)*WIDTH);  //these 3 values should be between 0.01 and 0.25.
-  constexpr int UPPER_LIMIT = static_cast<int>((1-0.01)*HEIGHT);
-  constexpr int LOWER_LIMIT = static_cast<int>(0.3*HEIGHT);      //LOWER_LIMIT should be atleast 0.3.
+  constexpr int UPPER_LIMIT = static_cast<int>((0.1)*HEIGHT);
+  constexpr int LOWER_LIMIT = static_cast<int>((1-0.5)*HEIGHT);      //LOWER_LIMIT should be atleast 0.3.
 
 
   std::map<ACTIONS, sf::Vector2f> actions_and_directions
