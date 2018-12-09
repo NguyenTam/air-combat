@@ -46,12 +46,13 @@ namespace AI
     sf::Vector2f current_worse_enemy = {-1.f,-1.f};
     int current_worse_enemy_priority = -1;
     sf::Vector2f my_position = me.getPosition();
+    //std::cout << "Surroundings size: " << surroundings.size() << std::endl;
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
+    //std::cout << " ########################" << std::endl;
     if( my_position.x < Game::LEFT_LIMIT || my_position.x > Game::RIGHT_LIMIT || my_position.y < Game::LOWER_LIMIT || my_position.x > Game::UPPER_LIMIT )
       {
 	if ( my_position.x < Game::LEFT_LIMIT )
-	  {
-	    
+	  {	    
 	    me.moveRight();
 	  }
 	if ( my_position.x > Game::RIGHT_LIMIT )
@@ -77,36 +78,29 @@ namespace AI
 	 */
       }
     // If worse enemy is visible
-    else if (current_worse_enemy.x > 0)
+    if (current_worse_enemy.x > 0)
       {
-	std::cout << "switch case " << std::endl;
+	std::cout << "Enemy found at at (x,y): " << current_worse_enemy.x << ", " << current_worse_enemy.y << std::endl;
 	switch (current_worse_enemy_priority)
 	  {
 	  case 10:
 	    {
 	      sf::Vector2f direction = my_position - current_worse_enemy;
 	      me.shoot(direction);
+	      std::cout << "shot at (x,y): " << current_worse_enemy.x << ", " << current_worse_enemy.y << std::endl;
 	      return;
 	    }
 	  default:
 	    {
-	      me.shoot({0.f,-1.f});
+	      me.shoot({0.f, 1.f});
+	      std::cout << "bomb at (x,y): " << current_worse_enemy.x << ", " << current_worse_enemy.y << std::endl;
 	      return;
 	    }
 	  }
       }
     else
       {
-	if (me.getDirection().x > 0)
-	  {
-	    me.moveRight();
-	    //std::cout << "move Right " << std::endl;
-	  }
-	else
-	  {
-	    me.moveLeft();
-	    //std::cout << "move Left " << std::endl;
-	  }
+	move_to_direction(me);
       }
   }
 
