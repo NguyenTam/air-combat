@@ -36,6 +36,7 @@ void Plane::moveLeft()
       force = - MAX_FORCE;
     }
   b2body.ApplyForce( b2Vec2(force,0), b2body.GetWorldCenter(), true );
+  faceLeft();
 }
 
 void Plane::moveRight()
@@ -46,7 +47,8 @@ void Plane::moveRight()
     {
       force = MAX_FORCE;
     }
-  b2body.ApplyForce( b2Vec2(force,0), b2body.GetWorldCenter(), true ); 
+  b2body.ApplyForce( b2Vec2(force,0), b2body.GetWorldCenter(), true );
+  faceRight();
 }
 
 
