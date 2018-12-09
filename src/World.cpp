@@ -12,7 +12,7 @@ World::World(sf::RenderWindow &main_window, ResourceManager &_resources) : pworl
 
 /*  Parse level .txt file and create world's entities  */
 
-bool World::read_level(std::string& filename) {
+bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 	//entity type; x; y; orientation; width; height
 	double x, y, width, height;
   	int orientation;
@@ -57,7 +57,7 @@ bool World::read_level(std::string& filename) {
 						}
 						i++;
 					}
-					
+
 					catch (std::exception &e) {
 						std::cout << e.what() << std::endl;
 						//clear all
@@ -77,12 +77,12 @@ bool World::read_level(std::string& filename) {
 					}
 					try {
 						Textures::ID id = Textures::alphaTextures.at(type);
-						if (x+width < Game::WIDTH) 
-							create_entity(id, x, y, orientation, width, height, sf::Vector2f(1.0f, 0.0f));
+						if (x+width < Game::WIDTH)
+							create_entity(id, x, y, orientation, width, height, sf::Vector2f(1.0f, 0.0f), game_mode);
 
 					}
 					catch (const std::out_of_range& er) {
-					    
+
 					}
 				}
 			}
@@ -96,24 +96,27 @@ bool World::read_level(std::string& filename) {
 
 void World::clear_all() {
 	objects.clear();
+	player_planes.clear();
 	for (b2Body* b = pworld.get_world()->GetBodyList(); b; b = b->GetNext())
 		pworld.get_world()->DestroyBody(b);
 }
 
 /*  Create entity  */
 
-bool World::create_entity(Textures::ID id, double x, double y, int orientation, double width, double height, sf::Vector2f direct) {
+bool World::create_entity(Textures::ID id, double x, double y, int orientation, double width, double height, sf::Vector2f direct, Game::GameMode game_mode) {
 	sf::Texture &tex = resources.get(id);
 	sf::Vector2f pos(x,y);
 	b2Body* body;
 	std::shared_ptr<Entity> entity;
-	
+
 	switch(id) {
 		case Textures::BlueAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::blue);
 			body->SetUserData(&(*entity));
 			body->SetGravityScale(0); //gravity 0 for plane
+			// add BlueAirplane to player_planes[0] (controlled by player not by AI)
+			player_planes.push_front((std::move(entity)));
 			break;
 		}
 		case Textures::BlueAntiAircraft_alpha: {
@@ -154,10 +157,34 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			break;
 		}
 		case Textures::RedAirplane_alpha: {
-			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
-			body->SetUserData(&(*entity));
-			body->SetGravityScale(0); //gravity 0 for plane
+			if (game_mode == Game::GameMode::SinglePlayer) {
+				// add RedAirplanes to the normal container (controlled by AI)
+				body = pworld.create_body_dynamic(x, y, width, height);
+				entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
+				body->SetUserData(&(*entity));
+				body->SetGravityScale(0); //gravity 0 for plane
+				objects.push_back(std::move(entity));
+			}
+			else {
+				// Add RedAirplane to player_planes container
+				if (player_planes.size() == 1) {
+					if (player_planes[0]->getTypeId() == Textures::BlueAirplane_alpha) {
+						// only one RedAirplane is alowed and it needs to be at player_planes[1]
+						body = pworld.create_body_dynamic(x, y, width, height);
+						entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
+						body->SetUserData(&(*entity));
+						body->SetGravityScale(0); //gravity 0 for plane
+						player_planes.push_back(std::move(entity));
+					}
+				}
+				else if (player_planes.size() == 0) {
+					body = pworld.create_body_dynamic(x, y, width, height);
+					entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
+					body->SetUserData(&(*entity));
+					body->SetGravityScale(0); //gravity 0 for plane
+					player_planes.push_back(std::move(entity));
+				}
+			}
 			break;
 		}
 		case Textures::RedAntiAircraft_alpha: {
@@ -200,8 +227,8 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			std::cout << "id not found" << std::endl;
 			break;
 	}
-	
-	if (entity) {	
+
+	if (entity && (id != Textures::BlueAirplane_alpha) && (id != Textures::RedAirplane_alpha)) {
 	  objects.push_back(std::move(entity));
 	  return true;
 	}
@@ -215,7 +242,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 
 bool World::remove_entity(std::shared_ptr<Entity> entity) {
 	auto it = std::find(objects.begin(), objects.end(), entity);
-	
+
 	if (it != objects.end()) {
 		objects.erase(it); //erase entity from vector
 
@@ -226,7 +253,7 @@ bool World::remove_entity(std::shared_ptr<Entity> entity) {
 	else {
 		return false;
 	}
-	
+
 }
 
 /*  Update the world  */
@@ -236,7 +263,7 @@ void World::update() {
 	float32 timeStep = 1/60.0;      //the length of time passed to simulate (seconds)
   	int32 velocityIterations = 8;   //how strongly to correct velocity
   	int32 positionIterations = 3;   //how strongly to correct position
-	
+
 	pworld.get_world()->Step(timeStep, velocityIterations, positionIterations);
 
 	for (auto it : objects) {
@@ -269,9 +296,9 @@ void World::update() {
 				}
 			}
 
-		
+
 		}
-		
+
 	}
 
 	//updating the world
@@ -286,15 +313,20 @@ void World::update() {
 		float y_corr = it->getSize().y/2;
 		float x = Game::TOPIXELS*it->getB2Body().GetPosition().x-x_corr;
 		float y = Game::TOPIXELS*it->getB2Body().GetPosition().y-y_corr;
-		sf::Vector2f newpos(x,y); 
+		sf::Vector2f newpos(x,y);
 		it->setPos(newpos);
-		
+
 		//set sfml sprite's angle from body's angle
 		it->setRot(it->getB2Body().GetAngle()*RADTODEG);
-		
+
 		it->drawTo(window);
 	}
-	
+
+	// Draw player planes
+	for (auto it : player_planes) {
+		it->drawTo(window);
+	}
+
 }
 
 std::vector<std::shared_ptr<Entity>>& World::get_all_entities()
