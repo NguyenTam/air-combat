@@ -89,9 +89,9 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 		}
 	}
 	sf::Texture &tex = resources.get(Textures::alphaTextures.at("Bullet"));
-	sf::Vector2f pos(-10,-10);
+	sf::Vector2f pos(10,10);
 	for (int i = 0; i < 1000; i++) {
-		b2Body* body = pworld.create_body_bullet(-10,-10,8,8);
+		b2Body* body = pworld.create_body_bullet(10,10,8,8);
 		std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(*pworld.get_world(), *body, tex, pos, sf::Vector2f(1.0f, 0.0f));
 		bullets.push_back(bullet);
 	}
@@ -345,19 +345,7 @@ void World::update() {
 	}
 
 	// Draw bullets
-	for (auto it : bullets) {
-		float x_corr = it->getSize().x/2;
-		float y_corr = it->getSize().y/2;
-		float x = Game::TOPIXELS*it->getB2Body().GetPosition().x-x_corr;
-		float y = Game::TOPIXELS*it->getB2Body().GetPosition().y-y_corr;
-		sf::Vector2f newpos(x,y);
-		it->setPos(newpos);
 
-		//set sfml sprite's angle from body's angle
-		it->setRot(it->getB2Body().GetAngle()*RADTODEG);
-
-		it->drawTo(window);
-	}
 }
 
 std::vector<std::shared_ptr<Entity>>& World::get_all_entities()
