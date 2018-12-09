@@ -323,6 +323,17 @@ void World::update() {
 
 	// Draw player planes
 	for (auto it : player_planes) {
+		float x_corr = it->getSize().x/2;
+		float y_corr = it->getSize().y/2;
+		float x = Game::TOPIXELS*it->getB2Body().GetPosition().x-x_corr;
+		float y = Game::TOPIXELS*it->getB2Body().GetPosition().y-y_corr;
+		sf::Vector2f newpos(x,y);
+		it->setPos(newpos);
+
+		//set sfml sprite's angle from body's angle
+		it->setRot(it->getB2Body().GetAngle()*RADTODEG);
+
+		it->drawTo(window);
 		it->drawTo(window);
 	}
 
