@@ -1,5 +1,6 @@
 #include "AI.hpp"
 #include <cmath>
+#include <cstdlib>
 namespace AI
 {
   std::map<Game::TYPE_ID, int> priority_list
