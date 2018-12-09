@@ -10,7 +10,9 @@
 #include "GameEngine.hpp"
 #include "Stats.hpp"
 #include <memory>
-
+#include <cstdlib>
+#include <iostream>
+#include <ctime>
 
 /**
   *   @brief Set window position to the center of the screen
@@ -31,6 +33,9 @@ void setWindowPosition(sf::RenderWindow &window)
   */
 int main()
 {
+  // random seed
+  std::srand(std::time(nullptr));
+  
   // Create empty RenderWindows
   sf::RenderWindow window;
   sf::RenderWindow dialog_window;
