@@ -8,8 +8,12 @@ Infantry::Infantry(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector
 void Infantry::moveLeft()
 {
   b2Vec2 vel = b2body.GetLinearVelocity();
-  vel.x = - VELOCITY;
+  vel.x = -VELOCITY;
   b2body.SetLinearVelocity(vel);
+  direction.x = -1;
+  direction.y = 0;
+
+  faceLeft();
 }
 
 void Infantry::moveRight()
@@ -18,18 +22,24 @@ void Infantry::moveRight()
   vel.x = VELOCITY;
   b2body.SetLinearVelocity(vel);
 
+  direction.x = 1;
+  direction.y = 0;
+
+  faceRight();
 }
 
-    bool Infantry::shoot(sf::Vector2f direction){
-      if (fireCountDown <= 0) {
-        if (numberOfBullets > 0) {
-          fireCountDown = rateOfFire;
-          numberOfBullets-=1;
-          return true;  
-        }
+
+
+bool Infantry::shoot(sf::Vector2f direction){
+  if (fireCountDown <= 0) {
+    if (numberOfBullets > 0) {
+      fireCountDown = rateOfFire;
+      numberOfBullets-=1;
+      return true;      
     }
-    fireCountDown-=1;
-    return false;
+  }
+  fireCountDown-=1;
+  return false;
 }
 
 
