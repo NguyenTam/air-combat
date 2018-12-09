@@ -79,6 +79,7 @@ namespace Game
       ground,
       rock,
       tree,
+      invisible_wall,
       type_id_end
     };
 
