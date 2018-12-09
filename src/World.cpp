@@ -316,7 +316,7 @@ void World::update() {
 		it->setPos(newpos);
 
 		//set sfml sprite's angle from body's angle
-		it->setRot(it->getB2Body().GetAngle()*RADTODEG);
+		//it->setRot(it->getB2Body().GetAngle()*RADTODEG);
 
 		it->drawTo(window);
 	}
