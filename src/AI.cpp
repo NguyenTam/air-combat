@@ -88,7 +88,7 @@ namespace AI
 	      {
 	      case 10:
 		{
-		  sf::Vector2f direction = my_position - current_worse_enemy;
+		  sf::Vector2f direction = current_worse_enemy - my_position;
 		  me.shoot(direction);
 		  std::cout << "shot direction (x,y): " << direction.x << ", " << direction.y << std::endl;
 		  return;
