@@ -31,11 +31,30 @@ void Entity::rotateClockWise()
   // entity.rotate(5.f);
 }
 
+
+void Entity::faceLeft()
+{
+  sf::Vector2u texture_size = entity.getTexture()->getSize();
+  //entity.setTextureRect(sf::IntRect(19, 0, -19, 32));
+  entity.setTextureRect(sf::IntRect(texture_size.x, 0, -texture_size.x, texture_size.y)); 
+}
+void Entity::faceRight()
+{
+  sf::Vector2u texture_size = entity.getTexture()->getSize();
+
+  //entity.setTextureRect(sf::IntRect(0, 0, 19, 32));
+  entity.setTextureRect(sf::IntRect(0, 0, texture_size.x, texture_size.y));
+}
+
 // Does not move by default
 void Entity::rotateCounterClockWise(){}
 
 sf::Vector2f Entity::getPosition() const{
   return entity.getPosition();
+}
+
+sf::Vector2f Entity::getOriginPosition() const {
+  return entity.getOrigin();
 }
 
 void Entity::setPos(sf::Vector2f newPos)
@@ -104,7 +123,7 @@ void Entity::setDirection(sf::Vector2f direct){
   direction = direct;
 }
 
-sf::Vector2f Entity::getDirection(){
+sf::Vector2f& Entity::getDirection(){
   return direction;
 }
 
