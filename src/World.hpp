@@ -82,7 +82,7 @@ public:
 
   std::vector<std::shared_ptr<Entity>>& get_all_entities();
 
-  std::deque<std::shared_ptr<Entity>>& get_player_planes()
+  std::deque<std::shared_ptr<Entity>>& get_player_planes();
 
 private:
   PhysicsWorld pworld;
