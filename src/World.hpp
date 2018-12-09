@@ -21,6 +21,7 @@
 #include "Ground.hpp"
 #include "Hangar.hpp"
 #include "AI.hpp"
+#include "InvisibleWall.hpp"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>

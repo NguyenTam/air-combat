@@ -73,7 +73,9 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 				else {
 					//all ok
 					if (type == "InvisibleWall") {
-						pworld.create_body_static(x, y, width, height);
+						b2Body* body = pworld.create_body_static(x, y, width, height);
+						std::shared_ptr<Entity> entity = std::make_shared<InvisibleWall>(*pworld.get_world(), *body, resources.get(Textures::alphaTextures.at("Ground")), sf::Vector2f(x,y));
+						body->SetUserData(entity.get());
 					}
 					try {
 						Textures::ID id = Textures::alphaTextures.at(type);
@@ -169,7 +171,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			else {
 				// Add RedAirplane to player_planes container
 				if (player_planes.size() == 1) {
-					if (player_planes[0]->getTypeId() == Textures::BlueAirplane_alpha) {
+					if (player_planes[0]->getType() == Textures::BlueAirplane_alpha) {
 						// only one RedAirplane is alowed and it needs to be at player_planes[1]
 						body = pworld.create_body_dynamic(x, y, width, height);
 						entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
@@ -296,10 +298,11 @@ void World::update() {
 					b_entity->insert_surrounding(a_entity);
 				}
 			}
-
+			
 			if (a_entity->getType() == Textures::ID::Bullet_alpha || b_entity->getType() == Textures::ID::Bullet_alpha) {
 				std::cout << "oli bullet" << std::endl;
 			}
+			
 		}
 
 	}
