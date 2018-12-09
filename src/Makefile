@@ -1,5 +1,5 @@
 CC=g++
-CPPFLAGS=-g -std=c++17 -Wall -Wextra -pedantic
+CPPFLAGS=-g -std=c++17 -Wall -Wextra -pedantic -D NDEBUG 
 SFMLFLAGS=-pthread -lsfml-graphics -lsfml-window -lsfml-system -lBox2D -lstdc++fs
 SOURCES=$(filter-out main.cpp, $(wildcard *.cpp))
 OBJECTS=$(SOURCES:.cpp=.o)
