@@ -21,7 +21,6 @@ MainMenu::MainMenu(sf::RenderWindow &parent_window, sf::RenderWindow &dialog,
                   sf::RenderWindow &help):
 UI(parent_window, dialog, help, sf::Color(150, 200, 255, 255))
 {
-  //createMainScreen();
   ui_view = window.getDefaultView();
   CreateMainMenu();
 }
@@ -51,6 +50,8 @@ void MainMenu::DrawUI()
     // Draw buttons
     window.draw(*button);
   }
+  // Draw background_img
+  window.draw(background_img);
 }
 
 
@@ -208,6 +209,13 @@ void MainMenu::CreateMainMenu()
   start_stats->setActiveColor(sf::Color(15, 10, 75));
   controls->setActiveColor(sf::Color(15, 10, 75));
   quit->setActiveColor(sf::Color(15, 10, 75));
+
+  // Construct background_img
+  if (background_img_texture.loadFromFile("../data/img/SPITFIRE.png"))
+  {
+    background_img = sf::Sprite(background_img_texture);
+    background_img.setPosition(500, 100);
+  }
 
 
 }

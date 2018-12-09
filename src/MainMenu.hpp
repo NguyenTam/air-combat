@@ -173,5 +173,7 @@ class MainMenu: public UI
 
     int current_button = -1; /**< Which button is currently active */
     std::vector<std::shared_ptr <Button> > buttons;
+    sf::Sprite background_img;
+    sf::Texture background_img_texture;
 
 };
