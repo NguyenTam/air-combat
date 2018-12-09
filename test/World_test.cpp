@@ -13,7 +13,7 @@ int main() {
 	std::string str = "../data/level_files/Level1.txt";
 	ResourceManager manager = ResourceManager();
 	World world(window,manager);
-	world.read_level(str);
+	world.read_level(str, Game::GameMode::SinglePlayer);
 	world.update();
 	window.display();
 }
