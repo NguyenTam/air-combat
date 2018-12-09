@@ -100,10 +100,16 @@ public:
       */
         std::deque<std::shared_ptr<Entity>>& get_player_planes();
 
+/**
+      *   @return Returns list of all bullets
+      */
+        std::vector<std::shared_ptr<Entity>>& get_bullets();
+
 private:
   PhysicsWorld pworld;
   ResourceManager &resources;
   sf::RenderWindow &window; /**< Window that is being used */
   std::vector<std::shared_ptr<Entity>> objects; /**< Contains all the entities added */
+  std::vector<std::shared_ptr<Entity>> bullets; /**< Contains all the bullets created */
   std::deque<std::shared_ptr<Entity>> player_planes; /**< Contains BlueAirplane and during multiplayer also one RedAirplane */
 };
