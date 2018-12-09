@@ -17,6 +17,7 @@
 #include <sstream>
 #include <fstream>
 #include <ctime>
+#include <math.h>
 
 #define MAX_FORCE 50.f
 #define MAX_VELOCITY 3.f
@@ -113,30 +114,6 @@ void GameEngine::run(std::string &level_file)
   }
 }
 
-void GameEngine::processEvents()
-{
-  sf::Event event{};
-  while(renderWindow.pollEvent(event))
-  {
-    switch(event.type)
-    {
-      case sf::Event::KeyPressed:
-        //handlePlayerInput(event.key.code, true);
-        break;
-      case sf::Event::KeyReleased:
-        //handlePlayerInput(event.key.code, false);
-        break;
-      case sf::Event::Closed:
-        // renderWindow.close();
-        gameEngineLogger->info("Closing Game Engine");
-        break;
-      default:
-        gameEngineLogger->info("Unspecified Key");
-        break;
-    }
-  }
-}
-
 void GameEngine::render()
 {
   renderWindow.clear(sf::Color(150,200,255));
@@ -157,10 +134,11 @@ void GameEngine::render()
 void GameEngine::update(sf::Time elapsedTime)
 {
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
-  Entity player1_entity = *planes[0];
+  Entity& player1_entity = *planes[0];
   b2Body& player1_body = player1_entity.getB2Body();
   b2Vec2 vel1 = player1_body.GetLinearVelocity();
   bool player2_set = false;
+  float max_angl_vel = 0.15f;
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
     // move world player_planes[0] up
@@ -199,15 +177,19 @@ void GameEngine::update(sf::Time elapsedTime)
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
     // rotate world player_planes[0] up
-
-    player1_body.ApplyTorque(-TORQUE,true);
+    if (player1_body.GetAngularVelocity() > 0) player1_body.SetAngularVelocity(0);
+    if (player1_body.GetAngularVelocity() > - max_angl_vel) {
+      player1_body.ApplyTorque((max_angl_vel + player1_body.GetAngularVelocity()) * (-TORQUE), true);
+    }
 
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
     // rotate world player_planes[0] down
-  
-    player1_body.ApplyTorque(TORQUE,true);
-   
+    if (player1_body.GetAngularVelocity() < 0) player1_body.SetAngularVelocity(0);
+    if (player1_body.GetAngularVelocity() < max_angl_vel) {
+      player1_body.ApplyTorque((max_angl_vel - player1_body.GetAngularVelocity()) * TORQUE, true);
+    }
+
 
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
@@ -217,7 +199,7 @@ void GameEngine::update(sf::Time elapsedTime)
 
   if (gameMode == Game::GameMode::Multiplayer) {
     player2_set = true;
-    Entity player2_entity = *planes[1];
+    Entity& player2_entity = *planes[1];
     b2Body& player2_body = player2_entity.getB2Body();
     b2Vec2 vel2 = player2_body.GetLinearVelocity();
 
@@ -238,6 +220,7 @@ void GameEngine::update(sf::Time elapsedTime)
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
       // flip world player_planes[1] left
       float force = 0;
+      player2_entity.faceLeft();
       if (vel2.x > -MAX_VELOCITY)
         force = -MAX_FORCE;
       player2_body.ApplyForce(b2Vec2(force,0), player2_body.GetWorldCenter(), true);
@@ -245,17 +228,24 @@ void GameEngine::update(sf::Time elapsedTime)
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
       // flip world player_planes[1] right
       float force = 0;
+      player2_entity.faceRight();
       if (vel2.x < MAX_VELOCITY)
         force = MAX_FORCE;
       player2_body.ApplyForce(b2Vec2(force,0), player2_body.GetWorldCenter(), true);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
       // rotate world player_planes[1] up
-      player2_body.ApplyTorque(-TORQUE,true);
+      if (player2_body.GetAngularVelocity() > 0) player2_body.SetAngularVelocity(0);
+      if (player2_body.GetAngularVelocity() > - max_angl_vel) {
+        player2_body.ApplyTorque((max_angl_vel + player2_body.GetAngularVelocity()) * (-TORQUE), true);
+      }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
       // rotate world player_planes[1] down
-      player2_body.ApplyTorque(TORQUE,true);
+      if (player2_body.GetAngularVelocity() < 0) player2_body.SetAngularVelocity(0);
+      if (player2_body.GetAngularVelocity() < max_angl_vel) {
+        player2_body.ApplyTorque((max_angl_vel - player2_body.GetAngularVelocity()) * TORQUE, true);
+      }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
       // shoot world player_planes[1]
