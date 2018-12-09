@@ -4,6 +4,7 @@
   */
 
 #include "World.hpp"
+
 /*  Class World  */
 
 /*  Constructor  */
@@ -308,7 +309,7 @@ void World::update() {
 	//updating the world
 	for (auto it : objects) {
 		//1. send ai information
-	  	AI::get_action(*it, it->get_surroundings());
+                AI::get_action(*it, it->get_surroundings(), resources);
 		//do something with ai information
 
 		//2. update new positions
