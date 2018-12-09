@@ -158,6 +158,6 @@ std::list<Entity*>& Entity::get_surroundings() {
   return surrounding;
 }
 
-std::list<Entity>& Entity::get_active_bullets() {
+std::list<std::shared_ptr<Entity>>& Entity::get_active_bullets() {
   return active_bullets;
 }
