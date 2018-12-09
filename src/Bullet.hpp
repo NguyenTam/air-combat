@@ -23,6 +23,7 @@ class Bullet : public Entity {
   *   @param b Bullet's body for collisions
   *   @param t Bullet's texture
   *   @param position Place as vector where bullet is created
+  *   @param direction Direction where bullet is headed
   */
   Bullet(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direction);
 

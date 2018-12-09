@@ -23,6 +23,8 @@ class Plane : public Entity {
    *   @param b Planes body for collisions
    *   @param t Planes texture
    *   @param position Place as vector where Plane is created
+   *   @param direction Direction where plane is headed
+   *   @param team Team where plane belongs to
    */
   Plane(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team);
 
