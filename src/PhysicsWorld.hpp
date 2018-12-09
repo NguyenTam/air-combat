@@ -27,7 +27,7 @@ public:
 	~PhysicsWorld();
 
   /**
-   *   @brief Construct a Hangar object.
+   *   @brief Creates a dynamic body
    *   @param x X-position where new body is created
    *   @param y Y-position where new body is created
    *   @param width Width of the body
@@ -37,7 +37,7 @@ public:
 	b2Body* create_body_dynamic(double x, double y, double width, double height);
 
   /**
-   *   @brief Construct a Hangar object.
+   *   @brief Creates a static body
    *   @param x X-position where new body is created
    *   @param y Y-position where new body is created
    *   @param width Width of the body
@@ -51,6 +51,16 @@ public:
    *   @param body Body to be removed
    */
 	void remove_body(b2Body* body);
+
+  /**
+   *   @brief Creates a bullet
+   *   @param x X-position where new body is created
+   *   @param y Y-position where new body is created
+   *   @param width Width of the body
+   *   @param height Height of the body
+   *   @return Created bullet
+   */
+	b2Body* create_body_bullet(double x, double y, double width, double height);
 
   /**
    *   @brief Gets the world of PhysicsWorld
