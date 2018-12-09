@@ -54,15 +54,22 @@ public:
       *   @brief Constructor for World
       *   @details creates variable for used window
       *   @param main_window RenderWindow which is used to display the game
+      *   @param _resources Resources given by ResourceManager
       */
 	World(sf::RenderWindow &main_window, ResourceManager &_resources);
 
 	/**
       *   @brief Adds given entity to the game
-      *   @param type: string of entity's type, x: x-axis coordinate, y: y-axis coordinate, orientation: direction where the entity is facing, width: width of the entity, height: height of the entity
+      *   @param id: string of entity's type
+      *   @param x: x-axis coordinate
+      *   @param y: y-axis coordinate
+      *   @param orientation: direction where the entity is facing
+      *   @param width: width of the entity
+      *   @param height: height of the entity
+      *   @param direct: direction where entity is headed
+      *   @param game_mode: single- or multiplayer
       *   @return Returns true if succesful, false if not
       */
-
 	bool create_entity(Textures::ID id, double x, double y, int orientation, double width, double height, sf::Vector2f direct, Game::GameMode game_mode);
 
 	/**

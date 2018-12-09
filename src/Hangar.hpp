@@ -22,6 +22,7 @@ class Hangar : public Entity {
    *   @param b Hangars body for collisions
    *   @param t Hangars texture
    *   @param position Place as vector where Hangar is created
+   *   @param team Hangars team
    */
   Hangar(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, Game::TEAM_ID team);
 };

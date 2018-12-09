@@ -70,7 +70,6 @@ class GameEngine : private sf::NonCopyable
 
    /**
     *   @brief Create window for game over
-    *   @param game_mode true -> single_player, false -> multiplayer
     *   @param blue_won pass true if blue_won. Otherwise false
     *   @details Creates user_input if single_player has ended
     */
