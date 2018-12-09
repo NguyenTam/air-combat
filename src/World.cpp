@@ -161,7 +161,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 				// add RedAirplanes to the normal container (controlled by AI)
 				body = pworld.create_body_dynamic(x, y, width, height);
 				entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
-				body->SetUserData(&(*entity));
+				body->SetUserData(entity.get());
 				body->SetGravityScale(0); //gravity 0 for plane
 				objects.push_back(std::move(entity));
 			}
@@ -172,7 +172,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 						// only one RedAirplane is alowed and it needs to be at player_planes[1]
 						body = pworld.create_body_dynamic(x, y, width, height);
 						entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
-						body->SetUserData(&(*entity));
+						body->SetUserData(entity.get());
 						body->SetGravityScale(0); //gravity 0 for plane
 						player_planes.push_back(std::move(entity));
 					}
@@ -180,7 +180,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 				else if (player_planes.size() == 0) {
 					body = pworld.create_body_dynamic(x, y, width, height);
 					entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
-					body->SetUserData(&(*entity));
+					body->SetUserData(entity.get());
 					body->SetGravityScale(0); //gravity 0 for plane
 					player_planes.push_back(std::move(entity));
 				}
@@ -331,4 +331,9 @@ void World::update() {
 std::vector<std::shared_ptr<Entity>>& World::get_all_entities()
 {
   return objects;
+}
+
+std::deque<std::shared_ptr<Entity>>& World::get_player_planes()
+{
+	return player_planes;
 }
