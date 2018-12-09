@@ -14,4 +14,5 @@ namespace AI {
   void get_infantry_action(Entity& me, std::list<Entity*> &surroundings);
   void set_target(Entity& me, std::list<Entity*> &surroundings, sf::Vector2f & current_worse_enemy, int &current_worse_enemy_priority);
   bool is_too_close(sf::Vector2f & e1, sf::Vector2f & e2);
+  void move_to_direction(Entity& me);
 }
