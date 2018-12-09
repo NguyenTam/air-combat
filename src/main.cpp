@@ -10,6 +10,7 @@
 #include "GameEngine.hpp"
 #include "Stats.hpp"
 #include <memory>
+#include <SFML/Audio/Music.hpp>
 
 
 /**
@@ -50,6 +51,12 @@ int main()
   Stats stats = Stats(window);
 
   int exit_status = ExitStatus::MAINMENU;
+
+  // Create music playback
+  sf::Music music;
+  music.openFromFile("../data/music/extremeaction.wav");
+  music.play();
+  music.setLoop(true);
 
   while(true)
   {
