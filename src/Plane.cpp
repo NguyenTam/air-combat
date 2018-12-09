@@ -62,13 +62,11 @@ void Plane::moveRight()
 }
 
 
-bool Plane::shoot(sf::Vector2f direction){
+bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
       if (fireCountDown <= 0) {
         if (numberOfBullets > 0) {
           fireCountDown = rateOfFire;
           numberOfBullets-=1;
-
-          ResourceManager resources;
 
           double x, y;
 
@@ -81,6 +79,7 @@ bool Plane::shoot(sf::Vector2f direction){
             x = getPosition().x + (this->getSize().x)/2;
             y = getPosition().y + (this->getSize().y)/2;
           }
+
 
           sf::Texture &tex = resources.get(Textures::alphaTextures.at("Bullet"));
           

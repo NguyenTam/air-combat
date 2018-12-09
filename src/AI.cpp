@@ -15,16 +15,16 @@ namespace AI
     { Game::TYPE_ID::rock, 1 },
     { Game::TYPE_ID::tree, 1 }
   };
-  void get_action(Entity& me, std::list<Entity*> &surroundings)
+void get_action(Entity& me, std::list<Entity*> &surroundings, ResourceManager & resources)
   {   
     switch (me.getTypeId())
       {
       case Game::TYPE_ID::airplane:
-	return get_airplane_action(me, surroundings);
+	return get_airplane_action(me, surroundings, resources);
       case Game::TYPE_ID::antiaircraft:
-	return get_antiaircraft_action(me, surroundings);
+	return get_antiaircraft_action(me, surroundings, resources);
       case Game::TYPE_ID::infantry:
-	return get_infantry_action(me, surroundings);
+	return get_infantry_action(me, surroundings,resources);
       default:
 	return ;
       }
@@ -42,7 +42,7 @@ namespace AI
 	me.moveUp();
     }
   // NOTICE current_worse_enemy was supposed to be Entity pointer, but we encountered a nasty problem: right after set_target-function call current_worse_enemy was assigned back to null pointer???
-  void get_airplane_action(Entity& me, std::list<Entity*> &surroundings)
+void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceManager & resources)
   {
     sf::Vector2f current_worse_enemy = {-1.f,-1.f};
     int current_worse_enemy_priority = -1;
@@ -124,7 +124,7 @@ namespace AI
       }
   }
 
-  void get_antiaircraft_action(Entity& me, std::list<Entity*> &surroundings)
+void get_antiaircraft_action(Entity& me, std::list<Entity*> &surroundings, ResourceManager & resources)
   {
     sf::Vector2f current_worse_enemy =  {-1.0f,-1.0};
     int current_worse_enemy_priority = -1;
@@ -137,7 +137,7 @@ namespace AI
       }
   }
 
-  void get_infantry_action(Entity& me, std::list<Entity*> &surroundings)
+void get_infantry_action(Entity& me, std::list<Entity*> &surroundings, ResourceManager & resources)
   {
     sf::Vector2f current_worse_enemy = {-1.0f,-1.0};
     int current_worse_enemy_priority = 0;
