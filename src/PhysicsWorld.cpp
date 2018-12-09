@@ -62,6 +62,7 @@ b2Body* PhysicsWorld::create_body_bullet(double x, double y, double width, doubl
 	BodyDef.type = b2_staticBody;
 	BodyDef.position = b2Vec2((x+(width/2))/Game::TOPIXELS, (y+(height/2))/Game::TOPIXELS);
 	BodyDef.bullet = true;
+	BodyDef.active = false;
 
 	b2Body* Body = World->CreateBody(&BodyDef);
 
