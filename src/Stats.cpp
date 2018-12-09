@@ -497,8 +497,15 @@ void Stats::init()
 {
   // Reactivate
   active = true;
-  // Init view and current_button and then draw it
+  // Init view and current_button
   current_view = 1;
+  // Set time button checked and others unchecked
+  for (auto it : buttons)
+  {
+    if (it->getText().getString() == "Time") it->setChecked();
+    else it->setUnchecked();
+  }
+
   current_button = 0;
   stats_view.setCenter(stats_view.getSize().x / 2, stats_view.getSize().y / 2);
 

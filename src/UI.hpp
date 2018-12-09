@@ -20,6 +20,7 @@
 #include <fstream>
 #include "button.hpp"
 #include "image_button.hpp"
+#include "CommonDefinitions.hpp"
 
 
 
@@ -52,11 +53,6 @@ enum ExitStatus
   STATS,
 };
 
-enum GameMode
-{
-  SinglePlayer,
-  Multiplayer,
-};
 
 /**
   *   @struct LevelSelect
@@ -152,7 +148,7 @@ class UI
       *   @brief Get GameMode user has selected
       *   @return Returns game_mode (enum GameMode)
       */
-    GameMode getGameMode();
+    Game::GameMode getGameMode();
 
   protected:
 
@@ -343,7 +339,7 @@ class UI
     int exit_status;
     LevelSelect level_select;
     std::string level_selected; /**< Level name which user selected */
-    GameMode game_mode = SinglePlayer;
+    Game::GameMode game_mode = Game::GameMode::SinglePlayer;
     sf::Text help_text;
     sf::Text help_title;
     sf::Font help_font;
