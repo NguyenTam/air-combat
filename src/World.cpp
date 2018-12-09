@@ -171,7 +171,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			else {
 				// Add RedAirplane to player_planes container
 				if (player_planes.size() == 1) {
-					if (player_planes[0]->getType() == Textures::BlueAirplane_alpha) {
+					if (player_planes[0]->getType() == Textures::ID::BlueAirplane_alpha) {
 						// only one RedAirplane is alowed and it needs to be at player_planes[1]
 						body = pworld.create_body_dynamic(x, y, width, height);
 						entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
@@ -285,6 +285,8 @@ void World::update() {
 			Entity* a_entity = static_cast<Entity*>(a_body->GetUserData());
 			Entity* b_entity = static_cast<Entity*>(b_body->GetUserData());
 
+		
+
 			bool a_sensor = a_fixture->IsSensor();
 			bool b_sensor = b_fixture->IsSensor();
 
@@ -297,10 +299,6 @@ void World::update() {
 				else {
 					b_entity->insert_surrounding(a_entity);
 				}
-			}
-			
-			if (a_entity->getType() == Textures::ID::Bullet_alpha || b_entity->getType() == Textures::ID::Bullet_alpha) {
-				std::cout << "oli bullet" << std::endl;
 			}
 			
 		}
