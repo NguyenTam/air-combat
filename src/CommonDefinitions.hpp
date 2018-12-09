@@ -103,8 +103,8 @@ namespace Game
 	actions_end
       };
 
-
   extern std::map<ACTIONS, sf::Vector2f> actions_and_directions;
+  extern std::map<Textures::ID, int> sensor_radius;
 
   enum GameMode
   {

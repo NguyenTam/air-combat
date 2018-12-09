@@ -22,6 +22,38 @@ namespace Game
       {	ACTIONS::bomb, sf::Vector2f(0.f, 1.f) },
       { ACTIONS::nothing,sf::Vector2f(0.f, 0.f) }
     };
+
+  std::map<Textures::ID, int> sensor_radius
+    {
+      { Textures::ID::BlueAirplane_alpha, 30 },
+      { Textures::ID::BlueAirplane, 30 },
+      { Textures::ID::BlueAntiAircraft_alpha, 40 },
+      { Textures::ID::BlueAntiAircraft, 40 },
+      { Textures::ID::BlueBase_alpha, 0 },
+      { Textures::ID::BlueBase, 0 },
+      { Textures::ID::BlueHangar_alpha, 0 },
+      { Textures::ID::BlueHangar, 0 },
+      { Textures::ID::BlueInfantry_alpha, 20 },
+      { Textures::ID::BlueInfantry, 20 },
+      { Textures::ID::Bullet_alpha, 0 },
+      { Textures::ID::Ground_alpha, 0 },
+      { Textures::ID::Ground, 0 },
+      { Textures::ID::RedAirplane_alpha, 30 },
+      { Textures::ID::RedAirplane, 30 },
+      { Textures::ID::RedAntiAircraft_alpha, 40 },
+      { Textures::ID::RedAntiAircraft, 40 },
+      { Textures::ID::RedBase_alpha, 0 },
+      { Textures::ID::RedBase, 0 },
+      { Textures::ID::RedHangar_alpha, 0 },
+      { Textures::ID::RedHangar, 0 },
+      { Textures::ID::RedInfantry_alpha, 20 },
+      { Textures::ID::RedInfantry, 20 },
+      { Textures::ID::Rock_alpha, 0 },
+      { Textures::ID::Rock, 0 },
+      { Textures::ID::Tree_alpha, 0 },
+      { Textures::ID::Tree, 0 }
+    };
+
 } // namespace Game
 
 namespace Paths
