@@ -1,4 +1,5 @@
 #include "AI.hpp"
+#include <cmath>
 namespace AI
 {
   std::map<Game::TYPE_ID, int> priority_list
@@ -9,183 +10,192 @@ namespace AI
     { Game::TYPE_ID::hangar, 5 },
     { Game::TYPE_ID::infantry, 8 },
     { Game::TYPE_ID::bullet, 9 },
-    { Game::TYPE_ID::ground, -1 },
+    { Game::TYPE_ID::ground, 0 },
     { Game::TYPE_ID::rock, 1 },
     { Game::TYPE_ID::tree, 1 }
   };
-  std::tuple<Game::ACTIONS, sf::Vector2f> get_action(Entity& me, std::list<Entity*> &surroundings)
-  {
-    srand(time(nullptr));
+  void get_action(Entity& me, std::list<Entity*> &surroundings)
+  {   
     switch (me.getTypeId())
       {
       case Game::TYPE_ID::airplane:
 	return get_airplane_action(me, surroundings);
       case Game::TYPE_ID::antiaircraft:
-	return get_airplane_action(me, surroundings);
+	return get_antiaircraft_action(me, surroundings);
       case Game::TYPE_ID::infantry:
-	return get_airplane_action(me, surroundings);
+	return get_infantry_action(me, surroundings);
       default:
-	return std::make_tuple(Game::ACTIONS::nothing, sf::Vector2f(0,0));
+	return ;
       }
   }
-
-  std::tuple<Game::ACTIONS, sf::Vector2f> get_airplane_action(Entity& me, std::list<Entity*> &surroundings)
+  // NOTICE current_worse_enemy was supposed to be Entity pointer, but we encountered a nasty problem: right after set_target-function call current_worse_enemy was assigned back to null pointer???
+  void get_airplane_action(Entity& me, std::list<Entity*> &surroundings)
   {
-    Entity* current_worse_enemy = nullptr;
+    sf::Vector2f current_worse_enemy = {-1.f,-1.f};
     int current_worse_enemy_priority = -1;
     sf::Vector2f my_position = me.getPosition();
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
     if( my_position.x < Game::LEFT_LIMIT || my_position.x > Game::RIGHT_LIMIT || my_position.y < Game::LOWER_LIMIT || my_position.x > Game::UPPER_LIMIT ||  current_worse_enemy_priority == priority_list[Game::TYPE_ID::ground] )
       {
-
 	if ( my_position.x < Game::LEFT_LIMIT )
 	  {
 	    me.moveRight();
-	    return std::make_tuple(Game::ACTIONS::move_right, Game::actions_and_directions[Game::ACTIONS::move_right]);
 	  }
 	else if ( my_position.x > Game::RIGHT_LIMIT )
 	  {
 	    me.moveLeft();
-	    return std::make_tuple(Game::ACTIONS::move_left, Game::actions_and_directions[Game::ACTIONS::move_left]);
 	  }
 	else if ( my_position.y < Game::LOWER_LIMIT )
 	  {
 	    me.moveDown();
-	    return std::make_tuple(Game::ACTIONS::move_down, Game::actions_and_directions[Game::ACTIONS::move_down]);
 	  }
 	else if ( my_position.y > Game::UPPER_LIMIT )
 	  {
 	    me.moveUp();
-	    return std::make_tuple(Game::ACTIONS::move_up, Game::actions_and_directions[Game::ACTIONS::move_up]);
 	  }
 	else
-	  {
-	    Game::ACTIONS movement_action = static_cast<Game::ACTIONS>(random()%4);
-	    switch (movement_action)
-	      {
-	      case Game::ACTIONS::move_left:
-		me.moveLeft();
-		break;
-	      case Game::ACTIONS::move_right:
-		me.moveRight();
-		break;
-	      case Game::ACTIONS::move_up:
-		me.moveUp();
-		break;
-	      default:
-		me.moveDown();
-		break;
-	      }
-	    return std::make_tuple(movement_action, Game::actions_and_directions[movement_action] );
+	  {	    
+	    if (me.getDirection().x > 0)
+	      me.moveLeft();
+	    else me.moveRight();
 	  }
       }
     // If worse enemy is visible
-    else if (current_worse_enemy != nullptr)
+    else if (current_worse_enemy.x > 0)
       {
-	switch (current_worse_enemy->getTypeId())
+	switch (current_worse_enemy_priority)
 	  {
-	  case Game::TYPE_ID::airplane :
+	  case 10:
 	    {
-	      sf::Vector2f direction = my_position - current_worse_enemy->getPosition();
+	      sf::Vector2f direction = my_position - current_worse_enemy;
 	      me.shoot(direction);
-	      return std::make_tuple(Game::ACTIONS::shoot, direction);
+	      return;
 	    }
 	  default:
 	    {
 	      me.shoot({0.f,-1.f});
-	      return std::make_tuple(Game::ACTIONS::bomb, Game::actions_and_directions[Game::ACTIONS::bomb]);
+	      return;
 	    }
 	  }
       }
-    return std::make_tuple(Game::ACTIONS::nothing, Game::actions_and_directions[Game::ACTIONS::nothing]);
   }
 
-  std::tuple<Game::ACTIONS, sf::Vector2f> get_antiaircraft_action(Entity& me, std::list<Entity*> &surroundings)
+  void get_antiaircraft_action(Entity& me, std::list<Entity*> &surroundings)
   {
-    Entity* current_worse_enemy = nullptr;
+    sf::Vector2f current_worse_enemy =  {-1.0f,-1.0};
     int current_worse_enemy_priority = -1;
     sf::Vector2f my_position = me.getPosition();
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
-    if ((current_worse_enemy != nullptr) && (current_worse_enemy->getTypeId() == Game::TYPE_ID::airplane))
+    if ((current_worse_enemy.x > 0) && (current_worse_enemy_priority > 0) && (current_worse_enemy.y  > 10))
       {
-	sf::Vector2f direction = my_position - current_worse_enemy->getPosition();
+	sf::Vector2f direction = my_position - current_worse_enemy;
 	me.shoot(direction);
-	return std::make_tuple(Game::ACTIONS::shoot, direction);
       }
-      return std::make_tuple(Game::ACTIONS::nothing, Game::actions_and_directions[Game::ACTIONS::nothing]);
   }
 
-  std::tuple<Game::ACTIONS, sf::Vector2f> get_infantry_action(Entity& me, std::list<Entity*> &surroundings)
+  void get_infantry_action(Entity& me, std::list<Entity*> &surroundings)
   {
-    Entity* current_worse_enemy = nullptr;
-    int current_worse_enemy_priority = -1;
+    sf::Vector2f current_worse_enemy = {-1.0f,-1.0};
+    int current_worse_enemy_priority = 0;
     sf::Vector2f my_position = me.getPosition();
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
-    if( my_position.x < Game::LEFT_LIMIT || my_position.x > Game::RIGHT_LIMIT ||  current_worse_enemy_priority == priority_list[Game::TYPE_ID::ground] )
+    if( my_position.x < Game::LEFT_LIMIT || my_position.x >= Game::RIGHT_LIMIT )
       {
-
 	if ( my_position.x < Game::LEFT_LIMIT )
 	  {
 	    me.moveRight();
-	    return std::make_tuple(Game::ACTIONS::move_right, Game::actions_and_directions[Game::ACTIONS::move_right]);
 	  }
-	else if ( my_position.x > Game::RIGHT_LIMIT )
+	else 
 	  {
 	    me.moveLeft();
-	    return std::make_tuple(Game::ACTIONS::move_left, Game::actions_and_directions[Game::ACTIONS::move_left]);
-	  }
-	else
-	  {
-	    Game::ACTIONS movement_action = static_cast<Game::ACTIONS>(random()%2);
-	    switch (movement_action)
-	      {
-	      case Game::ACTIONS::move_left:
-		me.moveLeft();
-		break;
-	      default:
-		me.moveRight();
-		break;
-	      }
-	    return std::make_tuple(movement_action, Game::actions_and_directions[movement_action] );
 	  }
       }
-    else if (current_worse_enemy != nullptr)
-      {
-	sf::Vector2f direction = my_position - current_worse_enemy->getPosition();
-	me.shoot(direction);
-	return std::make_tuple(Game::ACTIONS::shoot, direction);
-      }
-    else {
-      	    Game::ACTIONS movement_action = static_cast<Game::ACTIONS>(random()%2);
-	    switch (movement_action)
-	      {
-	      case Game::ACTIONS::move_left:
-		me.moveLeft();
-		break;
-	      default:
+    else
+      // Target exist
+      if (current_worse_enemy.x > 0 )
+	{
+	  // Target is enemy => shoot and move to opposite direction
+	  if(current_worse_enemy_priority > 0)
+	    {
+	      sf::Vector2f direction = my_position - current_worse_enemy;
+	      me.shoot(direction);
+	      std::cout << "shot called!!" <<  std::endl;
+	      if(direction.x > 0)
 		me.moveRight();
-		break;
-	      }
-      return std::make_tuple(movement_action, Game::actions_and_directions[Game::ACTIONS::nothing]);
-    }
+	      else me.moveLeft();
+	    }
+	  // Target is friend => move to opposite direction
+	  else if (current_worse_enemy_priority < 0) {
+	    sf::Vector2f new_direction = my_position - current_worse_enemy;
+
+	    // far away => walk to other direction
+	    if (is_too_close(my_position, current_worse_enemy) || new_direction.x > 0)
+	      me.moveRight();
+	    else me.moveLeft();
+	  }
+	  else {}
+	}    
+      else
+	{	
+	  if (me.getDirection().x > 0)
+	    me.moveRight();
+	  else me.moveLeft();
+	}
   }
 
-  void set_target(Entity& me, std::list<Entity*> &surroundings, Entity* current_worse_enemy, int &current_worse_enemy_priority)
+  void set_target(Entity& me, std::list<Entity*> &surroundings, sf::Vector2f& current_worse_enemy, int &current_worse_enemy_priority)
   {
-    current_worse_enemy;
-    current_worse_enemy_priority;
-    for ( auto const& e : surroundings )
+
+    float longest_distance = -1.f;
+    for ( Entity* e : surroundings )
       {
 	Game::TYPE_ID surrounding_type = e->getTypeId();
 	Game::TEAM_ID surrounding_team_id = e->getTeamId();
-	if ( (surrounding_team_id != Game::TEAM_ID::all_friend) && (surrounding_team_id != me.getTeamId()) )
+
+	//std::cout << surrounding_team_id << std::endl;
+	if ( surrounding_team_id != Game::TEAM_ID::all_friend )
 	  {
-	    if ( priority_list[surrounding_type] > current_worse_enemy_priority )
+	    if (surrounding_team_id != me.getTeamId())
 	      {
-		current_worse_enemy = e;
-		current_worse_enemy_priority = priority_list[surrounding_type];
+		if (priority_list[surrounding_type] > current_worse_enemy_priority)
+		  {
+		    current_worse_enemy = e->getPosition();
+		    current_worse_enemy_priority = priority_list[surrounding_type];
+		  }
+	      }
+	    // same team.
+	    else if (surrounding_team_id == me.getTeamId())
+	      {
+		sf::Vector2f distance = me.getPosition() - e->getPosition();
+		float distance_length = std::sqrt(distance.x*distance.x + distance.y*distance.y);
+		if (current_worse_enemy.x < 0 )
+		  {
+		    longest_distance = distance_length;
+		    current_worse_enemy = e->getPosition();
+		    current_worse_enemy_priority = -priority_list[surrounding_type];
+		  }
+		else if (distance_length > longest_distance)
+		  {
+		    longest_distance = distance_length;
+		    current_worse_enemy = e->getPosition();		   
+		    current_worse_enemy_priority = -priority_list[surrounding_type];
+		  }
+	      }
+	  }
+	else
+	  {
+	    if ( current_worse_enemy.x < 0 )
+	      {
+		current_worse_enemy = e->getPosition();
+		current_worse_enemy_priority = -priority_list[surrounding_type];		
 	      }
 	  }
       }
+  }
+
+  bool is_too_close(sf::Vector2f & e1, sf::Vector2f & e2)
+  {
+    sf::Vector2f distance = e1-e2;
+    return std::sqrt(distance.x*distance.x + distance.y*distance.y) < 10;
   }
 } // namespace AI
