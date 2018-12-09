@@ -28,6 +28,18 @@ namespace AI
 	return ;
       }
   }
+    void move_to_direction(Entity& me)
+    {
+      sf::Vector2f directions = me.getDirection();
+      if (directions.x > 0)
+	me.moveRight();
+      if (directions.x < 0)
+	me.moveLeft();
+      if (directions.y > 0)
+	me.moveDown();
+      if (directions.y < 0)
+	me.moveUp();
+    }
   // NOTICE current_worse_enemy was supposed to be Entity pointer, but we encountered a nasty problem: right after set_target-function call current_worse_enemy was assigned back to null pointer???
   void get_airplane_action(Entity& me, std::list<Entity*> &surroundings)
   {
@@ -35,34 +47,39 @@ namespace AI
     int current_worse_enemy_priority = -1;
     sf::Vector2f my_position = me.getPosition();
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
-    if( my_position.x < Game::LEFT_LIMIT || my_position.x > Game::RIGHT_LIMIT || my_position.y < Game::LOWER_LIMIT || my_position.x > Game::UPPER_LIMIT ||  current_worse_enemy_priority == priority_list[Game::TYPE_ID::ground] )
+    if( my_position.x < Game::LEFT_LIMIT || my_position.x > Game::RIGHT_LIMIT || my_position.y < Game::LOWER_LIMIT || my_position.x > Game::UPPER_LIMIT )
       {
 	if ( my_position.x < Game::LEFT_LIMIT )
 	  {
+	    
 	    me.moveRight();
 	  }
-	else if ( my_position.x > Game::RIGHT_LIMIT )
+	if ( my_position.x > Game::RIGHT_LIMIT )
 	  {
 	    me.moveLeft();
 	  }
-	else if ( my_position.y < Game::LOWER_LIMIT )
+	if ( my_position.y < Game::LOWER_LIMIT )
 	  {
 	    me.moveDown();
 	  }
-	else if ( my_position.y > Game::UPPER_LIMIT )
-	  {
+	if ( my_position.y > Game::UPPER_LIMIT )
+	  {	   
 	    me.moveUp();
 	  }
+	move_to_direction(me);
+	 /*
 	else
 	  {	    
 	    if (me.getDirection().x > 0)
 	      me.moveLeft();
 	    else me.moveRight();
 	  }
+	 */
       }
     // If worse enemy is visible
     else if (current_worse_enemy.x > 0)
       {
+	std::cout << "switch case " << std::endl;
 	switch (current_worse_enemy_priority)
 	  {
 	  case 10:
@@ -76,6 +93,19 @@ namespace AI
 	      me.shoot({0.f,-1.f});
 	      return;
 	    }
+	  }
+      }
+    else
+      {
+	if (me.getDirection().x > 0)
+	  {
+	    me.moveRight();
+	    //std::cout << "move Right " << std::endl;
+	  }
+	else
+	  {
+	    me.moveLeft();
+	    //std::cout << "move Left " << std::endl;
 	  }
       }
   }
