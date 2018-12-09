@@ -88,13 +88,6 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 			}
 		}
 	}
-	sf::Texture &tex = resources.get(Textures::alphaTextures.at("Bullet"));
-	sf::Vector2f pos(10,10);
-	for (int i = 0; i < 1000; i++) {
-		b2Body* body = pworld.create_body_bullet(10,10,8,8);
-		std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(*pworld.get_world(), *body, tex, pos, sf::Vector2f(1.0f, 0.0f));
-		bullets.push_back(bullet);
-	}
 
 	return true;
 }
@@ -323,6 +316,20 @@ void World::update() {
 		sf::Vector2f newpos(x,y);
 		it->setPos(newpos);
 
+		std::list<Entity> bullets = it->get_active_bullets();
+
+		std::cout << bullets.size() << std::endl;
+		for (auto b : bullets) {
+			float x_corr = b.getSize().x/2;
+			float y_corr = b.getSize().y/2;
+			float x = Game::TOPIXELS*b.getB2Body().GetPosition().x-x_corr;
+			float y = Game::TOPIXELS*b.getB2Body().GetPosition().y-y_corr;
+			sf::Vector2f newpos(x,y);
+			b.setPos(newpos);
+
+			b.drawTo(window);
+		}
+
 		//set sfml sprite's angle from body's angle
 		//it->setRot(it->getB2Body().GetAngle()*RADTODEG);
 
@@ -337,6 +344,19 @@ void World::update() {
 		float y = Game::TOPIXELS*it->getB2Body().GetPosition().y-y_corr;
 		sf::Vector2f newpos(x,y);
 		it->setPos(newpos);
+
+		std::list<Entity> bullets = it->get_active_bullets();
+
+		for (auto b : bullets) {
+			float x_corr = b.getSize().x/2;
+			float y_corr = b.getSize().y/2;
+			float x = Game::TOPIXELS*b.getB2Body().GetPosition().x-x_corr;
+			float y = Game::TOPIXELS*b.getB2Body().GetPosition().y-y_corr;
+			sf::Vector2f newpos(x,y);
+			b.setPos(newpos);
+
+			b.drawTo(window);
+		}
 
 		//set sfml sprite's angle from body's angle
 		it->setRot(it->getB2Body().GetAngle()*RADTODEG);

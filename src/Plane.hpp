@@ -9,7 +9,8 @@
 #include <SFML/Graphics.hpp>
 #include "Entity.hpp"
 #include <Box2D/Box2D.h>
-
+#include "ResourceManager.hpp"
+#include "Bullet.hpp"
 /**
   *   @class Plane
   */

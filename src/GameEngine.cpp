@@ -194,7 +194,8 @@ void GameEngine::update(sf::Time elapsedTime)
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
     // shoot world player_planes[0]
-    std::cout << "pew pew" << std::endl;
+    sf::Vector2f vec(cos(player1_body.GetAngle()), sin(player1_body.GetAngle()));
+    player1_entity.shoot(vec);
   }
 
   if (gameMode == Game::GameMode::Multiplayer) {
