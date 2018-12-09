@@ -65,7 +65,7 @@ void GameEngine::run(std::string &level_file)
   world.clear_all();
   sf::Time lastUpdateTime = sf::Time::Zero;
 
-  world.read_level(level_file);
+  world.read_level(level_file, gameMode);
 
   sf::Clock clock;
   while(renderWindow.isOpen())
@@ -152,29 +152,52 @@ void GameEngine::render()
 void GameEngine::update(sf::Time elapsedTime)
 {
 
-  sf::Vector2f moveTo(0.f,0.f);
-  float rotated = 0.f;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-    moveTo.y -= PLAYER_SPEED;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+    // move world player_planes[0] up
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-    moveTo.y += PLAYER_SPEED;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+    // move world player_planes[0] down
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-    moveTo.x -= PLAYER_SPEED;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+    // flip world player_planes[0] left
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-    moveTo.x += PLAYER_SPEED;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+    // flip world player_planes[0] right
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
-    rotated += PLAYER_ROTATION_DEGREE;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+    // rotate world player_planes[0] up
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
-    rotated -= PLAYER_ROTATION_DEGREE;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+    // rotate world player_planes[0] down
+  }
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+    // shoot world player_planes[0]
   }
 
-  playerSprite.move(moveTo * elapsedTime.asSeconds());
-  playerSprite.rotate(rotated);
+  if (gameMode == Game::GameMode::Multiplayer) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+      // move world player_planes[1] up
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
+      // move world player_planes[1] down
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
+      // flip world player_planes[1] left
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
+      // flip world player_planes[1] right
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
+      // rotate world player_planes[1] up
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
+      // rotate world player_planes[1] down
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+      // shoot world player_planes[1]
+    }
+  }
+
 }
 
 void GameEngine::updateGameInfo()
