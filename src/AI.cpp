@@ -80,24 +80,43 @@ namespace AI
       }
     // If worse enemy is visible
     if (current_worse_enemy.x > 0)
-      {
-	std::cout << "Enemy found at at (x,y): " << current_worse_enemy.x << ", " << current_worse_enemy.y << std::endl;
-	switch (current_worse_enemy_priority)
+      {	  
+	std::cout << "Target found at at (x,y): " << current_worse_enemy.x << ", " << current_worse_enemy.y << std::endl;
+	if (current_worse_enemy_priority > 0)
 	  {
-	  case 10:
-	    {
-	      sf::Vector2f direction = my_position - current_worse_enemy;
-	      me.shoot(direction);
-	      std::cout << "shot at (x,y): " << current_worse_enemy.x << ", " << current_worse_enemy.y << std::endl;
-	      return;
-	    }
-	  default:
-	    {
-	      me.shoot({0.f, 1.f});
-	      std::cout << "bomb at (x,y): " << current_worse_enemy.x << ", " << current_worse_enemy.y << std::endl;
-	      return;
-	    }
+	    switch (current_worse_enemy_priority)
+	      {
+	      case 10:
+		{
+		  sf::Vector2f direction = my_position - current_worse_enemy;
+		  me.shoot(direction);
+		  std::cout << "shot direction (x,y): " << direction.x << ", " << direction.y << std::endl;
+		  return;
+		}
+	      default:
+		{
+		  me.shoot({0.f, 1.f});
+		  std::cout << "bomb down at (x,y): " << std::endl;
+		  return;
+		}
+	      }
 	  }
+	else if ( current_worse_enemy_priority < 0 )
+	  {
+	    std::cout << "friendly entity detected. ignore. " << std::endl;
+	    switch (std::rand()%2)
+	      {
+	      case 0:
+		{
+		  me.moveDown();
+		  me.moveDown();
+		}
+	      default:
+		me.moveUp();
+		me.moveDown();
+	      }
+	  }
+	else move_to_direction(me);
       }
     else
       {
@@ -135,37 +154,36 @@ namespace AI
 	    me.moveLeft();
 	  }
       }
-    else
-      // Target exist
-      if (current_worse_enemy.x > 0 )
-	{
-	  // Target is enemy => shoot and move to opposite direction
-	  if(current_worse_enemy_priority > 0)
-	    {
-	      sf::Vector2f direction = my_position - current_worse_enemy;
-	      me.shoot(direction);
-	      std::cout << "shot called!!" <<  std::endl;
-	      if(direction.x > 0)
-		me.moveRight();
-	      else me.moveLeft();
-	    }
-	  // Target is friend => move to opposite direction
-	  else if (current_worse_enemy_priority < 0) {
-	    sf::Vector2f new_direction = my_position - current_worse_enemy;
-
-	    // far away => walk to other direction
-	    if (is_too_close(my_position, current_worse_enemy) || new_direction.x > 0)
+    // Target exist
+    if (current_worse_enemy.x > 0 )
+      {
+	// Target is enemy => shoot and move to opposite direction
+	if(current_worse_enemy_priority > 0)
+	  {
+	    sf::Vector2f direction = my_position - current_worse_enemy;
+	    me.shoot(direction);
+	    std::cout << "shot direction (x,y): " << direction.x << ", " << direction.y << std::endl;
+	    if(direction.x > 0)
 	      me.moveRight();
 	    else me.moveLeft();
 	  }
-	  else {}
-	}    
-      else
-	{	
-	  if (me.getDirection().x > 0)
+	// Target is friend => move to opposite direction
+	else if (current_worse_enemy_priority < 0) {
+	  sf::Vector2f new_direction = my_position - current_worse_enemy;
+	  
+	  // far away => walk to other direction
+	  if (is_too_close(my_position, current_worse_enemy) || new_direction.x > 0)
 	    me.moveRight();
 	  else me.moveLeft();
 	}
+	else {}
+      } 
+    else
+      {	
+	if (me.getDirection().x > 0)
+	  me.moveRight();
+	else me.moveLeft();
+      }
   }
 
   void set_target(Entity& me, std::list<Entity*> &surroundings, sf::Vector2f& current_worse_enemy, int &current_worse_enemy_priority)
