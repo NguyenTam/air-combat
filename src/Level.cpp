@@ -435,7 +435,8 @@ std::ostream& operator<<(std::ostream &os, const Level &level)
   // Left Wall
   os << "InvisibleWall;0;0;1;1;" << Game::HEIGHT << std::endl;
   // Right Wall
-  os << "InvisibleWall;" << max_width + 1 << ";0;1;1;" << Game::HEIGHT << std::endl;
+  //os << "InvisibleWall;" << max_width + 1 << ";0;1;1;" << Game::HEIGHT << std::endl;
+  os << "InvisibleWall;" << Game::WIDTH << ";0;1;1;" << Game::HEIGHT << std::endl;
 
   return os;
 }
