@@ -5,6 +5,8 @@
 
 #pragma once
 
+/* Includes */
+
 #include "Entity.hpp"
 #include "PhysicsWorld.hpp"
 #include "ResourceManager.hpp"
