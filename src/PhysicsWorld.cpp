@@ -57,6 +57,28 @@ b2Body* PhysicsWorld::create_body_static(double x, double y, double width, doubl
 	return Body;
 }
 
+b2Body* PhysicsWorld::create_body_bullet(double x, double y, double width, double height) {
+	b2BodyDef BodyDef;
+	BodyDef.type = b2_staticBody;
+	BodyDef.position = b2Vec2((x+(width/2))/Game::TOPIXELS, (y+(height/2))/Game::TOPIXELS);
+	BodyDef.bullet = true;
+	BodyDef.active = false;
+
+	b2Body* Body = World->CreateBody(&BodyDef);
+
+	b2PolygonShape Shape;
+	Shape.SetAsBox((width/2)/Game::TOPIXELS, (height/2)/Game::TOPIXELS); 
+
+	b2FixtureDef FixtureDef;
+	FixtureDef.density = 0.f;
+	FixtureDef.shape = &Shape;
+	FixtureDef.filter.categoryBits = 0x0008;
+	FixtureDef.filter.maskBits = 0x0002;
+	Body->CreateFixture(&FixtureDef);
+
+	return Body;
+}
+
 void PhysicsWorld::remove_body(b2Body* body) {
 	World->DestroyBody(body);
 }

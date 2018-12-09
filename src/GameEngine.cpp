@@ -18,6 +18,11 @@
 #include <fstream>
 #include <ctime>
 
+#define MAX_FORCE 50.f
+#define MAX_VELOCITY 3.f
+#define TORQUE 50.f
+#define MAX_ANG_VELOCITY 0.2f
+
 /* Initialize members*/
 const float GameEngine::METERS_PER_PIXEL = 60.f;
 const float GameEngine::PIXELS_PER_METER = 1/METERS_PER_PIXEL;
@@ -151,50 +156,125 @@ void GameEngine::render()
 /* Sum all inputs (movements and rotations) and set new position and orientation in two function call: move and rotate. */
 void GameEngine::update(sf::Time elapsedTime)
 {
+  std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
+  Entity player1_entity = *planes[0];
+  b2Body& player1_body = player1_entity.getB2Body();
+  b2Vec2 vel1 = player1_body.GetLinearVelocity();
+  bool player2_set = false;
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
     // move world player_planes[0] up
+    float force = 0;
+    //player1_body.SetAngularVelocity(0);
+    if (vel1.y > -MAX_VELOCITY)
+      force = -MAX_FORCE;
+    player1_body.ApplyForce(b2Vec2(0,force), player1_body.GetWorldCenter(), true);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
     // move world player_planes[0] down
+    float force = 0;
+    //player1_body.SetAngularVelocity(0);
+    if (vel1.y < MAX_VELOCITY)
+      force = MAX_FORCE;
+    player1_body.ApplyForce(b2Vec2(0,force), player1_body.GetWorldCenter(), true);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
     // flip world player_planes[0] left
+    player1_entity.faceLeft();
+    float force = 0;
+    //player1_body.SetAngularVelocity(0);
+    if (vel1.x > -MAX_VELOCITY)
+      force = -MAX_FORCE;
+    player1_body.ApplyForce(b2Vec2(force,0), player1_body.GetWorldCenter(), true);
+
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
     // flip world player_planes[0] right
+    player1_entity.faceRight();
+    float force = 0;
+    //player1_body.SetAngularVelocity(0);
+    if (vel1.x < MAX_VELOCITY)
+      force = MAX_FORCE;
+    player1_body.ApplyForce(b2Vec2(force,0), player1_body.GetWorldCenter(), true);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
     // rotate world player_planes[0] up
+
+    player1_body.ApplyTorque(-TORQUE,true);
+
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
     // rotate world player_planes[0] down
+  
+    player1_body.ApplyTorque(TORQUE,true);
+   
+
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
     // shoot world player_planes[0]
+    std::cout << "pew pew" << std::endl;
   }
 
   if (gameMode == Game::GameMode::Multiplayer) {
+    player2_set = true;
+    Entity player2_entity = *planes[1];
+    b2Body& player2_body = player2_entity.getB2Body();
+    b2Vec2 vel2 = player2_body.GetLinearVelocity();
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
       // move world player_planes[1] up
+      float force = 0;
+      if (vel2.y > -MAX_VELOCITY)
+        force = -MAX_FORCE;
+      player2_body.ApplyForce(b2Vec2(0,force), player2_body.GetWorldCenter(), true);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
       // move world player_planes[1] down
+      float force = 0;
+      if (vel2.y < MAX_VELOCITY)
+        force = MAX_FORCE;
+      player2_body.ApplyForce(b2Vec2(0,force), player2_body.GetWorldCenter(), true);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
       // flip world player_planes[1] left
+      float force = 0;
+      if (vel2.x > -MAX_VELOCITY)
+        force = -MAX_FORCE;
+      player2_body.ApplyForce(b2Vec2(force,0), player2_body.GetWorldCenter(), true);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
       // flip world player_planes[1] right
+      float force = 0;
+      if (vel2.x < MAX_VELOCITY)
+        force = MAX_FORCE;
+      player2_body.ApplyForce(b2Vec2(force,0), player2_body.GetWorldCenter(), true);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
       // rotate world player_planes[1] up
+      player2_body.ApplyTorque(-TORQUE,true);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
       // rotate world player_planes[1] down
+      player2_body.ApplyTorque(TORQUE,true);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
       // shoot world player_planes[1]
+    }
+  }
+
+  //set forces to 0
+  else {
+    float forcey1 = vel1.y * -MAX_FORCE;
+    float forcex1 = vel1.x * -MAX_FORCE;
+
+    player1_body.ApplyForce(b2Vec2(forcex1,forcey1), player1_body.GetWorldCenter(), true);
+
+    if (player2_set) {
+      float forcey2 = vel1.y * -MAX_FORCE;
+      float forcex2 = vel1.x * -MAX_FORCE;
+
+      player1_body.ApplyForce(b2Vec2(forcex2,forcey2), player1_body.GetWorldCenter(), true);
+
     }
   }
 

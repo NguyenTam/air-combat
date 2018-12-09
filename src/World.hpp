@@ -5,6 +5,8 @@
 
 #pragma once
 
+/* Includes */
+
 #include "Entity.hpp"
 #include "PhysicsWorld.hpp"
 #include "ResourceManager.hpp"
@@ -52,15 +54,22 @@ public:
       *   @brief Constructor for World
       *   @details creates variable for used window
       *   @param main_window RenderWindow which is used to display the game
+      *   @param _resources Resources given by ResourceManager
       */
 	World(sf::RenderWindow &main_window, ResourceManager &_resources);
 
 	/**
       *   @brief Adds given entity to the game
-      *   @param type: string of entity's type, x: x-axis coordinate, y: y-axis coordinate, orientation: direction where the entity is facing, width: width of the entity, height: height of the entity
+      *   @param id: string of entity's type
+      *   @param x: x-axis coordinate
+      *   @param y: y-axis coordinate
+      *   @param orientation: direction where the entity is facing
+      *   @param width: width of the entity
+      *   @param height: height of the entity
+      *   @param direct: direction where entity is headed
+      *   @param game_mode: single- or multiplayer
       *   @return Returns true if succesful, false if not
       */
-
 	bool create_entity(Textures::ID id, double x, double y, int orientation, double width, double height, sf::Vector2f direct, Game::GameMode game_mode);
 
 	/**
@@ -76,18 +85,40 @@ public:
       */
 	void update();
 
-  bool read_level(std::string& filename, Game::GameMode game_mode);
+	/**
+      *   @brief Reads the given level
+      *   @details Is called from the game engine
+      *   @param filename Filename of level to be opened
+      *   @param game_mode Is the game multiplayer or singleplayer
+      */
+        bool read_level(std::string& filename, Game::GameMode game_mode);
 
-  void clear_all();
+	/**
+      *   @brief Clears all entitys
+      *   @details Is called from the game engine when new game is started
+      */
+        void clear_all();
 
-  std::vector<std::shared_ptr<Entity>>& get_all_entities();
+	/**
+      *   @return Returns all objects
+      */
+        std::vector<std::shared_ptr<Entity>>& get_all_entities();
 
-  std::deque<std::shared_ptr<Entity>>& get_player_planes();
+	/**
+      *   @return Returns all planes controlled by player
+      */
+        std::deque<std::shared_ptr<Entity>>& get_player_planes();
+
+/**
+      *   @return Returns list of all bullets
+      */
+        std::vector<std::shared_ptr<Entity>>& get_bullets();
 
 private:
   PhysicsWorld pworld;
   ResourceManager &resources;
   sf::RenderWindow &window; /**< Window that is being used */
   std::vector<std::shared_ptr<Entity>> objects; /**< Contains all the entities added */
+  std::vector<std::shared_ptr<Entity>> bullets; /**< Contains all the bullets created */
   std::deque<std::shared_ptr<Entity>> player_planes; /**< Contains BlueAirplane and during multiplayer also one RedAirplane */
 };

@@ -10,9 +10,24 @@
 #include "GameEngine.hpp"
 #include "Stats.hpp"
 #include <memory>
+
+
+/**
+  *   @brief Set window position to the center of the screen
+  *   @param window sf::RenderWindow to be centered
+  */
+void setWindowPosition(sf::RenderWindow &window)
+{
+  // Try to center the window on screen
+  int x = (sf::VideoMode::getDesktopMode().width - Game::WIDTH) / 2;
+  int y = (sf::VideoMode::getDesktopMode().height - Game::HEIGHT) / 2;
+  window.setPosition(sf::Vector2i(x, y));
+}
+
+
 /**
   *   @brief Main for Air combat
-  *   @details Integrates MainMenu, LevelEditor and TODO Game
+  *   @details Integrates MainMenu, LevelEditor and Game
   */
 int main()
 {
@@ -23,6 +38,7 @@ int main()
 
   // Create main window (size and name don't matter, MainMenu resizes and renames window)
   window.create(sf::VideoMode(Game::WIDTH, Game::HEIGHT), "Main Menu", sf::Style::Close);
+  setWindowPosition(window);
 
   // Create Game Engine
   GameEngine game {window};

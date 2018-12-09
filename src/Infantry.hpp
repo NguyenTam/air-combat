@@ -22,6 +22,7 @@ class Infantry : public Entity {
    *   @param b infantrys body for collisions
    *   @param t infantrys texture
    *   @param position Place as vector where infantry is created
+   *   @param team infantrys team
    */
   Infantry(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, Game::TEAM_ID team);
   

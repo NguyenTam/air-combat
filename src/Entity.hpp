@@ -104,7 +104,8 @@ public:
   void rotateCounterClockWise();
 
   /*
-   *   @brief Gives the height element from entitys position vector  
+   *   @brief Gives the height element from entitys position vector
+   *   @return Returns the y-cordinate of entity
    */
   int getY();
 
@@ -131,37 +132,46 @@ public:
 
   /*
    *   @brief Gives the type of entity  
+   *   @return Returns the texture type of entity
    */
   Textures::ID getType();
 
   /*
    *   @brief Gives the body of entity  
+   *   @return Returns body of entity
    */
   b2Body& getB2Body();
 
   /*
-   *   @brief Gives the body of entity  
+   *   @brief Scales a picture bigger or smaller 
+   *   @param width of map
+   *   @param height of map
+   *   @return Returns is the scaling succesfull, if either number is 0 or smaller, returns FALSE
    */
   bool setScale(float width, float height);
 
   /**
-   * @brief Get texture size
+   *   @brief Get texture size
+   *   @return Returns size as vector
    */
   sf::Vector2u getSize();
 
   /*
-   *   @brief Puts scale for entitys body  
+   *   @brief Gives entitys hitpoints
+   *   @return Returns hitpoints of entity
    */
   int getHitPoints();
 
   /*
    *   @brief Activated when entity is damaged
    *   @return True is damage kills the entity, False if entity only loses hitpoints
+   *   @param damage Amount of damage to entity
    */
   bool damage(int damage);
 
   /*
    *   @brief Set a direction for entity
+   *   @param direct Direction that is set
    */
   void setDirection(sf::Vector2f direct);
 
@@ -180,13 +190,31 @@ public:
    */
   Game::TYPE_ID getTypeId();
 
+  /*
+   *   @brief Adds entity to the surroundings of this entity 
+   *   @param entity Entity to be added to the surroundings-list of this entity
+   */
   void insert_surrounding(Entity* entity);
 
+  /*
+   *   @brief Clears list of entities surrounding this entity
+   */
   void erase_surroundings();
 
+  /*
+   *   @brief Gets surrounding entities 
+   *   @return List of surrounding entities
+   */
   std::list<Entity*>& get_surroundings();
 
+  /*
+   *   @brief Puts the sprite of entity to face left
+   */
   void faceLeft();
+
+  /*
+   *   @brief Puts the sprite of entity to face right
+   */
   void faceRight();  
 
 protected:
