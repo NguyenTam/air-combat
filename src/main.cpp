@@ -65,9 +65,7 @@ int main()
     if (exit_status == ExitStatus::STARTGAME)
     {
       std::string level_name = menu.getLevel();
-      GameMode mode = menu.getGameMode();
-      std::cout << "GameMode: " << mode << std::endl;
-      // TODO : From game back to main menu.
+      game.setGameMode(menu.getGameMode());
       window.setTitle("Air Combat 1");
       game.run(level_name);
       exit_status = ExitStatus::MAINMENU;

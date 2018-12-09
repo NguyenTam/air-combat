@@ -28,6 +28,7 @@
 #include <fstream>
 #include <sstream>
 #include <list>
+#include <deque>
 
 
 #define DEGTORAD 0.0174532925199432957f
@@ -40,7 +41,7 @@
   *   @brief World class for air combat game
   */
 
-//This class presents the game view. 
+//This class presents the game view.
 
 class World {
 public:
@@ -60,7 +61,7 @@ public:
       *   @return Returns true if succesful, false if not
       */
 
-	bool create_entity(Textures::ID id, double x, double y, int orientation, double width, double height, sf::Vector2f direct);
+	bool create_entity(Textures::ID id, double x, double y, int orientation, double width, double height, sf::Vector2f direct, Game::GameMode game_mode);
 
 	/**
       *   @brief Removes given entity from the game
@@ -75,7 +76,7 @@ public:
       */
 	void update();
 
-  bool read_level(std::string& filename);
+  bool read_level(std::string& filename, Game::GameMode game_mode);
 
   void clear_all();
 
@@ -86,4 +87,5 @@ private:
   ResourceManager &resources;
   sf::RenderWindow &window; /**< Window that is being used */
   std::vector<std::shared_ptr<Entity>> objects; /**< Contains all the entities added */
+  std::deque<std::shared_ptr<Entity>> player_planes; /**< Contains BlueAirplane and during multiplayer also one RedAirplane */
 };

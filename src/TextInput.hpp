@@ -78,6 +78,11 @@ class TextInput: public sf::Drawable
       void addChar(char32_t new_char);
 
     /**
+      *   @brief Activate TextInput
+      */
+      void activate();
+
+    /**
       *   @brief Deactivate TextInput
       */
       void deactivate();

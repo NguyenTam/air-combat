@@ -38,6 +38,9 @@ void MainMenu::createMainScreen()
   // Reset view and update set it to window
   ui_view.reset(sf::FloatRect(0, 0, Game::WIDTH, Game::HEIGHT));
   window.setView(ui_view);
+
+  // init game_mode
+  game_mode = Game::GameMode::SinglePlayer;
 }
 
 /* Draw UI */
@@ -301,7 +304,7 @@ void MainMenu::single_player_action()
   level_select.multiplayer->setUnchecked();
   level_select.single_player->setChecked();
   // Set game_mode to SinglePlayer
-  game_mode = GameMode::SinglePlayer;
+  game_mode = Game::GameMode::SinglePlayer;
 }
 
 /*  Set game_mode to Multiplayer and update the GameModeButtons */
@@ -314,7 +317,7 @@ void MainMenu::multiplayer_action()
   level_select.single_player->setUnchecked();
   level_select.multiplayer->setChecked();
   // Set game_mode to Multiplayer
-  game_mode = GameMode::Multiplayer;
+  game_mode = Game::GameMode::Multiplayer;
 }
 
 /*  Change checked Buttons & GameMode */
