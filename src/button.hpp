@@ -94,12 +94,14 @@ class Button: public sf::Drawable
 
       /**
         *   Copy constructor
+        *   @param button Button to be copied
         */
       Button(const Button& button);
 
       /**
         *   @brief Assignment operator
         *   @remark Does not assign button status
+        *   @param button Button to be copied
         */
       Button& operator=(const Button& button);
 

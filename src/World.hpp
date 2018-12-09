@@ -76,13 +76,29 @@ public:
       */
 	void update();
 
-  bool read_level(std::string& filename, Game::GameMode game_mode);
+	/**
+      *   @brief Reads the given level
+      *   @details Is called from the game engine
+      *   @param filename Filename of level to be opened
+      *   @param game_mode Is the game multiplayer or singleplayer
+      */
+        bool read_level(std::string& filename, Game::GameMode game_mode);
 
-  void clear_all();
+	/**
+      *   @brief Clears all entitys
+      *   @details Is called from the game engine when new game is started
+      */
+        void clear_all();
 
-  std::vector<std::shared_ptr<Entity>>& get_all_entities();
+	/**
+      *   @return Returns all objects
+      */
+        std::vector<std::shared_ptr<Entity>>& get_all_entities();
 
-  std::deque<std::shared_ptr<Entity>>& get_player_planes();
+	/**
+      *   @return Returns all planes controlled by player
+      */
+        std::deque<std::shared_ptr<Entity>>& get_player_planes();
 
 private:
   PhysicsWorld pworld;

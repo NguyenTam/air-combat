@@ -1,0 +1,27 @@
+Single Player / Multiplayer Player1
+
+  - W : Blue plane up
+  - S : Blue plane down
+  - A : Blue plane left
+  - D : Blue plane right
+
+  - Q : Blue plane rotate upwards
+  - E : Blue plane rotate downwards
+
+  - Z : Blue plane shoot bullet
+
+Multiplayer Player2
+
+  - I : Red plane up
+  - K : Red plane down
+  - J : Red plane left
+  - L : Red plane right
+
+  - U : Red plane rotate upwards
+  - E : Red plane rotate downwards
+
+  - M : Red plane shoot bullet
+
+  
+
+Esc: Return to main menu / exit (from main menu)
