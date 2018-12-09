@@ -59,6 +59,8 @@ public:
    */
   sf::Vector2f getPosition() const;
 
+  sf::Vector2f getOriginPosition() const;
+
   /*
    *   @brief Rotates entity clockwise 
    *   @param Degrees to rotate  
@@ -120,7 +122,7 @@ public:
   /*
    *   @brief General shoot function for entity, more defined version in subclasses
    */
-  virtual bool shoot();
+  virtual bool shoot(sf::Vector2f direction);
 
   /*
    *   @brief Gives a type for entity  
@@ -166,7 +168,7 @@ public:
   /*
    *   @brief Gives the direction of entity
    */
-  sf::Vector2f getDirection();
+  sf::Vector2f& getDirection();
 
   /*
    *   @brief Gives info if entity is players team, enemy team, neutral or projectile
@@ -183,6 +185,9 @@ public:
   void erase_surroundings();
 
   std::list<Entity*>& get_surroundings();
+
+  void faceLeft();
+  void faceRight();  
 
 protected:
 
