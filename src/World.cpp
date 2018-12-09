@@ -297,6 +297,9 @@ void World::update() {
 				}
 			}
 
+			if (a_entity->getType() == Textures::ID::Bullet_alpha || b_entity->getType() == Textures::ID::Bullet_alpha) {
+				std::cout << "oli bullet" << std::endl;
+			}
 		}
 
 	}
@@ -316,18 +319,17 @@ void World::update() {
 		sf::Vector2f newpos(x,y);
 		it->setPos(newpos);
 
-		std::list<Entity> bullets = it->get_active_bullets();
+		std::list<std::shared_ptr<Entity>> bullets = it->get_active_bullets();
 
-		std::cout << bullets.size() << std::endl;
 		for (auto b : bullets) {
-			float x_corr = b.getSize().x/2;
-			float y_corr = b.getSize().y/2;
-			float x = Game::TOPIXELS*b.getB2Body().GetPosition().x-x_corr;
-			float y = Game::TOPIXELS*b.getB2Body().GetPosition().y-y_corr;
+			float x_corr = b->getSize().x/2;
+			float y_corr = b->getSize().y/2;
+			float x = Game::TOPIXELS*b->getB2Body().GetPosition().x-x_corr;
+			float y = Game::TOPIXELS*b->getB2Body().GetPosition().y-y_corr;
 			sf::Vector2f newpos(x,y);
-			b.setPos(newpos);
+			b->setPos(newpos);
 
-			b.drawTo(window);
+			b->drawTo(window);
 		}
 
 		//set sfml sprite's angle from body's angle
@@ -345,17 +347,17 @@ void World::update() {
 		sf::Vector2f newpos(x,y);
 		it->setPos(newpos);
 
-		std::list<Entity> bullets = it->get_active_bullets();
+		std::list<std::shared_ptr<Entity>> bullets = it->get_active_bullets();
 
 		for (auto b : bullets) {
-			float x_corr = b.getSize().x/2;
-			float y_corr = b.getSize().y/2;
-			float x = Game::TOPIXELS*b.getB2Body().GetPosition().x-x_corr;
-			float y = Game::TOPIXELS*b.getB2Body().GetPosition().y-y_corr;
+			float x_corr = b->getSize().x/2;
+			float y_corr = b->getSize().y/2;
+			float x = Game::TOPIXELS*b->getB2Body().GetPosition().x-x_corr;
+			float y = Game::TOPIXELS*b->getB2Body().GetPosition().y-y_corr;
 			sf::Vector2f newpos(x,y);
-			b.setPos(newpos);
+			b->setPos(newpos);
 
-			b.drawTo(window);
+			b->drawTo(window);
 		}
 
 		//set sfml sprite's angle from body's angle

@@ -101,10 +101,11 @@ bool Plane::shoot(sf::Vector2f direction){
           body->CreateFixture(&FixtureDef);
           
           sf::Vector2f pos(x,y);
-          Bullet bullet(world, *body, tex, pos, sf::Vector2f(1.0f, 0.0f));
+          std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(world, *body, tex, pos, sf::Vector2f(1.0f, 0.0f));
 
           body->SetGravityScale(0.5f);
           body->ApplyLinearImpulse(b2Vec2(10*direction.x, 10*direction.y), body->GetWorldCenter(), true);
+          body->SetUserData(bullet.get());
           active_bullets.push_back(bullet);
           
 
