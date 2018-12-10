@@ -26,5 +26,6 @@ class Bullet : public Entity {
   *   @param direction Direction where bullet is headed
   */
   Bullet(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direction);
+  Bullet(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direction, Entity* owner);
 
 };
