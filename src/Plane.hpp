@@ -42,5 +42,5 @@ class Plane : public Entity {
    *   @brief give permission for object to shoot
    *   @return Return true or false based on if the object can shoot or not
    */
-  bool shoot(sf::Vector2f direction, ResourceManager & resources);
+  virtual bool shoot(sf::Vector2f direction, ResourceManager & resources) override;
 };
