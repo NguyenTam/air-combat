@@ -30,6 +30,5 @@ These libraries are in Maari A, B and in CS-building Panic
 | `make main`         | Build `src/`                                                         |
 | `make test`         | Build `test/`                                                        |
 | `make run-main`     | Build `src/` and run an application                                  |
-| `make run-test`     | Build `test/` and run tests                                          |
 | `make clean`        | Remove compiled objects and executable files from `src/` and `test/` |
 | `doxygen`           | Generate documents of `src/`                                         |

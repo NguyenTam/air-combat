@@ -17,6 +17,3 @@ clean:
 
 run-game:
 	$(MAKE) -C $(MAIN_DIR) run
-
-run-test:
-	$(MAKE) -C $(TEST_DIR) run
