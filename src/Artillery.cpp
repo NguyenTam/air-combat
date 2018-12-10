@@ -28,7 +28,15 @@ bool Artillery::shoot(sf::Vector2f direction, ResourceManager& resources){
 
           b2BodyDef BodyDef;
           BodyDef.type = b2_dynamicBody;
-          BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y+(this->getSize().y)/2)/Game::TOPIXELS);
+          if (-(direction.y) >= (std::abs(direction.x))) {
+            BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y-2)/Game::TOPIXELS);
+          }
+          else if (direction.x < 0){
+            BodyDef.position = b2Vec2((x-4)/Game::TOPIXELS, (y+((this->getSize().y)/2))/Game::TOPIXELS);
+          }
+          else {
+            BodyDef.position = b2Vec2((x+(this->getSize().x)+4)/Game::TOPIXELS, (y-((this->getSize().y)/2))/Game::TOPIXELS);
+          }
           BodyDef.bullet = true;
 
           b2Body* body = world.CreateBody(&BodyDef);
