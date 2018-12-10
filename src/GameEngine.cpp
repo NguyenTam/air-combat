@@ -56,6 +56,7 @@ GameEngine::GameEngine(sf::RenderWindow &rw)
     }
 }
 
+
 /**
  * Handle inputs and draw textures to the screen.
  * This function passes constant TIME_PER_FRAME to update function to achieve fixed time steps.
@@ -121,23 +122,27 @@ void GameEngine::render()
   }
   else {
     // Draw only normal game view
-    world.update();
+    GameResult result = world.update(gameMode);
+    if (result != GameResult::UnFinished) {
+      // Game over
+      createGameOver(result);
+    }
   }
+
   renderWindow.display();
 }
-
 void GameEngine::playerMoveUp(int player_number)
 {
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
   Entity& player_entity = *planes[player_number];
   b2Body& player_body = player_entity.getB2Body();
   b2Vec2 vel1 = player_body.GetLinearVelocity();
-  
+
   float force = 0;
   if (vel1.y > -Game::PlayerPlane::MAX_VELOCITY)
     force = -Game::PlayerPlane::MAX_FORCE;
   player_body.ApplyForce(b2Vec2(0,Game::PlayerPlane::COEFFICIENT*force), player_body.GetWorldCenter(), true);
-  
+
 }
 
 void GameEngine::playerMoveDown(int player_number)
@@ -214,7 +219,7 @@ void GameEngine::playerShoot(int player_number)
   Entity& player_entity = *planes[player_number];
   b2Body& player_body = player_entity.getB2Body();
   b2Vec2 vel1 = player_body.GetLinearVelocity();
-  
+
   sf::Vector2f vec(25*cos(player_body.GetAngle()), 25*sin(player_body.GetAngle()));
   player_entity.shoot(100.f*vec, resources);
 }
@@ -232,18 +237,18 @@ void GameEngine::update(sf::Time elapsedTime)
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
     playerMoveUp(0);
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {    
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
     // move world player_planes[0] down
-    playerMoveDown(0);    
+    playerMoveDown(0);
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {    
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
     // flip world player_planes[0] left
     playerMoveLeft(0);
 
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {    
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
     // flip world player_planes[0] right
-    playerMoveRight(0);    
+    playerMoveRight(0);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
     playerRotateCounterClockWise(0);
@@ -261,7 +266,7 @@ void GameEngine::update(sf::Time elapsedTime)
     Entity& player2_entity = *planes[1];
     b2Body& player2_body = player2_entity.getB2Body();
     b2Vec2 vel2 = player2_body.GetLinearVelocity();
-    
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
       // move world player_planes[1] up
       playerMoveUp(1);
@@ -275,7 +280,7 @@ void GameEngine::update(sf::Time elapsedTime)
       playerMoveLeft(1);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-      // flip world player_planes[1] right      
+      // flip world player_planes[1] right
       playerMoveRight(1);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
@@ -322,8 +327,7 @@ bool GameEngine::gameOverHandler(sf::Event &event, std::string &level_path)
     if (event.key.code == sf::Keyboard::Return) {
       // Exit to main menu
       if (gameMode == Game::GameMode::SinglePlayer) {
-        // TODO real score here
-        logStats(level_path, name_input.getInputText(), 100);
+        logStats(level_path, name_input.getInputText(), world.getScore());
       }
       return true;
     }
@@ -343,7 +347,7 @@ bool GameEngine::gameOverHandler(sf::Event &event, std::string &level_path)
   return false;
 }
 
-void GameEngine::createGameOver(bool blue_won)
+void GameEngine::createGameOver(GameResult result)
 {
   //  Clear level
   world.clear_all();
@@ -363,17 +367,22 @@ void GameEngine::createGameOver(bool blue_won)
   name_input_info.setPosition(Game::WIDTH / 2 - 110, Game::HEIGHT / 2 - 50);
   name_input_info.setColor(sf::Color::Black);
 
-  if (blue_won) {
+  if (result == GameResult::BlueWon) {
     // Blue team won
     game_over_text = sf::Text("Game Over: Blue Team Won", gameFont, 30);
     game_over_text.setPosition(Game::WIDTH / 2 - 200, 100);
     game_over_text.setColor(sf::Color::Blue);
   }
-  else {
+  else if (result == GameResult::RedWon){
     // Red team won
     game_over_text = sf::Text("Game Over: Red Team Won", gameFont, 30);
     game_over_text.setPosition(Game::WIDTH / 2 - 200, 100);
     game_over_text.setColor(sf::Color::Red);
+  }
+  else {
+    game_over_text = sf::Text("Game Over: Tie", gameFont, 30);
+    game_over_text.setPosition(Game::WIDTH / 2 - 200, 100);
+    game_over_text.setColor(sf::Color::Green);
   }
 
   GameOver = true;
@@ -424,4 +433,6 @@ void GameEngine::logStats(std::string level_path, std::string user_name, int sco
 void GameEngine::setGameMode(Game::GameMode gameMode)
 {
   this->gameMode = gameMode;
+  // reset GameOver
+  GameOver = false;
 }
