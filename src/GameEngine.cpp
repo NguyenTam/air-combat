@@ -229,87 +229,89 @@ void GameEngine::playerShoot(int player_number)
 void GameEngine::update(sf::Time elapsedTime)
 {
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
-  Entity& player1_entity = *planes[0];
-  b2Body& player1_body = player1_entity.getB2Body();
-  b2Vec2 vel1 = player1_body.GetLinearVelocity();
-  bool player2_set = false;
+  if (planes.size() > 0) {
+    Entity& player1_entity = *planes[0];
+    b2Body& player1_body = player1_entity.getB2Body();
+    b2Vec2 vel1 = player1_body.GetLinearVelocity();
+    bool player2_set = false;
 
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-    playerMoveUp(0);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-    // move world player_planes[0] down
-    playerMoveDown(0);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-    // flip world player_planes[0] left
-    playerMoveLeft(0);
-
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-    // flip world player_planes[0] right
-    playerMoveRight(0);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-    playerRotateCounterClockWise(0);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
-    playerRotateClockWise(0);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-    // shoot world player_planes[0]
-    playerShoot(0);
-  }
-
-  if ((planes.size()==2) && (gameMode == Game::GameMode::Multiplayer)) {
-    player2_set = true;
-    Entity& player2_entity = *planes[1];
-    b2Body& player2_body = player2_entity.getB2Body();
-    b2Vec2 vel2 = player2_body.GetLinearVelocity();
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
-      // move world player_planes[1] up
-      playerMoveUp(1);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+      playerMoveUp(0);
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
-      // move world player_planes[1] down
-      playerMoveDown(1);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+      // move world player_planes[0] down
+      playerMoveDown(0);
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
-      // flip world player_planes[1] left
-      playerMoveLeft(1);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-      // flip world player_planes[1] right
-      playerMoveRight(1);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
-      playerRotateCounterClockWise(1);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
-      playerRotateClockWise(1);
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
-      playerShoot(1);
-    }
-  }
-
-  //set forces to 0
-  else {
-    float forcey1 = vel1.y * -Game::PlayerPlane::MAX_FORCE;
-    float forcex1 = vel1.x * -Game::PlayerPlane::MAX_FORCE;
-
-    player1_body.ApplyForce(b2Vec2(forcex1,forcey1), player1_body.GetWorldCenter(), true);
-
-    if (player2_set) {
-      float forcey2 = vel1.y * -Game::PlayerPlane::MAX_FORCE;
-      float forcex2 = vel1.x * -Game::PlayerPlane::MAX_FORCE;
-
-      player1_body.ApplyForce(b2Vec2(forcex2,forcey2), player1_body.GetWorldCenter(), true);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+      // flip world player_planes[0] left
+      playerMoveLeft(0);
 
     }
-  }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+      // flip world player_planes[0] right
+      playerMoveRight(0);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+      playerRotateCounterClockWise(0);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+      playerRotateClockWise(0);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+      // shoot world player_planes[0]
+      playerShoot(0);
+    }
 
+    if ((planes.size()==2) && (gameMode == Game::GameMode::Multiplayer)) {
+      player2_set = true;
+      Entity& player2_entity = *planes[1];
+      b2Body& player2_body = player2_entity.getB2Body();
+      b2Vec2 vel2 = player2_body.GetLinearVelocity();
+
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+        // move world player_planes[1] up
+        playerMoveUp(1);
+      }
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
+        // move world player_planes[1] down
+        playerMoveDown(1);
+      }
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
+        // flip world player_planes[1] left
+        playerMoveLeft(1);
+      }
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
+        // flip world player_planes[1] right
+        playerMoveRight(1);
+      }
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
+        playerRotateCounterClockWise(1);
+      }
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
+        playerRotateClockWise(1);
+      }
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+        playerShoot(1);
+      }
+    }
+
+    //set forces to 0
+    else {
+      float forcey1 = vel1.y * -Game::PlayerPlane::MAX_FORCE;
+      float forcex1 = vel1.x * -Game::PlayerPlane::MAX_FORCE;
+
+      player1_body.ApplyForce(b2Vec2(forcex1,forcey1), player1_body.GetWorldCenter(), true);
+
+      if (player2_set) {
+        float forcey2 = vel1.y * -Game::PlayerPlane::MAX_FORCE;
+        float forcex2 = vel1.x * -Game::PlayerPlane::MAX_FORCE;
+
+        player1_body.ApplyForce(b2Vec2(forcex2,forcey2), player1_body.GetWorldCenter(), true);
+
+      }
+    }
+  }
+  
 }
 
 void GameEngine::updateGameInfo()
