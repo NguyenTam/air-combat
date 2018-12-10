@@ -1,4 +1,5 @@
 #include "Infantry.hpp"
+#include <cmath>
 #define VELOCITY 0.2f
 
 //Note about the magical numbers
@@ -52,7 +53,15 @@ bool Infantry::shoot(sf::Vector2f direction, ResourceManager& resources){
 
       b2BodyDef BodyDef;
       BodyDef.type = b2_dynamicBody;
-      BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y-(this->getSize().y))/Game::TOPIXELS);
+      if (-(direction.y) >= (std::abs(direction.x))) {
+        BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y-2)/Game::TOPIXELS);
+      }
+      else if (direction.x < 0){
+        BodyDef.position = b2Vec2((x-4)/Game::TOPIXELS, (y+((this->getSize().y)/2))/Game::TOPIXELS);
+      }
+      else {
+        BodyDef.position = b2Vec2((x+(this->getSize().x)+4)/Game::TOPIXELS, (y-((this->getSize().y)/2))/Game::TOPIXELS);
+      }
       BodyDef.bullet = true;
 
       b2Body* body = world.CreateBody(&BodyDef);
@@ -71,13 +80,12 @@ bool Infantry::shoot(sf::Vector2f direction, ResourceManager& resources){
       bullet->setType(Textures::Bullet_alpha);
 
       body->SetGravityScale(0.5f);
-      body->ApplyLinearImpulse(b2Vec2(3*direction.x, direction.y), body->GetWorldCenter(), true);
+      body->ApplyLinearImpulse(b2Vec2(direction.x/5, direction.y/5), body->GetWorldCenter(), true);
       body->SetUserData(bullet.get());
       active_bullets.push_back(bullet);
 
       numberOfBullets-=1;
       clock.restart();
-      std::cout << "Infantry shot" << std::endl;
       return true;
     }
   }
