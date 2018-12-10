@@ -1,6 +1,9 @@
 /**
   *   @file main.cpp
   *   @brief Contains main for Air combat game
+  * @mainpage Welcome to mainpage
+  * @brief Main menu will open users.
+  * @detail 
   */
 
 #include "UI.hpp"
