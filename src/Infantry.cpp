@@ -1,6 +1,6 @@
 #include "Infantry.hpp"
+#include "CommonDefinitions.hpp"
 #include <cmath>
-#define VELOCITY 0.2f
 
 const int bullet_correction = 2;  // this is how many pixels away from the body bullet is created
 const float bullet_force = 0.2;  // this is multiplier for impulse given to bullet
@@ -14,7 +14,7 @@ Infantry::Infantry(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector
 void Infantry::moveLeft()
 {
   b2Vec2 vel = b2body.GetLinearVelocity();
-  vel.x = -VELOCITY;
+  vel.x = -Game::Infantry::VELOCITY;
   b2body.SetLinearVelocity(vel);
   direction.x = -1;
   direction.y = 0;
@@ -25,7 +25,7 @@ void Infantry::moveLeft()
 void Infantry::moveRight()
 {
   b2Vec2 vel = b2body.GetLinearVelocity();
-  vel.x = VELOCITY;
+  vel.x = Game::Infantry::VELOCITY;
   b2body.SetLinearVelocity(vel);
 
   direction.x = 1;
@@ -33,8 +33,6 @@ void Infantry::moveRight()
 
   faceRight();
 }
-
-
 
 bool Infantry::shoot(sf::Vector2f direction, ResourceManager& resources){
   if (clock.getElapsedTime() > sf::seconds(1.f)) {

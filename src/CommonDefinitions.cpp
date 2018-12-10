@@ -11,7 +11,16 @@ namespace Game
   constexpr int UPPER_LIMIT = static_cast<int>((0.2)*HEIGHT);
   constexpr int LOWER_LIMIT = static_cast<int>((1-0.3)*HEIGHT);      //LOWER_LIMIT should be atleast 0.3.
 
+  const float Infantry::VELOCITY = 20.f;
+  const float Plane::MAX_FORCE = 50.f;
+  const float Plane::MAX_VELOCITY = 30.f;
 
+  const float PlayerPlane::MAX_FORCE = 100.f;
+  const float PlayerPlane::MAX_VELOCITY = 100.f;
+  const int PlayerPlane::COEFFICIENT = 30;
+  const float PlayerPlane::TORQUE = 5.f;
+  const float PlayerPlane::MAX_ANGULAR_VELOCITY = 15.f;
+  
   std::map<ACTIONS, sf::Vector2f> actions_and_directions
     {
       { ACTIONS::move_left, sf::Vector2f(-1.f, 0.f)},

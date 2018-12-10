@@ -1,6 +1,5 @@
 #include "Plane.hpp"
-#define MAX_FORCE .5f
-#define MAX_VELOCITY 0.5
+#include "CommonDefinitions.hpp"
 
 const int bullet_correction = 5;  // this is how many pixels away from the body bullet is created
 const float bullet_force = 0.2;  // this is multiplier for impulse given to bullet
@@ -17,9 +16,9 @@ void Plane::moveUp()
 {
   b2Vec2 vel = b2body.GetLinearVelocity();
   float force = 0;
-  if( vel.y > - MAX_VELOCITY )
+  if( vel.y > - Game::Plane::MAX_VELOCITY )
     {
-      force = - MAX_FORCE;
+      force = - Game::Plane::MAX_FORCE;
     }
   direction.y = -1;
   b2body.ApplyForce( b2Vec2(0,force), b2body.GetWorldCenter(), true );
@@ -29,9 +28,9 @@ void Plane::moveDown()
 {
   b2Vec2 vel = b2body.GetLinearVelocity();
   float force = 0;
-  if( vel.y < MAX_VELOCITY )
+  if( vel.y < Game::Plane::MAX_VELOCITY )
     {
-      force = MAX_FORCE;
+      force = Game::Plane::MAX_FORCE;
     }
   direction.y = 1;
   b2body.ApplyForce( b2Vec2(0,force), b2body.GetWorldCenter(), true );
@@ -40,10 +39,11 @@ void Plane::moveDown()
 void Plane::moveLeft()
 {
   b2Vec2 vel = b2body.GetLinearVelocity();
+  std::cout << "AI Plane: " << vel.x << ", " << vel.y << std::endl;
   float force = 1;
-  if( vel.x > -MAX_VELOCITY )
+  if( vel.x > -Game::Plane::MAX_VELOCITY )
     {
-      force = -MAX_FORCE;
+      force = -Game::Plane::MAX_FORCE;
     }
   faceLeft();
   direction.x = -1;
@@ -54,9 +54,9 @@ void Plane::moveRight()
 {
   b2Vec2 vel = b2body.GetLinearVelocity();
   float force = 0;
-  if( vel.x < MAX_VELOCITY )
+  if( vel.x < Game::Plane::MAX_VELOCITY )
     {
-      force = MAX_FORCE;
+      force = Game::Plane::MAX_FORCE;
     }
   faceRight();
   direction.x = 1;

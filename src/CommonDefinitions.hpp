@@ -68,6 +68,24 @@ namespace Game
   extern const int LOWER_LIMIT;
 
 
+  namespace Infantry 
+  {
+    extern const float VELOCITY;  
+  }
+  namespace Plane
+  {
+    extern const float MAX_FORCE;
+    extern const float MAX_VELOCITY;
+  }
+  namespace PlayerPlane
+  {
+    extern const float MAX_FORCE;
+    extern const float MAX_VELOCITY;
+    extern const int COEFFICIENT;
+    extern const float TORQUE;
+    extern const float MAX_ANGULAR_VELOCITY;
+  }
+  
   enum TYPE_ID
     {
       airplane,
