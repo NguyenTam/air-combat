@@ -89,6 +89,7 @@ void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 	      case 10:
 		{
 		  sf::Vector2f direction = current_worse_enemy - my_position;
+                  direction = direction/(std::abs(direction.x)*std::abs(direction.y));
 		  me.shoot(direction, resources);
 		  //std::cout << "shot direction (x,y): " << direction.x << ", " << direction.y << std::endl;
 		  return;
@@ -132,6 +133,7 @@ void get_antiaircraft_action(Entity& me, std::list<Entity*> &surroundings, Resou
     if ((current_worse_enemy.x > 0) && (current_worse_enemy_priority > 0) && (current_worse_enemy.y  > 10))
       {
 	sf::Vector2f direction = current_worse_enemy - my_position;
+        direction = direction/(std::abs(direction.x)*std::abs(direction.y));
 	me.shoot(direction, resources);
       }
   }
@@ -160,6 +162,7 @@ void get_infantry_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 	if(current_worse_enemy_priority > 0)
 	  {
 	    sf::Vector2f direction =  current_worse_enemy - my_position;
+            direction = direction/(std::abs(direction.x)*std::abs(direction.y));
 	    me.shoot(direction, resources);
 	    if(direction.x > 0)
 	      me.moveLeft();
