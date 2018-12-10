@@ -288,6 +288,13 @@ bool World::remove_entity(Entity *entity)
 				return true;
 			}
 		}
+		// go through also player_planes
+		for (auto it = player_planes.begin(); it != player_planes.end(); it++) {
+			if (it->get() == entity) {
+				player_planes.erase(it);
+				return true;
+			}
+		}
 
 
 	//entity was not found
@@ -304,7 +311,10 @@ void World::update() {
 
 	pworld.get_world()->Step(timeStep, velocityIterations, positionIterations);
 
-	for (auto it : objects) {
+	for (auto &it : objects) {
+		it->erase_surroundings();
+	}
+	for (auto &it : player_planes) {
 		it->erase_surroundings();
 	}
 
@@ -338,10 +348,15 @@ void World::update() {
 			else if ((a_sensor == false) && (b_sensor == false)) {
 				if (a_entity->getType() == Textures::Bullet_alpha) {
 					if (b_entity->getType() == Textures::Bullet_alpha) {
-						std::cout << "Bullet vs Bullet" << std::endl;
 						// remove both bullets
 						if (remove_bullet(b_entity, a_entity)) {
 							pworld.remove_body(b_body);
+						}
+					}
+					else if (a_entity->getOwner() != b_entity){
+						if (b_entity->damage(10)) {
+							pworld.remove_body(b_body);
+							remove_entity(b_entity);
 						}
 					}
 					// remove a_entity which is a bullet
@@ -353,10 +368,17 @@ void World::update() {
 				}
 				else if (b_entity->getType() == Textures::Bullet_alpha) {
 
+					if (b_entity->getOwner() != a_entity) {
+						if (a_entity->damage(10)) {
+							pworld.remove_body(a_body);
+							remove_entity(a_entity);
+						}
+					}
 					// remove b_entity which is a bullet
 					if (remove_bullet(b_entity, a_entity)) {
 						pworld.remove_body(b_body);
 					}
+
 				}
 
 			}
@@ -400,6 +422,7 @@ void World::update() {
 	}
 
 	// Draw player planes
+	std::cout << "Draw player_planes" << std::endl;
 	for (auto it : player_planes) {
 		float x_corr = it->getSize().x/2;
 		float y_corr = it->getSize().y/2;

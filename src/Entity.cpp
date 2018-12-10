@@ -139,14 +139,12 @@ Game::TYPE_ID Entity::getTypeId(){
 }
 
 bool Entity::damage(int damage){
+
+  hitPoints -= damage;
   if (hitPoints <= 0) {
     return true;
-  } else if (hitPoints > damage) {
-    hitPoints = hitPoints - damage;
-    return false;
-  } else {
-    return true;
   }
+  return false;
 }
 
 void Entity::insert_surrounding(Entity* entity) {
