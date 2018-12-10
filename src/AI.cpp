@@ -55,18 +55,22 @@ void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 	if ( my_position.x < Game::LEFT_LIMIT )
 	  {	    
 	    me.moveRight();
+            me.moveRight();
 	  }
 	if ( my_position.x > Game::RIGHT_LIMIT )
 	  {
 	    me.moveLeft();
+            me.moveLeft();
 	  }
 	if ( my_position.y < Game::LOWER_LIMIT )
 	  {
 	    me.moveDown();
+            me.moveDown();
 	  }
 	if ( my_position.y > Game::UPPER_LIMIT )
 	  {	   
 	    me.moveUp();
+            me.moveUp();
 	  }
 	move_to_direction(me);
 	 /*
@@ -103,7 +107,26 @@ void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 	  }
 	else if ( current_worse_enemy_priority < 0 )
 	  {
-	    std::cout << "friendly entity detected. ignore. " << std::endl;
+	    std::cout << "friendly entity detected. avoid it. " << std::endl;
+
+            if (current_worse_enemy.y <= my_position.y)
+            {
+              me.moveDown();
+            }
+            if (current_worse_enemy.y > my_position.y)
+            {
+              me.moveDown();
+            }
+            if (current_worse_enemy.x < my_position.x)
+            {
+              me.moveRight();
+            }
+            if (current_worse_enemy.x >= my_position.x)
+            {
+              me.moveLeft();
+            }
+                
+            /*
 	    switch (std::rand()%2)
 	      {
 	      case 0:
@@ -115,6 +138,7 @@ void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 		me.moveUp();
 		me.moveDown();
 	      }
+            */
 	  }
 	else move_to_direction(me);
       }
