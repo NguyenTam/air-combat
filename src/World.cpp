@@ -15,6 +15,8 @@ World::World(sf::RenderWindow &main_window, ResourceManager &_resources) : pworl
 
 bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 	//entity type; x; y; orientation; width; height
+	// init score
+	score = 0;
 	double x, y, width, height;
   	int orientation;
   	std::string type;
@@ -303,7 +305,7 @@ bool World::remove_entity(Entity *entity)
 
 /*  Update the world  */
 
-void World::update() {
+GameResult World::update(Game::GameMode game_mode) {
 	//physicsworld step
 	float32 timeStep = 1/60.0;      //the length of time passed to simulate (seconds)
   	int32 velocityIterations = 8;   //how strongly to correct velocity
@@ -331,7 +333,6 @@ void World::update() {
 			Entity* b_entity = static_cast<Entity*>(b_body->GetUserData());
 
 
-
 			bool a_sensor = a_fixture->IsSensor();
 			bool b_sensor = b_fixture->IsSensor();
 
@@ -345,6 +346,7 @@ void World::update() {
 					b_entity->insert_surrounding(a_entity);
 				}
 			}
+
 			else if ((a_sensor == false) && (b_sensor == false)) {
 				if (a_entity->getType() == Textures::Bullet_alpha) {
 					if (b_entity->getType() == Textures::Bullet_alpha) {
@@ -380,6 +382,64 @@ void World::update() {
 					}
 
 				}
+				else if (a_entity->getTypeId() == Game::TYPE_ID::airplane) {
+					if (b_entity->getTypeId() == Game::TYPE_ID::ground) {
+						// airplane destroyed
+						pworld.remove_body(a_body);
+						remove_entity(a_entity);
+					}
+					else if (b_entity->getTypeId() == Game::TYPE_ID::airplane)
+					{
+						// damage both planes
+						if (a_entity->damage(10)){
+							pworld.remove_body(a_body);
+							remove_entity(a_entity);
+						}
+						if (b_entity->damage(10)){
+							pworld.remove_body(b_body);
+							remove_entity(b_entity);
+						}
+					}
+					else if (b_entity->getTypeId() == Game::TYPE_ID::infantry) {
+						// destroy infantry and damage plane
+						pworld.remove_body(b_body);
+						remove_entity(b_entity);
+						if (a_entity->damage(10)) {
+							pworld.remove_body(a_body);
+							remove_entity(a_entity);
+						}
+					}
+				}
+				else if (b_entity->getTypeId() == Game::TYPE_ID::airplane) {
+					if (a_entity->getTypeId() == Game::TYPE_ID::ground) {
+						// airplane destroyed
+						pworld.remove_body(b_body);
+						remove_entity(b_entity);
+					}
+					else if (a_entity->getTypeId() == Game::TYPE_ID::airplane)
+					{
+						// damage both planes
+						if (b_entity->damage(10)){
+							pworld.remove_body(a_body);
+							remove_entity(a_entity);
+						}
+						if (a_entity->damage(10)){
+							pworld.remove_body(b_body);
+							remove_entity(b_entity);
+						}
+					}
+					else if (a_entity->getTypeId() == Game::TYPE_ID::infantry) {
+						// destroy infantry and damage plane
+						pworld.remove_body(a_body);
+						remove_entity(a_entity);
+						if (b_entity->damage(10)) {
+							pworld.remove_body(b_body);
+							remove_entity(b_entity);
+						}
+					}
+				}
+
+
 
 			}
 
@@ -422,7 +482,6 @@ void World::update() {
 	}
 
 	// Draw player planes
-	std::cout << "Draw player_planes" << std::endl;
 	for (auto it : player_planes) {
 		float x_corr = it->getSize().x/2;
 		float y_corr = it->getSize().y/2;
@@ -450,8 +509,7 @@ void World::update() {
 		it->drawTo(window);
 	}
 
-	// Draw bullets
-
+	return checkGameStatus(game_mode);
 }
 
 std::vector<std::shared_ptr<Entity>>& World::get_all_entities()
@@ -467,4 +525,45 @@ std::deque<std::shared_ptr<Entity>>& World::get_player_planes()
 std::vector<std::shared_ptr<Entity>>& World::get_bullets()
 {
 	return bullets;
+}
+
+GameResult World::checkGameStatus(Game::GameMode game_mode)
+{
+	if (game_mode == Game::GameMode::SinglePlayer) {
+		// Red team won if blue plane destroyed
+		if (player_planes.size() == 0) {
+			return GameResult::RedWon;
+		}
+		else {
+			// Blue team won if all red planes and bases destroyed
+			for (auto it : objects){
+				if ((it->getType() == Textures::RedBase_alpha )|| (it->getType() == Textures::RedAirplane_alpha)) {
+					// not all red planes and bases destroyed, game UnFinished
+					return GameResult::UnFinished;
+				}
+			}
+			// All red planes and bases destroyed
+			return GameResult::BlueWon;
+		}
+	}
+	else {
+		// Multiplayer is over when red or blue plane is destroyed
+		if (player_planes.size() < 2) {
+			if (player_planes.size() == 1) {
+				if (player_planes[0]->getType() == Textures::RedAirplane_alpha) {
+					return GameResult::RedWon;
+				}
+				else return GameResult::BlueWon;
+			}
+			else return GameResult::TieGame;
+
+		}
+		// both planes still active
+		return GameResult::UnFinished;
+	}
+}
+
+int World::getScore()
+{
+	return score;
 }

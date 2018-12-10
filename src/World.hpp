@@ -38,6 +38,14 @@
 #define RADTODEG 57.295779513082320876f
 
 
+enum GameResult
+{
+  UnFinished,
+  BlueWon,
+  RedWon,
+  TieGame
+};
+
 
 /**
   *   @class World
@@ -85,8 +93,10 @@ public:
 	/**
       *   @brief Updates the world
       *   @details Is called from the game engine
+      *   @param game_mode Current Game::GameMode
+      *   @return Returns GameResult
       */
-	void update();
+	GameResult update(Game::GameMode game_mode);
 
 	/**
       *   @brief Reads the given level
@@ -117,7 +127,21 @@ public:
       */
         std::vector<std::shared_ptr<Entity>>& get_bullets();
 
+        /**
+          *   @brief Get score,
+          *   @remark This should be used only during singleplayer
+          *   @return Returns score
+          */   
+        int getScore();
+
 private:
+
+  /**
+    *   @brif Check game status
+    *   @return Returns correct GameResult
+    *   @param game_mode Current Game::GameMode
+    */
+  GameResult checkGameStatus(Game::GameMode game_mode);
 
   PhysicsWorld pworld;
   ResourceManager &resources;
@@ -125,4 +149,5 @@ private:
   std::vector<std::shared_ptr<Entity>> objects; /**< Contains all the entities added */
   std::vector<std::shared_ptr<Entity>> bullets; /**< Contains all the bullets created */
   std::deque<std::shared_ptr<Entity>> player_planes; /**< Contains BlueAirplane and during multiplayer also one RedAirplane */
+  int score = 0;
 };
