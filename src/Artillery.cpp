@@ -56,7 +56,7 @@ bool Artillery::shoot(sf::Vector2f direction, ResourceManager& resources){
           bullet->setType(Textures::Bullet_alpha);
 
           body->SetGravityScale(0.5f);
-          body->ApplyLinearImpulse(b2Vec2(3*direction.x, direction.y), body->GetWorldCenter(), true);
+          body->ApplyLinearImpulse(b2Vec2(direction.x/5, direction.y/5), body->GetWorldCenter(), true);
           body->SetUserData(bullet.get());
           active_bullets.push_back(bullet);      
           

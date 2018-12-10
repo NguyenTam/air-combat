@@ -86,7 +86,19 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
 
           b2BodyDef BodyDef;
           BodyDef.type = b2_dynamicBody;
-          BodyDef.position = b2Vec2((x+((this->getSize().x) + 5))/Game::TOPIXELS, (y-(this->getSize().y))/Game::TOPIXELS);
+          if (-(direction.y) >= direction.x) {  //shooting up
+            BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y-2)/Game::TOPIXELS);
+          }
+          else if (direction.y >= direction.x){  //shooting down
+            BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y+(this->getSize().y)+2)/Game::TOPIXELS);
+          }
+          else if (direction.x >= direction.y){  //shooting right
+            BodyDef.position = b2Vec2((x+(this->getSize().x)+2)/Game::TOPIXELS, (y+((this->getSize().y)/2))/Game::TOPIXELS);
+          }
+          else {                                 //shooting left
+            BodyDef.position = b2Vec2((x-2)/Game::TOPIXELS, (y+((this->getSize().y)/2))/Game::TOPIXELS);
+          }
+
           BodyDef.bullet = true;
 
           b2Body* body = world.CreateBody(&BodyDef);
@@ -105,7 +117,7 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
           bullet->setType(Textures::Bullet_alpha);
 
           body->SetGravityScale(0.5f);
-          body->ApplyLinearImpulse(b2Vec2(10*direction.x, 10*direction.y), body->GetWorldCenter(), true);
+          body->ApplyLinearImpulse(b2Vec2(direction.x/5, direction.y/5), body->GetWorldCenter(), true);
           body->SetUserData(bullet.get());
           active_bullets.push_back(bullet);
 
