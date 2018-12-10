@@ -8,6 +8,11 @@ Entity::Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &
   entity.setPosition(position);
 }
 
+/*Entity::~Entity()
+{
+  owner = nullptr;
+}*/
+
 void Entity::drawTo(sf::RenderWindow &window)
 {
   window.draw(entity);
@@ -36,7 +41,7 @@ void Entity::faceLeft()
 {
   sf::Vector2u texture_size = entity.getTexture()->getSize();
   //entity.setTextureRect(sf::IntRect(19, 0, -19, 32));
-  entity.setTextureRect(sf::IntRect(texture_size.x, 0, -texture_size.x, texture_size.y)); 
+  entity.setTextureRect(sf::IntRect(texture_size.x, 0, -texture_size.x, texture_size.y));
 }
 void Entity::faceRight()
 {
@@ -158,4 +163,9 @@ std::list<Entity*>& Entity::get_surroundings() {
 
 std::list<std::shared_ptr<Entity>>& Entity::get_active_bullets() {
   return active_bullets;
+}
+
+Entity* Entity::getOwner()
+{
+  return owner;
 }

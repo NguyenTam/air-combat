@@ -35,15 +35,16 @@ public:
    */
   Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position,  float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direction, Game::TEAM_ID team);
 
+  //virtual ~Entity();
   /**
    *   @brief Draw to window
-   *   @param window Window to be drawn into   
-   */ 
+   *   @param window Window to be drawn into
+   */
   void drawTo(sf::RenderWindow &window);
 
   /*
    *   @brief Move entity
-   *   @param Distance Direction as vector where to move entity  
+   *   @param Distance Direction as vector where to move entity
    */
   void move(sf::Vector2f distance);
 
@@ -62,44 +63,44 @@ public:
   sf::Vector2f getOriginPosition() const;
 
   /*
-   *   @brief Rotates entity clockwise 
-   *   @param Degrees to rotate  
+   *   @brief Rotates entity clockwise
+   *   @param Degrees to rotate
    */
   void rotate(float);
 
   /*
    *   @brief Puts entity to certain angle
-   *   @param Angle Degrees of rotation for entity  
+   *   @param Angle Degrees of rotation for entity
    */
   void setRot(float angle);
 
   /*
-   *   @brief Move entity directly upward with it's maximum speed  
+   *   @brief Move entity directly upward with it's maximum speed
    */
   virtual void moveUp();
 
   /*
-   *   @brief Move entity directly upward with it's maximum speed  
+   *   @brief Move entity directly upward with it's maximum speed
    */
   virtual void moveDown();
 
   /*
-   *   @brief Move entity directly left with it's maximum speed  
+   *   @brief Move entity directly left with it's maximum speed
    */
   virtual void moveLeft();
 
   /*
-   *   @brief Move entity directly right with it's maximum speed  
+   *   @brief Move entity directly right with it's maximum speed
    */
   virtual void moveRight();
 
   /*
-   *   @brief Rotates entity clockwise  
+   *   @brief Rotates entity clockwise
    */
   void rotateClockWise();
 
   /*
-   *   @brief Rotates entity counterclockwise  
+   *   @brief Rotates entity counterclockwise
    */
   void rotateCounterClockWise();
 
@@ -110,13 +111,13 @@ public:
   int getY();
 
   /*
-   *   @brief Puts a speed for entity 
+   *   @brief Puts a speed for entity
    *   @param Speed Speed for entity
    */
   void setSpeed(float speed);
 
   /*
-   *   @brief Gives the speed of the entity  
+   *   @brief Gives the speed of the entity
    */
   float getSpeed();
 
@@ -126,24 +127,24 @@ public:
   virtual bool shoot(sf::Vector2f direction, ResourceManager& resources);
 
   /*
-   *   @brief Gives a type for entity  
+   *   @brief Gives a type for entity
    */
   void setType(Textures::ID type);
 
   /*
-   *   @brief Gives the type of entity  
+   *   @brief Gives the type of entity
    *   @return Returns the texture type of entity
    */
   Textures::ID getType();
 
   /*
-   *   @brief Gives the body of entity  
+   *   @brief Gives the body of entity
    *   @return Returns body of entity
    */
   b2Body& getB2Body();
 
   /*
-   *   @brief Scales a picture bigger or smaller 
+   *   @brief Scales a picture bigger or smaller
    *   @param width of map
    *   @param height of map
    *   @return Returns is the scaling succesfull, if either number is 0 or smaller, returns FALSE
@@ -191,7 +192,7 @@ public:
   Game::TYPE_ID getTypeId();
 
   /*
-   *   @brief Adds entity to the surroundings of this entity 
+   *   @brief Adds entity to the surroundings of this entity
    *   @param entity Entity to be added to the surroundings-list of this entity
    */
   void insert_surrounding(Entity* entity);
@@ -202,7 +203,7 @@ public:
   void erase_surroundings();
 
   /*
-   *   @brief Gets surrounding entities 
+   *   @brief Gets surrounding entities
    *   @return List of surrounding entities
    */
   std::list<Entity*>& get_surroundings();
@@ -216,6 +217,12 @@ public:
    *   @brief Puts the sprite of entity to face right
    */
   void faceRight();
+
+  /**
+    *   @brief Get owner entity
+    *   @return Returns raw pointer to of the owner, or nullptr
+    */
+  Entity* getOwner();
 
   /*
    *   @brief Returns active bullets of this entity
@@ -238,10 +245,11 @@ protected:
   Game::TEAM_ID teamId; /**< Tells if entity is in blue or red team, obstacle or projetile */
   Game::TYPE_ID typeId; /**< Tells what entity subclass entity belongs to, for example stone, airplane or infantry */
 
-  
+
   b2World & world; /**< World where entity exists */
   b2Body& b2body; /**< Entitys body */
   Textures::ID type; /**< Textures file name without extension */
   std::list<Entity*> surrounding;
   std::list<std::shared_ptr<Entity>> active_bullets;
+  Entity *owner = nullptr; /**< Possible owner entity for Bullets */
 };
