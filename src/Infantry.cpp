@@ -32,7 +32,7 @@ void Infantry::moveRight()
 
 
 
-bool Infantry::shoot(sf::Vector2f direction){
+bool Infantry::shoot(sf::Vector2f direction, ResourceManager& resources){
   if (fireCountDown <= 0) {
     if (numberOfBullets > 0) {
       fireCountDown = rateOfFire;
