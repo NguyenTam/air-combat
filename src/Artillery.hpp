@@ -8,7 +8,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Entity.hpp"
-
+#include "Bullet.hpp"
 /**
   *   @class Artillery
   */
