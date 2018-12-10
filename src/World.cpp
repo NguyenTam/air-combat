@@ -76,6 +76,7 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 					if (type == "InvisibleWall") {
 						b2Body* body = pworld.create_body_static(x, y, width, height);
 						std::shared_ptr<Entity> entity = std::make_shared<InvisibleWall>(*pworld.get_world(), *body, resources.get(Textures::alphaTextures.at("Ground")), sf::Vector2f(x,y));
+						entity->setType(Textures::Ground_alpha); //TODO Id for InvisibleWall
 						body->SetUserData(entity.get());
 					}
 					try {
@@ -149,13 +150,6 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			body = pworld.create_body_dynamic(x, y, width, height);
 			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
 			entity->setType(Textures::BlueInfantry_alpha);
-			body->SetUserData(entity.get());
-			break;
-		}
-		case Textures::Bullet_alpha: {
-			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Bullet>(*pworld.get_world(), *body, tex, pos, direct);
-			entity->setType(Textures::Bullet_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
@@ -260,20 +254,44 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 
 /*  Remove entity  */
 
-bool World::remove_entity(std::shared_ptr<Entity> entity) {
-	auto it = std::find(objects.begin(), objects.end(), entity);
-
-	if (it != objects.end()) {
-		objects.erase(it); //erase entity from vector
-
-		return true;
+bool World::remove_bullet(Entity *bullet, Entity *entity) {
+	for (auto it = objects.begin(); it != objects.end(); it++) {
+		std::list<std::shared_ptr<Entity>>& bullets_list = (*it)->get_active_bullets();
+		for (auto item = bullets_list.begin(); item != bullets_list.end(); item++) {
+			if ((item->get() == bullet) && (bullet->getOwner() != entity)) {
+				// raw pointers match, erase bullet
+				bullets_list.erase(item);
+				return true;
+			}
+		}
 	}
+	for (auto it = player_planes.begin(); it != player_planes.end(); it++) {
+		// Check also player_planes bullets
+		std::list<std::shared_ptr<Entity>>& bullets_list = (*it)->get_active_bullets();
+		for (auto item = bullets_list.begin(); item != bullets_list.end(); item++) {
+			if ((item->get() == bullet) && (bullet->getOwner() != entity)) {
+				// raw pointers match, erase bullet
+				bullets_list.erase(item);
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+bool World::remove_entity(Entity *entity)
+{
+		for (auto it = objects.begin(); it != objects.end(); it++) {
+			if (it->get() == entity) {
+				// raw pointers match, erase entity from the vector
+				objects.erase(it);
+				return true;
+			}
+		}
+
 
 	//entity was not found
-	else {
-		return false;
-	}
-
+	return false;
 }
 
 /*  Update the world  */
@@ -313,13 +331,34 @@ void World::update() {
 					a_entity->insert_surrounding(b_entity);
 				}
 
-				else {
+				else if (b_sensor) {
 					b_entity->insert_surrounding(a_entity);
 				}
 			}
-			
-			if ((a_entity->getType() == Textures::Bullet_alpha) || (b_entity->getType() == Textures::Bullet_alpha)){
-				std::cout << "Hit by a bullet" << std::endl;
+			else if ((a_sensor == false) && (b_sensor == false)) {
+				if (a_entity->getType() == Textures::Bullet_alpha) {
+					if (b_entity->getType() == Textures::Bullet_alpha) {
+						std::cout << "Bullet vs Bullet" << std::endl;
+						// remove both bullets
+						if (remove_bullet(b_entity, a_entity)) {
+							pworld.remove_body(b_body);
+						}
+					}
+					// remove a_entity which is a bullet
+					if (remove_bullet(a_entity, b_entity)) {
+						pworld.remove_body(a_body);
+					}
+
+
+				}
+				else if (b_entity->getType() == Textures::Bullet_alpha) {
+
+					// remove b_entity which is a bullet
+					if (remove_bullet(b_entity, a_entity)) {
+						pworld.remove_body(b_body);
+					}
+				}
+
 			}
 
 		}

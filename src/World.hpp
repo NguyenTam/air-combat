@@ -73,12 +73,14 @@ public:
       */
 	bool create_entity(Textures::ID id, double x, double y, int orientation, double width, double height, sf::Vector2f direct, Game::GameMode game_mode);
 
+  bool remove_bullet(Entity *bullet, Entity *entity);
 	/**
       *   @brief Removes given entity from the game
-      *   @param entity Pointer to the entity that is being removed
+      *   @param entity Raw pointer to the entity that is being removed
+      *   @param bullet Pass true if bullet is to be removed, false otherwise
       *   @return Returns true if succesful, false if not
       */
-	bool remove_entity(std::shared_ptr<Entity> entity);
+	bool remove_entity(Entity *entity);
 
 	/**
       *   @brief Updates the world
@@ -116,6 +118,7 @@ public:
         std::vector<std::shared_ptr<Entity>>& get_bullets();
 
 private:
+
   PhysicsWorld pworld;
   ResourceManager &resources;
   sf::RenderWindow &window; /**< Window that is being used */
