@@ -131,7 +131,7 @@ void get_antiaircraft_action(Entity& me, std::list<Entity*> &surroundings, Resou
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
     if ((current_worse_enemy.x > 0) && (current_worse_enemy_priority > 0) && (current_worse_enemy.y  > 10))
       {
-	sf::Vector2f direction = my_position - current_worse_enemy;
+	sf::Vector2f direction = current_worse_enemy - my_position;
 	me.shoot(direction, resources);
       }
   }
@@ -159,11 +159,11 @@ void get_infantry_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 	// Target is enemy => shoot and move to opposite direction
 	if(current_worse_enemy_priority > 0)
 	  {
-	    sf::Vector2f direction = my_position - current_worse_enemy;
+	    sf::Vector2f direction =  current_worse_enemy - my_position;
 	    me.shoot(direction, resources);
 	    if(direction.x > 0)
-	      me.moveRight();
-	    else me.moveLeft();
+	      me.moveLeft();
+	    else me.moveRight();
 	  }
 	// Target is friend => move to opposite direction
 	else if (current_worse_enemy_priority < 0) {
