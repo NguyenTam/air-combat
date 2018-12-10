@@ -5,11 +5,11 @@
 #pragma once
 
 /* Includes */
-
+#include "CommonDefinitions.hpp"
+#include "ResourceManager.hpp"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <Box2D/Box2D.h>
-#include "CommonDefinitions.hpp"
 #include <list>
 
 /**
@@ -123,7 +123,7 @@ public:
   /*
    *   @brief General shoot function for entity, more defined version in subclasses
    */
-  virtual bool shoot(sf::Vector2f direction);
+  virtual bool shoot(sf::Vector2f direction, ResourceManager& resources);
 
   /*
    *   @brief Gives a type for entity  
@@ -221,7 +221,7 @@ public:
    *   @brief Returns active bullets of this entity
    */
   std::list<std::shared_ptr<Entity>>& get_active_bullets();
-
+  sf::Clock clock;
 protected:
 
     /*  Variables */

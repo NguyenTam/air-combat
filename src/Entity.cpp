@@ -87,12 +87,10 @@ void Entity::move(sf::Vector2f direction){
   setPos(getPosition() + moveSpeed*direction);
 }
 
-bool Entity::shoot(sf::Vector2f direction) {
+bool Entity::shoot(sf::Vector2f direction, ResourceManager& resources) {
 
-  if(numberOfBullets>0){
-    numberOfBullets-=1;
-    return true;
-  } 
+  (void) direction;
+  (void) resources;
   return false;
 
 }
