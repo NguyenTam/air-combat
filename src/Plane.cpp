@@ -5,7 +5,7 @@
 
 //Note about the magical numbers
 //Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team)
-Plane::Plane(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team):Entity(w, b, t, position, 20, 400, 6, 60, 20, direct, team){
+Plane::Plane(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team):Entity(w, b, t, position, 20, 400, 6, 20, 20, direct, team){
   typeId = Game::TYPE_ID::airplane;
   }
 
@@ -63,7 +63,8 @@ void Plane::moveRight()
 
 
 bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
-      if (fireCountDown <= 0) {
+
+  if (clock.getElapsedTime()>sf::seconds(0.5f)) {
         if (numberOfBullets > 0) {
           fireCountDown = rateOfFire;
           numberOfBullets-=1;
@@ -108,7 +109,8 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
           body->SetUserData(bullet.get());
           active_bullets.push_back(bullet);
 
-
+          clock.restart();
+          std::cout << "airplane shot" << std::endl;
           return true;
         }
     }
