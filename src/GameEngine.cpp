@@ -155,7 +155,6 @@ void GameEngine::playerMoveDown(int player_number)
   float force = 0;
   if (vel1.y < Game::PlayerPlane::MAX_VELOCITY)
     force = Game::PlayerPlane::MAX_FORCE;
-  std::cout<< "force : "  << force << std::endl;
   player_body.ApplyForce(b2Vec2(0,Game::PlayerPlane::COEFFICIENT*force), player_body.GetWorldCenter(), true);
 }
 
