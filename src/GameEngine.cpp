@@ -125,8 +125,13 @@ void GameEngine::render()
   }
   else {
     // Draw only normal game view
-    world.update();
+    GameResult result = world.update(gameMode);
+    if (result != GameResult::UnFinished) {
+      // Game over
+      createGameOver(result);
+    }
   }
+
   renderWindow.display();
 }
 
@@ -258,6 +263,8 @@ void GameEngine::update(sf::Time elapsedTime)
       }
       if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
         // shoot world player_planes[1]
+        sf::Vector2f vec(cos(player2_body.GetAngle()), sin(player2_body.GetAngle()));
+        player2_entity.shoot(vec, resources);
       }
     }
 
@@ -296,8 +303,7 @@ bool GameEngine::gameOverHandler(sf::Event &event, std::string &level_path)
     if (event.key.code == sf::Keyboard::Return) {
       // Exit to main menu
       if (gameMode == Game::GameMode::SinglePlayer) {
-        // TODO real score here
-        logStats(level_path, name_input.getInputText(), 100);
+        logStats(level_path, name_input.getInputText(), world.getScore());
       }
       return true;
     }
@@ -317,7 +323,7 @@ bool GameEngine::gameOverHandler(sf::Event &event, std::string &level_path)
   return false;
 }
 
-void GameEngine::createGameOver(bool blue_won)
+void GameEngine::createGameOver(GameResult result)
 {
   //  Clear level
   world.clear_all();
@@ -337,17 +343,22 @@ void GameEngine::createGameOver(bool blue_won)
   name_input_info.setPosition(Game::WIDTH / 2 - 110, Game::HEIGHT / 2 - 50);
   name_input_info.setColor(sf::Color::Black);
 
-  if (blue_won) {
+  if (result == GameResult::BlueWon) {
     // Blue team won
     game_over_text = sf::Text("Game Over: Blue Team Won", gameFont, 30);
     game_over_text.setPosition(Game::WIDTH / 2 - 200, 100);
     game_over_text.setColor(sf::Color::Blue);
   }
-  else {
+  else if (result == GameResult::RedWon){
     // Red team won
     game_over_text = sf::Text("Game Over: Red Team Won", gameFont, 30);
     game_over_text.setPosition(Game::WIDTH / 2 - 200, 100);
     game_over_text.setColor(sf::Color::Red);
+  }
+  else {
+    game_over_text = sf::Text("Game Over: Tie", gameFont, 30);
+    game_over_text.setPosition(Game::WIDTH / 2 - 200, 100);
+    game_over_text.setColor(sf::Color::Green);
   }
 
   GameOver = true;
@@ -398,4 +409,6 @@ void GameEngine::logStats(std::string level_path, std::string user_name, int sco
 void GameEngine::setGameMode(Game::GameMode gameMode)
 {
   this->gameMode = gameMode;
+  // reset GameOver
+  GameOver = false;
 }

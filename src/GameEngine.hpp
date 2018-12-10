@@ -70,10 +70,10 @@ class GameEngine : private sf::NonCopyable
 
    /**
     *   @brief Create window for game over
-    *   @param blue_won pass true if blue_won. Otherwise false
+    *   @param GameResult @see world.hpp
     *   @details Creates user_input if single_player has ended
     */
-   void createGameOver(bool blue_won);
+   void createGameOver(GameResult result);
 
    /**
     *   @brief Draw window when game is over
