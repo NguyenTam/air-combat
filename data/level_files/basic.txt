@@ -1,0 +1,14 @@
+basic
+/*  */
+Ground;4;511;1;1187;89
+RedBase;1103;447;0;76;63
+BlueBase;28;447;1;76;63
+RedAirplane;1129;28;0;38;18
+RedInfantry;821;478;1;19;32
+RedAntiAircraft;996;479;0;36;31
+BlueAntiAircraft;598;479;1;36;31
+BlueAirplane;509;322;1;38;18
+InvisibleWall;0;0;1;1192;1
+InvisibleWall;0;600;1;1192;1
+InvisibleWall;0;0;1;1;600
+InvisibleWall;1200;0;1;1;600
