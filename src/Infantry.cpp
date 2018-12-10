@@ -33,14 +33,14 @@ void Infantry::moveRight()
 
 
 bool Infantry::shoot(sf::Vector2f direction, ResourceManager& resources){
-  if (fireCountDown <= 0) {
+  if (clock.getElapsedTime() > sf::seconds(1.f)) {
     if (numberOfBullets > 0) {
-      fireCountDown = rateOfFire;
       numberOfBullets-=1;
+      clock.restart();
+      std::cout << "Infantry shot" << std::endl;
       return true;      
     }
   }
-  fireCountDown-=1;
   return false;
 }
 

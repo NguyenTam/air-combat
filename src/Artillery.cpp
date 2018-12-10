@@ -7,14 +7,16 @@ Artillery::Artillery(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vec
   }
 
 bool Artillery::shoot(sf::Vector2f direction, ResourceManager& resources){
-      if (fireCountDown <= 0) {
+  if (clock.getElapsedTime() > sf::seconds(0.5)) {
         if (numberOfBullets > 0) {
-          fireCountDown = rateOfFire;
+          //fireCountDown = rateOfFire;
           numberOfBullets-=1;
+          clock.restart();
+          std::cout << "artillery shot" << std::endl;
           return true;  
         }
     }
-    fireCountDown-=1;
+  //fireCountDown-=1;
     return false;    
 }
 

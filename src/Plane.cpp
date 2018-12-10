@@ -66,7 +66,7 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
 
   if (clock.getElapsedTime()>sf::seconds(0.5f)) {
         if (numberOfBullets > 0) {
-          fireCountDown = rateOfFire;
+          //fireCountDown = rateOfFire;
           numberOfBullets-=1;
 
           double x, y;
@@ -114,6 +114,6 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
           return true;
         }
     }
-    fireCountDown-=1;
+  //fireCountDown-=1;
     return false;
 }
