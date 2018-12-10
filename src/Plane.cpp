@@ -86,7 +86,7 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
 
           b2BodyDef BodyDef;
           BodyDef.type = b2_dynamicBody;
-          BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y+(this->getSize().y)/2)/Game::TOPIXELS);
+          BodyDef.position = b2Vec2((x+((this->getSize().x) + 5))/Game::TOPIXELS, (y-(this->getSize().y))/Game::TOPIXELS);
           BodyDef.bullet = true;
 
           b2Body* body = world.CreateBody(&BodyDef);
@@ -101,7 +101,7 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
           body->CreateFixture(&FixtureDef);
 
           sf::Vector2f pos(x,y);
-          std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(world, *body, tex, pos, sf::Vector2f(1.0f, 0.0f));
+          std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(world, *body, tex, pos, sf::Vector2f(1.0f, 0.0f), this);
           bullet->setType(Textures::Bullet_alpha);
 
           body->SetGravityScale(0.5f);
