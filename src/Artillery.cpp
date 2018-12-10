@@ -1,6 +1,9 @@
 #include "Artillery.hpp"
 #include <cmath>
 
+const int bullet_correction = 2;  // this is how many pixels away from the body bullet is created
+const float bullet_force = 0.2;  // this is multiplier for impulse given to bullet
+
 //Note about the magical numbers
 //Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team) 
 Artillery::Artillery(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, Game::TEAM_ID team):Entity(w, b, t, position, 0.f, 1000, 0, 90, 30, sf::Vector2f(1.0f, 0.0f), team){ 
@@ -30,13 +33,13 @@ bool Artillery::shoot(sf::Vector2f direction, ResourceManager& resources){
           b2BodyDef BodyDef;
           BodyDef.type = b2_dynamicBody;
           if (-(direction.y) >= (std::abs(direction.x))) {
-            BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y-2)/Game::TOPIXELS);
+            BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y-bullet_correction)/Game::TOPIXELS);
           }
           else if (direction.x < 0){
-            BodyDef.position = b2Vec2((x-4)/Game::TOPIXELS, (y+((this->getSize().y)/2))/Game::TOPIXELS);
+            BodyDef.position = b2Vec2((x-bullet_correction)/Game::TOPIXELS, (y+((this->getSize().y)/2))/Game::TOPIXELS);
           }
           else {
-            BodyDef.position = b2Vec2((x+(this->getSize().x)+4)/Game::TOPIXELS, (y-((this->getSize().y)/2))/Game::TOPIXELS);
+            BodyDef.position = b2Vec2((x+(this->getSize().x)+bullet_correction)/Game::TOPIXELS, (y-((this->getSize().y)/2))/Game::TOPIXELS);
           }
           BodyDef.bullet = true;
 
@@ -56,7 +59,7 @@ bool Artillery::shoot(sf::Vector2f direction, ResourceManager& resources){
           bullet->setType(Textures::Bullet_alpha);
 
           body->SetGravityScale(0.5f);
-          body->ApplyLinearImpulse(b2Vec2(direction.x/5, direction.y/5), body->GetWorldCenter(), true);
+          body->ApplyLinearImpulse(b2Vec2(direction.x*bullet_force, direction.y*bullet_force), body->GetWorldCenter(), true);
           body->SetUserData(bullet.get());
           active_bullets.push_back(bullet);      
           
