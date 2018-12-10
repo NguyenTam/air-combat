@@ -91,6 +91,14 @@ class GameEngine : private sf::NonCopyable
    void logStats(std::string level_path, std::string user_name, int score);
 
 
+  void playerMoveUp(int player_number);
+  void playerMoveDown(int player_number);
+  void playerMoveLeft(int player_number);
+  void playerMoveRight(int player_number);
+  void playerRotateCounterClockWise(int player_number);
+  void playerRotateClockWise(int player_number);
+  void playerShoot(int player_number);
+
 
   sf::RenderWindow &renderWindow; /**< Display window for game engine */
   ResourceManager resources;
