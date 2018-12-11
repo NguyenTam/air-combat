@@ -1,0 +1,14 @@
+Testi
+/*  */
+Ground;3;535;1;1194;65
+RedAntiAircraft;979;503;1;36;31
+RedInfantry;400;502;1;19;32
+RedAirplane;1149;20;1;38;18
+BlueAirplane;50;307;1;38;18
+Rock;734;514;1;25;20
+BlueAntiAircraft;17;503;1;36;31
+RedBase;1104;471;1;76;63
+InvisibleWall;0;0;1;1198;1
+InvisibleWall;0;600;1;1198;1
+InvisibleWall;0;0;1;1;600
+InvisibleWall;1200;0;1;1;600
