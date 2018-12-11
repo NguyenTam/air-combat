@@ -1,6 +1,7 @@
 #include "AI.hpp"
 #include <cmath>
 #include <cstdlib>
+#include <math.h> 
 namespace AI
 {
   std::map<Game::TYPE_ID, int> priority_list
@@ -85,7 +86,7 @@ void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
     // If worse enemy is visible
     if (current_worse_enemy.x > 0)
       {	  
-	std::cout << "Target found at at (x,y): " << current_worse_enemy.x << ", " << current_worse_enemy.y << std::endl;
+	//std::cout << "Target found at at (x,y): " << current_worse_enemy.x << ", " << current_worse_enemy.y << std::endl;
 	if (current_worse_enemy_priority > 0)
 	  {
 	    switch (current_worse_enemy_priority)
@@ -107,7 +108,7 @@ void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 	  }
 	else if ( current_worse_enemy_priority < 0 )
 	  {
-	    std::cout << "friendly entity detected. avoid it. " << std::endl;
+	    //std::cout << "friendly entity detected. avoid it. " << std::endl;
 
             if (current_worse_enemy.y <= my_position.y)
             {
@@ -186,7 +187,9 @@ void get_infantry_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 	if(current_worse_enemy_priority > 0)
 	  {
 	    sf::Vector2f direction =  current_worse_enemy - my_position;
-            direction = direction/(std::abs(direction.x)*std::abs(direction.y));
+            float scale = sqrt(pow(std::abs(direction.x),2)+pow(std::abs(direction.y),2));
+            direction.x = direction.x/scale;
+            direction.y = direction.y/scale;
 	    me.shoot(direction, resources);
 	    if(direction.x > 0)
 	      me.moveLeft();

@@ -2,11 +2,11 @@
 #include "CommonDefinitions.hpp"
 
 const int bullet_correction = 5;  // this is how many pixels away from the body bullet is created
-const float bullet_force = 0.2;  // this is multiplier for impulse given to bullet
+const float bullet_force = 1000;  // this is multiplier for impulse given to bullet
 
 //Note about the magical numbers
 //Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team)
-Plane::Plane(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team):Entity(w, b, t, position, 20, 400, 6, 20, 20, direct, team){
+Plane::Plane(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team):Entity(w, b, t, position, 20, 400, 6, 20, 2000, direct, team){
   typeId = Game::TYPE_ID::airplane;
   }
 
@@ -39,7 +39,7 @@ void Plane::moveDown()
 void Plane::moveLeft()
 {
   b2Vec2 vel = b2body.GetLinearVelocity();
-  std::cout << "AI Plane: " << vel.x << ", " << vel.y << std::endl;
+  //std::cout << "AI Plane: " << vel.x << ", " << vel.y << std::endl;
   float force = 1;
   if( vel.x > -Game::Plane::MAX_VELOCITY )
     {
@@ -119,12 +119,13 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
           bullet->setType(Textures::Bullet_alpha);
 
           body->SetGravityScale(0.5f);
+	  //std::cout << "Plane fires, force of bullet: X: " << direction.x*bullet_force << ", Y: " << direction.y*bullet_force << std::endl;
           body->ApplyLinearImpulse(b2Vec2(direction.x*bullet_force, direction.y*bullet_force), body->GetWorldCenter(), true);
           body->SetUserData(bullet.get());
           active_bullets.push_back(bullet);
 
           clock.restart();
-          std::cout << "airplane shot" << std::endl;
+          //std::cout << "airplane shot" << std::endl;
           return true;
         }
     }
