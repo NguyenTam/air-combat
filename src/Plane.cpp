@@ -118,7 +118,7 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
           bullet->setType(Textures::Bullet_alpha);
 
           body->SetGravityScale(0.5f);
-	  std::cout << "Plane fires, force of bullet: X: " << direction.x*bullet_force << ", Y: " << direction.y*bullet_force << std::endl;
+	  //std::cout << "Plane fires, force of bullet: X: " << direction.x*bullet_force << ", Y: " << direction.y*bullet_force << std::endl;
           body->ApplyLinearImpulse(b2Vec2(direction.x*bullet_force, direction.y*bullet_force), body->GetWorldCenter(), true);
           body->SetUserData(bullet.get());
           active_bullets.push_back(bullet);
