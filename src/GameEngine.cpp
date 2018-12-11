@@ -220,8 +220,8 @@ void GameEngine::playerShoot(int player_number)
   b2Body& player_body = player_entity.getB2Body();
   b2Vec2 vel1 = player_body.GetLinearVelocity();
 
-  sf::Vector2f vec(25*cos(player_body.GetAngle()), 25*sin(player_body.GetAngle()));
-  player_entity.shoot(100.f*vec, resources);
+  sf::Vector2f vec(cos(player_body.GetAngle()), sin(player_body.GetAngle()));
+  player_entity.shoot(vec, resources);
 }
 
 
