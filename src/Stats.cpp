@@ -39,6 +39,7 @@ void Stats::CreateUI()
 
   // Set Button style
   menu->setActiveColor(ButtonActiveColor);
+  menu->activate(true);
   name->setCheckable(true);
   name->setActiveColor(ButtonActiveColor);
   score->setCheckable(true);
@@ -499,14 +500,20 @@ void Stats::init()
   active = true;
   // Init view and current_button
   current_view = 1;
-  // Set time button checked and others unchecked
+  // Set time button checked and others unchecked and non-active
   for (auto it : buttons)
   {
     if (it->getText().getString() == "Time") it->setChecked();
-    else it->setUnchecked();
+    else
+    {
+      it->setUnchecked();
+      it->activate(false);
+    }
   }
 
   current_button = 0;
+  // Button one active
+  buttons[0]->activate(true);
   stats_view.setCenter(stats_view.getSize().x / 2, stats_view.getSize().y / 2);
 
 }
