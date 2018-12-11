@@ -39,7 +39,6 @@ void Plane::moveDown()
 void Plane::moveLeft()
 {
   b2Vec2 vel = b2body.GetLinearVelocity();
-  std::cout << "AI Plane: " << vel.x << ", " << vel.y << std::endl;
   float force = 1;
   if( vel.x > -Game::Plane::MAX_VELOCITY )
     {
