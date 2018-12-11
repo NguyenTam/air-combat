@@ -1,7 +1,7 @@
 #include "Artillery.hpp"
 #include <cmath>
 
-const int bullet_correction = 2;  // this is how many pixels away from the body bullet is created
+const int bullet_correction = 5;  // this is how many pixels away from the body bullet is created
 const float bullet_force = 1000;  // this is multiplier for impulse given to bullet
 
 //Note about the magical numbers
@@ -32,13 +32,13 @@ bool Artillery::shoot(sf::Vector2f direction, ResourceManager& resources){
 
           b2BodyDef BodyDef;
           BodyDef.type = b2_dynamicBody;
-          if (-(direction.y) >= (std::abs(direction.x))) {
+          if (-(direction.y) >= (std::abs(direction.x))) {   //shooting up
             BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y-bullet_correction)/Game::TOPIXELS);
           }
-          else if (direction.x < 0){
+          else if (direction.x < 0){                         //shooting left
             BodyDef.position = b2Vec2((x-bullet_correction)/Game::TOPIXELS, (y+((this->getSize().y)/2))/Game::TOPIXELS);
           }
-          else {
+          else {                                             //shooting right
             BodyDef.position = b2Vec2((x+(this->getSize().x)+bullet_correction)/Game::TOPIXELS, (y-((this->getSize().y)/2))/Game::TOPIXELS);
           }
           BodyDef.bullet = true;
