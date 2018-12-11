@@ -14,6 +14,6 @@ int main() {
 	ResourceManager manager = ResourceManager();
 	World world(window,manager);
 	world.read_level(str, Game::GameMode::SinglePlayer);
-	world.update();
+	world.update(Game::GameMode::SinglePlayer);
 	window.display();
 }
