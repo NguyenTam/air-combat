@@ -18,6 +18,8 @@
 #include <fstream>
 #include <ctime>
 #include <math.h>
+#include <sstream>
+
 
 /* Initialize members*/
 const float GameEngine::METERS_PER_PIXEL = 60.f;
@@ -103,7 +105,6 @@ void GameEngine::run(std::string &level_file)
           }
         }
       }
-      updateGameInfo();
       update(TIME_PER_FRAME);
       render();
     }
@@ -128,7 +129,7 @@ void GameEngine::render()
       createGameOver(result);
     }
   }
-
+  updateGameInfo();
   renderWindow.display();
 }
 void GameEngine::playerMoveUp(int player_number)
@@ -316,9 +317,21 @@ void GameEngine::update(sf::Time elapsedTime)
 void GameEngine::updateGameInfo()
 {
   /*Game info to display*/
-  std::ostringstream convert;
-  convert << rand() % 10000;
-  gameInfo.setString("Entities Left: " + convert.str() + "\n" + "AAAAAAAAA");
+
+  std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
+  std::stringstream display_information;
+  if ( planes.size() > 0 )
+  {
+    Entity& player_entity = *planes[0];
+    display_information << "Player 1, hitpoints: " << player_entity.getHitPoints() << "\n";
+  }
+  if ( planes.size() > 1 )
+  {
+    Entity& player_entity = *planes[1];
+    display_information << "Player 2, hitpoints: " << player_entity.getHitPoints() << "\n";
+  }
+  gameInfo.setString(display_information.str());
+  renderWindow.draw(gameInfo);
 }
 
 bool GameEngine::gameOverHandler(sf::Event &event, std::string &level_path)
