@@ -6,17 +6,17 @@ namespace Game
   const float GRAVITY = 0.1f;
   constexpr float TOPIXELS = 5.f;
   constexpr float TOMETERS = 1/TOPIXELS;
-  constexpr int LEFT_LIMIT = static_cast<int>(0.25*WIDTH);       //limit as percentage from the limits of the map.
+  constexpr int LEFT_LIMIT = static_cast<int>(0.2*WIDTH);       //limit as percentage from the limits of the map.
   constexpr int RIGHT_LIMIT = static_cast<int>((1-0.25)*WIDTH);  //these 3 values should be between 0.01 and 0.25.
-  constexpr int UPPER_LIMIT = static_cast<int>((0.4)*HEIGHT);
-  constexpr int LOWER_LIMIT = static_cast<int>((1-0.5)*HEIGHT);      //LOWER_LIMIT should be atleast 0.3.
+  constexpr int UPPER_LIMIT = static_cast<int>((0.3)*HEIGHT);
+  constexpr int LOWER_LIMIT = static_cast<int>((1-0.4)*HEIGHT);      //LOWER_LIMIT should be atleast 0.3.
 
   const float Infantry::VELOCITY = 20.f;
   const float Plane::MAX_FORCE = 30.f;
   const float Plane::MAX_VELOCITY = 10.f;
 
-  const float PlayerPlane::MAX_FORCE = 100.f;
-  const float PlayerPlane::MAX_VELOCITY = 100.f;
+  const float PlayerPlane::MAX_FORCE = 80.f;
+  const float PlayerPlane::MAX_VELOCITY = 20.f;
   const int PlayerPlane::COEFFICIENT = 30;
   const float PlayerPlane::TORQUE = 5.f;
   const float PlayerPlane::MAX_ANGULAR_VELOCITY = 15.f;
