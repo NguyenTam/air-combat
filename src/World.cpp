@@ -124,6 +124,11 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			body->SetUserData(entity.get());
 			body->SetGravityScale(0); //gravity 0 for plane
 			// add BlueAirplane to player_planes[0] (controlled by player not by AI)
+                        if (orientation == 0)
+                        {
+                          entity->setDirection({-1.f,0});
+                          entity->faceLeft();
+                        }
 			player_planes.push_front((std::move(entity)));
 			break;
 		}
@@ -163,7 +168,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			body->SetUserData(entity.get());
 			break;
 		}
-		case Textures::RedAirplane_alpha: {
+		case Textures::RedAirplane_alpha: {                 
 			if (game_mode == Game::GameMode::SinglePlayer) {
 				// add RedAirplanes to the normal container (controlled by AI)
 				body = pworld.create_body_dynamic(x, y, width, height);
@@ -171,6 +176,11 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 				entity->setType(Textures::RedAirplane_alpha);
 				body->SetUserData(entity.get());
 				body->SetGravityScale(0); //gravity 0 for plane
+                                if (orientation == 0)
+                                {
+                                  entity->setDirection({-1.f,0});
+                                  entity->faceLeft();
+                                }
 				objects.push_back(std::move(entity));
 			}
 			else {
@@ -183,6 +193,11 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 						entity->setType(Textures::RedAirplane_alpha);
 						body->SetUserData(entity.get());
 						body->SetGravityScale(0); //gravity 0 for plane
+                                                if (orientation == 0)
+                                                {
+                                                  entity->setDirection({-1.f,0});
+                                                  entity->faceLeft();
+                                                }
 						player_planes.push_back(std::move(entity));
 					}
 				}
@@ -192,6 +207,11 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 					entity->setType(Textures::RedAirplane_alpha);
 					body->SetUserData(entity.get());
 					body->SetGravityScale(0); //gravity 0 for plane
+                                        if (orientation == 0)
+                                        {
+                                          entity->setDirection({-1.f,0});
+                                          entity->faceLeft();
+                                        }                                        
 					player_planes.push_back(std::move(entity));
 				}
 			}
@@ -244,6 +264,12 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			break;
 	}
 
+        if (id != Textures::RedAirplane_alpha && id != Textures::BlueAirplane_alpha &&  orientation == 0)
+        {
+          entity->setDirection({-1.f,0});
+          entity->faceLeft();
+        }
+        
 	if (entity && (id != Textures::BlueAirplane_alpha) && (id != Textures::RedAirplane_alpha)) {
 	  objects.push_back(std::move(entity));
 	  return true;
