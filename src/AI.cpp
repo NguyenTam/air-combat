@@ -173,13 +173,14 @@ void get_infantry_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
     int current_worse_enemy_priority = 0;
     sf::Vector2f my_position = me.getPosition();
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
-    if( my_position.x < Game::LEFT_LIMIT || my_position.x >= Game::RIGHT_LIMIT )
+    const int EPSILON = 50;
+    if( my_position.x < EPSILON || my_position.x >= Game::WIDTH - EPSILON)
       {
-	if ( my_position.x < Game::LEFT_LIMIT )
+	if ( my_position.x < EPSILON )
 	  {
 	    me.moveRight();
 	  }
-	else 
+	else
 	  {
 	    me.moveLeft();
 	  }
@@ -211,7 +212,7 @@ void get_infantry_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 	else {}
       } 
     else
-      {	
+      {
 	if (me.getDirection().x > 0)
 	  me.moveRight();
 	else me.moveLeft();
@@ -259,11 +260,8 @@ void get_infantry_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 	  }
 	else
 	  {
-	    if ( current_worse_enemy.x < 0 )
-	      {
-		current_worse_enemy = e->getPosition();
-		current_worse_enemy_priority = -priority_list[surrounding_type];		
-	      }
+	    current_worse_enemy = e->getPosition();
+	    current_worse_enemy_priority = priority_list[surrounding_type];
 	  }
       }
   }
