@@ -1,5 +1,4 @@
 #include "PhysicsWorld.hpp"
-#include "CommonDefinitions.hpp"
 PhysicsWorld::PhysicsWorld() {
         b2Vec2 gvector(0.0f, Game::GRAVITY);
 	World = new b2World(gvector);
@@ -39,7 +38,7 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 	return Body; 
 }
 
-b2Body* PhysicsWorld::create_body_static(double x, double y, double width, double height) {
+b2Body* PhysicsWorld::create_body_static(double x, double y, double width, double height, Game::TYPE_ID type) {
 	b2BodyDef BodyDef;
 	BodyDef.type = b2_staticBody;
 	BodyDef.position = b2Vec2((x+(width/2))/Game::TOPIXELS, (y+(height/2))/Game::TOPIXELS);
@@ -52,6 +51,10 @@ b2Body* PhysicsWorld::create_body_static(double x, double y, double width, doubl
 	b2FixtureDef FixtureDef;
 	FixtureDef.density = 0.f;
 	FixtureDef.shape = &Shape;
+	if (type == Game::TYPE_ID::antiaircraft || type == Game::TYPE_ID::base || type == Game::TYPE_ID::hangar || type == Game::TYPE_ID::rock || type == Game::TYPE_ID::tree)
+	  {
+	    FixtureDef.filter.categoryBits = 0x0004;
+	  }
 	Body->CreateFixture(&FixtureDef);
 
 	return Body;
