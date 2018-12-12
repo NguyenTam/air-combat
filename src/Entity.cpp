@@ -167,3 +167,13 @@ Entity* Entity::getOwner()
 {
   return owner;
 }
+
+bool Entity::getFacing()
+{
+  sf::Vector2u texture_size = entity.getTexture()->getSize();
+  if (entity.getTextureRect() == sf::IntRect(0, 0, texture_size.x, texture_size.y)) {
+    // Texture rect right oriented
+    return true;
+  }
+  return false;
+}

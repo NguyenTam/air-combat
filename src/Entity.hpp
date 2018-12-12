@@ -224,6 +224,12 @@ public:
     */
   Entity* getOwner();
 
+  /**
+    *   @brief Get facing of the entity
+    *   @return Return true if facing right, else false
+    */
+  bool getFacing();
+
   /*
    *   @brief Returns active bullets of this entity
    */
