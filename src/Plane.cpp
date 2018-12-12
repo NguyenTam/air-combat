@@ -1,12 +1,12 @@
 #include "Plane.hpp"
 #include "CommonDefinitions.hpp"
 
-const int bullet_correction = 5;  // this is how many pixels away from the body bullet is created
+const int bullet_correction = 2;  // this is how many pixels away from the body bullet is created
 const float bullet_force = 1000;  // this is multiplier for impulse given to bullet
 
 //Note about the magical numbers
 //Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team)
-Plane::Plane(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team):Entity(w, b, t, position, 20, 400, 6, 20, 20, direct, team){
+Plane::Plane(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team):Entity(w, b, t, position, 20, 400, 6, 20, 20999, direct, team){
   typeId = Game::TYPE_ID::airplane;
   }
 
@@ -87,17 +87,31 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
 
           b2BodyDef BodyDef;
           BodyDef.type = b2_dynamicBody;
+          std::cout << "Plane location X: " << x << " Y: " << y << " Size X: " << this->getSize().x << " Y: " << this->getSize().y << std::endl;
           if (-(direction.y) >= direction.x) {  //shooting up
+            if (direction.x > 0) {
+              x += (this->getSize().x)/4;
+	    }
             BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y-bullet_correction)/Game::TOPIXELS);
+            std::cout << "Bullet created up X: " << (x+((this->getSize().x)/2)) << " Y: " << (y-bullet_correction) << std::endl;
           }
           else if (direction.y >= direction.x){  //shooting down
+            if (direction.x > 0) {
+              x -= (this->getSize().x)/4;
+	    }
             BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y+(this->getSize().y)+bullet_correction)/Game::TOPIXELS);
+            std::cout << "Bullet created down X: " << (x+((this->getSize().x)/2)) << " Y: " << (y+(this->getSize().y)+bullet_correction) << std::endl;
           }
-          else if (direction.x >= direction.y){  //shooting right
-            BodyDef.position = b2Vec2((x+(this->getSize().x)+bullet_correction)/Game::TOPIXELS, (y+((this->getSize().y)/2))/Game::TOPIXELS);
+          else if (direction.x > direction.y){  //shooting right
+            BodyDef.position = b2Vec2((x+(this->getSize().x)+bullet_correction+200)/Game::TOPIXELS, y+((this->getSize().y)/2)/Game::TOPIXELS);
+            std::cout << "Bullet created right X: " << (x+(this->getSize().x)+bullet_correction) << " Y: " << (y-((this->getSize().y)/2)) << std::endl;
           }
-          else {                                 //shooting left
+          else {                                 //shooting left koodi ei koskaan mene tähän!!! LauriB hoitaa torstaina
+            if (direction.y > 0) {
+              y += (this->getSize().x);
+	    }
             BodyDef.position = b2Vec2((x-bullet_correction)/Game::TOPIXELS, (y+((this->getSize().y)/2))/Game::TOPIXELS);
+            std::cout << "Bullet created left X: " << (x-bullet_correction) << " Y: " << (y+((this->getSize().y)/2)) << std::endl;
           }
 
           BodyDef.bullet = true;
