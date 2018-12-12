@@ -76,7 +76,7 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 				else {
 					//all ok
 					if (type == "InvisibleWall") {
-						b2Body* body = pworld.create_body_static(x, y, width, height);
+					        b2Body* body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::invisible_wall);
 						std::shared_ptr<Entity> entity = std::make_shared<InvisibleWall>(*pworld.get_world(), *body, resources.get(Textures::alphaTextures.at("Ground")), sf::Vector2f(x,y));
 						entity->setType(Textures::Ground_alpha); //TODO Id for InvisibleWall
 						body->SetUserData(entity.get());
@@ -140,14 +140,14 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			break;
 		}
 		case Textures::BlueBase_alpha: {
-			body = pworld.create_body_static(x, y, width, height);
+		        body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::base);
 			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
 			entity->setType(Textures::BlueBase_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::BlueHangar_alpha: {
-			body = pworld.create_body_static(x, y, width, height);
+		        body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::hangar);
 			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
 			entity->setType(Textures::BlueHangar_alpha);
 			body->SetUserData(entity.get());
@@ -161,7 +161,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			break;
 		}
 		case Textures::Ground_alpha: {
-			body = pworld.create_body_static(x, y, width, height);
+		        body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::ground);
 			entity = std::make_shared<Ground>(*pworld.get_world(), *body, tex, pos);
 			entity->setType(Textures::Ground_alpha);
 			entity->setScale(width,height);
@@ -225,14 +225,14 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			break;
 		}
 		case Textures::RedBase_alpha: {
-			body = pworld.create_body_static(x, y, width, height);
+		        body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::base);
 			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
 			entity->setType(Textures::RedBase_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::RedHangar_alpha: {
-			body = pworld.create_body_static(x, y, width, height);
+		        body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::hangar);
 			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
 			entity->setType(Textures::RedHangar_alpha);
 			body->SetUserData(entity.get());
@@ -246,14 +246,14 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			break;
 		}
 		case Textures::Rock_alpha: {
-			body = pworld.create_body_static(x, y, width, height);
+			body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::rock);
 			entity = std::make_shared<Stone>(*pworld.get_world(), *body, tex, pos);
 			entity->setType(Textures::Rock_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::Tree_alpha: {
-			body = pworld.create_body_static(x, y, width, height);
+			body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::tree);
 			entity = std::make_shared<Tree>(*pworld.get_world(), *body, tex, pos);
 			entity->setType(Textures::Tree_alpha);
 			body->SetUserData(entity.get());
