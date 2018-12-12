@@ -168,7 +168,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			body->SetUserData(entity.get());
 			break;
 		}
-		case Textures::RedAirplane_alpha: {                 
+		case Textures::RedAirplane_alpha: {
 			if (game_mode == Game::GameMode::SinglePlayer) {
 				// add RedAirplanes to the normal container (controlled by AI)
 				body = pworld.create_body_dynamic(x, y, width, height);
@@ -211,7 +211,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
                                         {
                                           entity->setDirection({-1.f,0});
                                           entity->faceLeft();
-                                        }                                        
+                                        }
 					player_planes.push_back(std::move(entity));
 				}
 			}
@@ -269,7 +269,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
           entity->setDirection({-1.f,0});
           entity->faceLeft();
         }
-        
+
 	if (entity && (id != Textures::BlueAirplane_alpha) && (id != Textures::RedAirplane_alpha)) {
 	  objects.push_back(std::move(entity));
 	  return true;
@@ -311,6 +311,7 @@ bool World::remove_entity(Entity *entity)
 {
 		for (auto it = objects.begin(); it != objects.end(); it++) {
 			if (it->get() == entity) {
+				//std::cout << "Removing entity" << std::endl;
 				// raw pointers match, erase entity from the vector
 				objects.erase(it);
 				return true;
@@ -319,6 +320,7 @@ bool World::remove_entity(Entity *entity)
 		// go through also player_planes
 		for (auto it = player_planes.begin(); it != player_planes.end(); it++) {
 			if (it->get() == entity) {
+				//std::cout << "Removing player entity" << std::endl;
 				player_planes.erase(it);
 				return true;
 			}
@@ -382,6 +384,7 @@ GameResult World::update(Game::GameMode game_mode) {
 						}
 					}
 					else if (a_entity->getOwner() != b_entity){
+						//std::cout << "Hit by Bullet" << std::endl;
 						if (b_entity->damage(10)) {
 							pworld.remove_body(b_body);
 							remove_entity(b_entity);
@@ -397,6 +400,7 @@ GameResult World::update(Game::GameMode game_mode) {
 				else if (b_entity->getType() == Textures::Bullet_alpha) {
 
 					if (b_entity->getOwner() != a_entity) {
+						//std::cout << "Hit by Bullet" << std::endl;
 						if (a_entity->damage(10)) {
 							pworld.remove_body(a_body);
 							remove_entity(a_entity);
@@ -416,6 +420,7 @@ GameResult World::update(Game::GameMode game_mode) {
 					}
 					else if (b_entity->getTypeId() == Game::TYPE_ID::airplane)
 					{
+						//std::cout << "Plane collision" << std::endl;
 						// damage both planes
 						if (a_entity->damage(10)){
 							pworld.remove_body(a_body);
