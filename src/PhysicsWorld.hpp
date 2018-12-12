@@ -34,7 +34,7 @@ public:
    *   @param height Height of the body
    *   @return Created body
    */
-	b2Body* create_body_dynamic(double x, double y, double width, double height);
+       b2Body* create_body_dynamic(double x, double y, double width, double height, int density);
 
   /**
    *   @brief Creates a static body

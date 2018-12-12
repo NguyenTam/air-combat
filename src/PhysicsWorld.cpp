@@ -4,7 +4,7 @@ PhysicsWorld::PhysicsWorld() {
 	World = new b2World(gvector);
 }
 
-b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, double height) {
+b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, double height, int density) {
 	//creating a definition of a body
 	b2BodyDef BodyDef;
 	BodyDef.type = b2_dynamicBody; //creating a dynamic body
@@ -20,7 +20,7 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 
 	b2FixtureDef FixtureDef;
 	FixtureDef.shape = &boxShape;
-	FixtureDef.density = 1; //mass of the body is AREA * density
+	FixtureDef.density = density; //mass of the body is AREA * density
 	FixtureDef.filter.categoryBits = 0x0004;
 	Body->CreateFixture(&FixtureDef);
 
