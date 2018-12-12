@@ -157,7 +157,7 @@ void get_antiaircraft_action(Entity& me, std::list<Entity*> &surroundings, Resou
     int current_worse_enemy_priority = -1;
     sf::Vector2f my_position = me.getPosition();
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
-    if ((current_worse_enemy.x > 0) && (current_worse_enemy_priority > 0) && (current_worse_enemy.y  > 10))
+    if (current_worse_enemy_priority == priority_list[Game::TYPE_ID::airplane])
       {
 	sf::Vector2f direction = current_worse_enemy - my_position;
         float scale = sqrt(pow(std::abs(direction.x),2)+pow(std::abs(direction.y),2));
