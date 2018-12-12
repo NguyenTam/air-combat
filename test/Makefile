@@ -10,7 +10,7 @@ CC = g++
 CFLAGS = -Wall -Wextra -pedantic -g -std=c++17
 LINKER = -pthread -lsfml-graphics -lsfml-window -lsfml-system -lstdc++fs -lBox2D
 
-OBJECTS = PhysicsWorld.o Plane.o Artillery.o Infantry.o Bullet.o World.o Entity.o button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o TextInput.o CommonDefinitions.o ResourceManager.o Plane.o Artillery.o Infantry.o Bullet.o World.o PhysicsWorld.o GameEngine.o Tree.o Stone.o Ground.o Base.o Hangar.o AI.o
+OBJECTS = PhysicsWorld.o Plane.o Artillery.o Infantry.o Bullet.o World.o Entity.o button.o image_button.o LevelEntity.o Level.o UI.o LevelEditor.o MainMenu.o TextInput.o CommonDefinitions.o ResourceManager.o Plane.o Artillery.o Infantry.o Bullet.o World.o PhysicsWorld.o GameEngine.o Tree.o Stone.o Ground.o Base.o Hangar.o InvisibleWall.o AI.o
 UI_OBJECTS = UI.o button.o image_button.o CommonDefinitions.o ResourceManager.o TextInput.o
 
 SRC = ../src/
