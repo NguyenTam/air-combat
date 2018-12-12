@@ -6,7 +6,7 @@
 #pragma once
 
 /*  Includes  */
-
+#include "CommonDefinitions.hpp"
 #include <Box2D/Box2D.h>
 
 /**
@@ -44,7 +44,7 @@ public:
    *   @param height Height of the body
    *   @return Created body
    */
-	b2Body* create_body_static(double x, double y, double width, double height);
+        b2Body* create_body_static(double x, double y, double width, double height, Game::TYPE_ID type);
 
   /**
    *   @brief Removes a body
