@@ -342,8 +342,8 @@ void MainMenu::CreateGameModeButtons()
   level_select.single_player->setTextStyle(sf::Text::Bold, 14, sf::Color::Red);
   level_select.multiplayer->setTextStyle(sf::Text::Bold, 14, sf::Color::Red);
   level_select.single_player->enableClicking(false);
-  level_select.single_player->setCheckedColor(sf::Color::Blue);
-  level_select.multiplayer->setCheckedColor(sf::Color::Blue);
+  level_select.single_player->setCheckedColor(sf::Color(15, 10, 75));
+  level_select.multiplayer->setCheckedColor(sf::Color(15, 10, 75));
 
   // Add Buttons to the container
   level_select.buttons.push_back(level_select.single_player);
