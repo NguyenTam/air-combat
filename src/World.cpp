@@ -118,7 +118,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 
 	switch(id) {
 		case Textures::BlueAirplane_alpha: {
-			body = pworld.create_body_dynamic(x, y, width, height);
+		        body = pworld.create_body_dynamic(x, y, width, height,1);
 			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::blue);
 			entity->setType(Textures::BlueAirplane_alpha);
 			body->SetUserData(entity.get());
@@ -133,7 +133,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			break;
 		}
 		case Textures::BlueAntiAircraft_alpha: {
-			body = pworld.create_body_dynamic(x, y, width, height);
+		        body = pworld.create_body_dynamic(x, y, width, height, 1);
 			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
 			entity->setType(Textures::BlueAntiAircraft_alpha);
 			body->SetUserData(entity.get());
@@ -154,7 +154,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			break;
 		}
 		case Textures::BlueInfantry_alpha: {
-			body = pworld.create_body_dynamic(x, y, width, height);
+		        body = pworld.create_body_dynamic(x, y, width, height, 1000);
 			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
 			entity->setType(Textures::BlueInfantry_alpha);
 			body->SetUserData(entity.get());
@@ -171,7 +171,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		case Textures::RedAirplane_alpha: {
 			if (game_mode == Game::GameMode::SinglePlayer) {
 				// add RedAirplanes to the normal container (controlled by AI)
-				body = pworld.create_body_dynamic(x, y, width, height);
+			        body = pworld.create_body_dynamic(x, y, width, height, 1);
 				entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
 				entity->setType(Textures::RedAirplane_alpha);
 				body->SetUserData(entity.get());
@@ -188,7 +188,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 				if (player_planes.size() == 1) {
 					if (player_planes[0]->getType() == Textures::ID::BlueAirplane_alpha) {
 						// only one RedAirplane is alowed and it needs to be at player_planes[1]
-						body = pworld.create_body_dynamic(x, y, width, height);
+					        body = pworld.create_body_dynamic(x, y, width, height, 1);
 						entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
 						entity->setType(Textures::RedAirplane_alpha);
 						body->SetUserData(entity.get());
@@ -202,7 +202,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 					}
 				}
 				else if (player_planes.size() == 0) {
-					body = pworld.create_body_dynamic(x, y, width, height);
+				        body = pworld.create_body_dynamic(x, y, width, height,1 );
 					entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
 					entity->setType(Textures::RedAirplane_alpha);
 					body->SetUserData(entity.get());
@@ -218,7 +218,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			break;
 		}
 		case Textures::RedAntiAircraft_alpha: {
-			body = pworld.create_body_dynamic(x, y, width, height);
+		        body = pworld.create_body_dynamic(x, y, width, height,1);
 			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
 			entity->setType(Textures::RedAntiAircraft_alpha);
 			body->SetUserData(entity.get());
@@ -239,7 +239,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			break;
 		}
 		case Textures::RedInfantry_alpha: {
-			body = pworld.create_body_dynamic(x, y, width, height);
+		        body = pworld.create_body_dynamic(x, y, width, height, 1000);
 			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
 			entity->setType(Textures::RedInfantry_alpha);
 			body->SetUserData(entity.get());
