@@ -219,9 +219,17 @@ void GameEngine::playerShoot(int player_number)
   Entity& player_entity = *planes[player_number];
   b2Body& player_body = player_entity.getB2Body();
   b2Vec2 vel1 = player_body.GetLinearVelocity();
+  if (player_entity.getFacing()) {
+    // facing right, shoot right
+    sf::Vector2f vec(cos(player_body.GetAngle()), sin(player_body.GetAngle()));
+    player_entity.shoot(vec, resources);
+  }
+  else {
+    // facing left, shoot left
+    sf::Vector2f vec(- cos(player_body.GetAngle()), - sin(player_body.GetAngle()));
+    player_entity.shoot(vec, resources);
+  }
 
-  sf::Vector2f vec(cos(player_body.GetAngle()), sin(player_body.GetAngle()));
-  player_entity.shoot(vec, resources);
 }
 
 
@@ -311,7 +319,7 @@ void GameEngine::update(sf::Time elapsedTime)
       }
     }
   }
-  
+
 }
 
 void GameEngine::updateGameInfo()
