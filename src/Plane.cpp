@@ -74,11 +74,11 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
           double x, y;
 
           if (getFacing()) {
-            x = getPosition().x + (this->getSize().x)/2*cos(this->getB2Body()->GetAngle()) + 2;
+            x = getPosition().x + (this->getSize().x)/2*cos(this->getB2Body()->GetAngle()) + 5;
             y = getPosition().y + (this->getSize().y)/2*sin(this->getB2Body()->GetAngle());
           }
           else {
-            x = getPosition().x - (this->getSize().x)/2*cos(this->getB2Body()->GetAngle()) + 2;
+            x = getPosition().x - (this->getSize().x)/2*cos(this->getB2Body()->GetAngle()) + 5;
             y = getPosition().y - (this->getSize().y)/2*sin(this->getB2Body()->GetAngle());
           }
 
