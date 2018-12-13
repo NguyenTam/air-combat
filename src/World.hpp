@@ -131,7 +131,7 @@ public:
           *   @brief Get score,
           *   @remark This should be used only during singleplayer
           *   @return Returns score
-          */   
+          */
         int getScore();
 
 private:
@@ -149,5 +149,7 @@ private:
   std::vector<std::shared_ptr<Entity>> objects; /**< Contains all the entities added */
   std::vector<std::shared_ptr<Entity>> bullets; /**< Contains all the bullets created */
   std::deque<std::shared_ptr<Entity>> player_planes; /**< Contains BlueAirplane and during multiplayer also one RedAirplane */
+  std::list<b2Body*> destroyed_entity_bodies; /**< Destroyed entity bodies which should be removed from the world */
+  std::list<b2Body*> destroyed_bullet_bodies; /**< Destroyed bullet bodies which should be removed from the world */
   int score = 0;
 };

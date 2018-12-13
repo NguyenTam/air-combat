@@ -77,7 +77,7 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 					//all ok
 					if (type == "InvisibleWall") {
 					        b2Body* body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::invisible_wall);
-						std::shared_ptr<Entity> entity = std::make_shared<InvisibleWall>(*pworld.get_world(), *body, resources.get(Textures::alphaTextures.at("Ground")), sf::Vector2f(x,y));
+						std::shared_ptr<Entity> entity = std::make_shared<InvisibleWall>(*pworld.get_world(), body, resources.get(Textures::alphaTextures.at("Ground")), sf::Vector2f(x,y));
 						entity->setType(Textures::Ground_alpha); //TODO Id for InvisibleWall
 						body->SetUserData(entity.get());
 					}
@@ -119,7 +119,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 	switch(id) {
 		case Textures::BlueAirplane_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::blue);
+			entity = std::make_shared<Plane>(*pworld.get_world(), body, tex, pos, direct, Game::TEAM_ID::blue);
 			entity->setType(Textures::BlueAirplane_alpha);
 			body->SetUserData(entity.get());
 			body->SetGravityScale(0); //gravity 0 for plane
@@ -134,35 +134,35 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		}
 		case Textures::BlueAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
+			entity = std::make_shared<Artillery>(*pworld.get_world(), body, tex, pos, Game::TEAM_ID::blue);
 			entity->setType(Textures::BlueAntiAircraft_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::BlueBase_alpha: {
 		        body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::base);
-			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
+			entity = std::make_shared<Base>(*pworld.get_world(), body, tex, pos, Game::TEAM_ID::blue);
 			entity->setType(Textures::BlueBase_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::BlueHangar_alpha: {
 		        body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::hangar);
-			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
+			entity = std::make_shared<Hangar>(*pworld.get_world(), body, tex, pos, Game::TEAM_ID::blue);
 			entity->setType(Textures::BlueHangar_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::BlueInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::blue);
+			entity = std::make_shared<Infantry>(*pworld.get_world(), body, tex, pos, Game::TEAM_ID::blue);
 			entity->setType(Textures::BlueInfantry_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::Ground_alpha: {
 		        body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::ground);
-			entity = std::make_shared<Ground>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Ground>(*pworld.get_world(), body, tex, pos);
 			entity->setType(Textures::Ground_alpha);
 			entity->setScale(width,height);
 			body->SetUserData(entity.get());
@@ -172,7 +172,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			if (game_mode == Game::GameMode::SinglePlayer) {
 				// add RedAirplanes to the normal container (controlled by AI)
 				body = pworld.create_body_dynamic(x, y, width, height);
-				entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
+				entity = std::make_shared<Plane>(*pworld.get_world(), body, tex, pos, direct, Game::TEAM_ID::red);
 				entity->setType(Textures::RedAirplane_alpha);
 				body->SetUserData(entity.get());
 				body->SetGravityScale(0); //gravity 0 for plane
@@ -189,7 +189,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 					if (player_planes[0]->getType() == Textures::ID::BlueAirplane_alpha) {
 						// only one RedAirplane is alowed and it needs to be at player_planes[1]
 						body = pworld.create_body_dynamic(x, y, width, height);
-						entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
+						entity = std::make_shared<Plane>(*pworld.get_world(), body, tex, pos, direct, Game::TEAM_ID::red);
 						entity->setType(Textures::RedAirplane_alpha);
 						body->SetUserData(entity.get());
 						body->SetGravityScale(0); //gravity 0 for plane
@@ -203,7 +203,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 				}
 				else if (player_planes.size() == 0) {
 					body = pworld.create_body_dynamic(x, y, width, height);
-					entity = std::make_shared<Plane>(*pworld.get_world(), *body, tex, pos, direct, Game::TEAM_ID::red);
+					entity = std::make_shared<Plane>(*pworld.get_world(), body, tex, pos, direct, Game::TEAM_ID::red);
 					entity->setType(Textures::RedAirplane_alpha);
 					body->SetUserData(entity.get());
 					body->SetGravityScale(0); //gravity 0 for plane
@@ -219,42 +219,42 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 		}
 		case Textures::RedAntiAircraft_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Artillery>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
+			entity = std::make_shared<Artillery>(*pworld.get_world(), body, tex, pos, Game::TEAM_ID::red);
 			entity->setType(Textures::RedAntiAircraft_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::RedBase_alpha: {
 		        body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::base);
-			entity = std::make_shared<Base>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
+			entity = std::make_shared<Base>(*pworld.get_world(), body, tex, pos, Game::TEAM_ID::red);
 			entity->setType(Textures::RedBase_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::RedHangar_alpha: {
 		        body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::hangar);
-			entity = std::make_shared<Hangar>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
+			entity = std::make_shared<Hangar>(*pworld.get_world(), body, tex, pos, Game::TEAM_ID::red);
 			entity->setType(Textures::RedHangar_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::RedInfantry_alpha: {
 			body = pworld.create_body_dynamic(x, y, width, height);
-			entity = std::make_shared<Infantry>(*pworld.get_world(), *body, tex, pos, Game::TEAM_ID::red);
+			entity = std::make_shared<Infantry>(*pworld.get_world(), body, tex, pos, Game::TEAM_ID::red);
 			entity->setType(Textures::RedInfantry_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::Rock_alpha: {
 			body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::rock);
-			entity = std::make_shared<Stone>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Stone>(*pworld.get_world(), body, tex, pos);
 			entity->setType(Textures::Rock_alpha);
 			body->SetUserData(entity.get());
 			break;
 		}
 		case Textures::Tree_alpha: {
 			body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::tree);
-			entity = std::make_shared<Tree>(*pworld.get_world(), *body, tex, pos);
+			entity = std::make_shared<Tree>(*pworld.get_world(), body, tex, pos);
 			entity->setType(Textures::Tree_alpha);
 			body->SetUserData(entity.get());
 			break;
@@ -288,7 +288,11 @@ bool World::remove_bullet(Entity *bullet, Entity *entity) {
 		for (auto item = bullets_list.begin(); item != bullets_list.end(); item++) {
 			if ((item->get() == bullet) && (bullet->getOwner() != entity)) {
 				// raw pointers match, erase bullet
+				b2Body* body = (*item)->getB2Body();
+				body->SetUserData(nullptr);
 				bullets_list.erase(item);
+				// remove body also
+				pworld.remove_body(body);
 				return true;
 			}
 		}
@@ -299,7 +303,11 @@ bool World::remove_bullet(Entity *bullet, Entity *entity) {
 		for (auto item = bullets_list.begin(); item != bullets_list.end(); item++) {
 			if ((item->get() == bullet) && (bullet->getOwner() != entity)) {
 				// raw pointers match, erase bullet
+				b2Body* body = (*item)->getB2Body();
+				body->SetUserData(nullptr);
 				bullets_list.erase(item);
+				// remove body also
+				pworld.remove_body(body);
 				return true;
 			}
 		}
@@ -311,17 +319,40 @@ bool World::remove_entity(Entity *entity)
 {
 		for (auto it = objects.begin(); it != objects.end(); it++) {
 			if (it->get() == entity) {
-				//std::cout << "Removing entity" << std::endl;
 				// raw pointers match, erase entity from the vector
+				std::list<std::shared_ptr<Entity>>& bullets_list = (*it)->get_active_bullets();
+				for (auto item = bullets_list.begin(); item != bullets_list.end(); ) {
+						// remove all entity's bullets
+						b2Body* body = (*item)->getB2Body();
+						body->SetUserData(nullptr);
+						item = bullets_list.erase(item);
+						// remove body also
+						pworld.remove_body(body);
+					}
+				b2Body* body = (*it)->getB2Body();
+				body->SetUserData(nullptr);
 				objects.erase(it);
+				pworld.remove_body(body);
 				return true;
 			}
 		}
 		// go through also player_planes
 		for (auto it = player_planes.begin(); it != player_planes.end(); it++) {
 			if (it->get() == entity) {
-				//std::cout << "Removing player entity" << std::endl;
+				// get player's bullets
+				std::list<std::shared_ptr<Entity>>& bullets_list = (*it)->get_active_bullets();
+				for (auto item = bullets_list.begin(); item != bullets_list.end(); ) {
+						// remove all entity's bullets
+						b2Body* body = (*item)->getB2Body();
+						body->SetUserData(nullptr);
+						item = bullets_list.erase(item);
+						// remove body also
+						pworld.remove_body(body);
+					}
+				b2Body* body = (*it)->getB2Body();
+				body->SetUserData(nullptr);
 				player_planes.erase(it);
+				pworld.remove_body(body);
 				return true;
 			}
 		}
@@ -379,93 +410,71 @@ GameResult World::update(Game::GameMode game_mode) {
 				if (a_entity->getType() == Textures::Bullet_alpha) {
 					if (b_entity->getType() == Textures::Bullet_alpha) {
 						// remove both bullets
-						if (remove_bullet(b_entity, a_entity)) {
-							pworld.remove_body(b_body);
-						}
+						destroyed_bullet_bodies.push_back(b_body);
 					}
 					else if (a_entity->getOwner() != b_entity){
-						//std::cout << "Hit by Bullet" << std::endl;
 						if (b_entity->damage(10)) {
-							pworld.remove_body(b_body);
-							remove_entity(b_entity);
+							destroyed_entity_bodies.push_back(b_body);
 						}
 					}
 					// remove a_entity which is a bullet
-					if (remove_bullet(a_entity, b_entity)) {
-						pworld.remove_body(a_body);
-					}
-
+					destroyed_bullet_bodies.push_back(a_body);
 
 				}
 				else if (b_entity->getType() == Textures::Bullet_alpha) {
 
 					if (b_entity->getOwner() != a_entity) {
-						//std::cout << "Hit by Bullet" << std::endl;
 						if (a_entity->damage(10)) {
-							pworld.remove_body(a_body);
-							remove_entity(a_entity);
+							destroyed_entity_bodies.push_back(a_body);
 						}
 					}
 					// remove b_entity which is a bullet
-					if (remove_bullet(b_entity, a_entity)) {
-						pworld.remove_body(b_body);
-					}
+					destroyed_bullet_bodies.push_back(b_body);
 
 				}
 				else if (a_entity->getTypeId() == Game::TYPE_ID::airplane) {
 					if (b_entity->getTypeId() == Game::TYPE_ID::ground) {
 						// airplane destroyed
-						pworld.remove_body(a_body);
-						remove_entity(a_entity);
+						destroyed_entity_bodies.push_back(a_body);
 					}
 					else if (b_entity->getTypeId() == Game::TYPE_ID::airplane)
 					{
-						//std::cout << "Plane collision" << std::endl;
 						// damage both planes
 						if (a_entity->damage(10)){
-							pworld.remove_body(a_body);
-							remove_entity(a_entity);
+							destroyed_entity_bodies.push_back(a_body);
 						}
 						if (b_entity->damage(10)){
-							pworld.remove_body(b_body);
-							remove_entity(b_entity);
+							destroyed_entity_bodies.push_back(b_body);
 						}
 					}
 					else if (b_entity->getTypeId() == Game::TYPE_ID::infantry) {
 						// destroy infantry and damage plane
-						pworld.remove_body(b_body);
-						remove_entity(b_entity);
+						destroyed_entity_bodies.push_back(b_body);
 						if (a_entity->damage(10)) {
-							pworld.remove_body(a_body);
-							remove_entity(a_entity);
+							destroyed_entity_bodies.push_back(a_body);
 						}
 					}
 				}
 				else if (b_entity->getTypeId() == Game::TYPE_ID::airplane) {
 					if (a_entity->getTypeId() == Game::TYPE_ID::ground) {
 						// airplane destroyed
-						pworld.remove_body(b_body);
-						remove_entity(b_entity);
+						destroyed_entity_bodies.push_back(b_body);
 					}
 					else if (a_entity->getTypeId() == Game::TYPE_ID::airplane)
 					{
 						// damage both planes
-						if (b_entity->damage(10)){
-							pworld.remove_body(a_body);
-							remove_entity(a_entity);
+						if (b_entity->damage(10)) {
+							destroyed_entity_bodies.push_back(b_body);
 						}
-						if (a_entity->damage(10)){
-							pworld.remove_body(b_body);
-							remove_entity(b_entity);
+						if (a_entity->damage(10)) {
+							destroyed_entity_bodies.push_back(a_body);
 						}
 					}
 					else if (a_entity->getTypeId() == Game::TYPE_ID::infantry) {
 						// destroy infantry and damage plane
-						pworld.remove_body(a_body);
-						remove_entity(a_entity);
+						destroyed_entity_bodies.push_back(a_body);
 						if (b_entity->damage(10)) {
-							pworld.remove_body(b_body);
-							remove_entity(b_entity);
+							destroyed_entity_bodies.push_back(b_body);
 						}
 					}
 				}
@@ -477,6 +486,26 @@ GameResult World::update(Game::GameMode game_mode) {
 		}
 
 	}
+	// remove destroyed_bodies from the world
+	// bullets must be removed first because they are stored within other entities
+
+	// sort the list and remove dublicates so that no entity / bullet is removed twice
+	destroyed_bullet_bodies.sort();
+	destroyed_bullet_bodies.unique();
+	for (auto it : destroyed_bullet_bodies) {
+		Entity* bullet = static_cast<Entity*>(it->GetUserData());
+		remove_bullet(bullet, bullet);
+	}
+	// clear all old pointers which have been removed
+	destroyed_bullet_bodies.clear();
+
+	destroyed_entity_bodies.sort();
+	destroyed_entity_bodies.unique();
+	for (auto it : destroyed_entity_bodies) {
+		Entity* entity = static_cast<Entity*>(it->GetUserData());
+		remove_entity(entity);
+	}
+	destroyed_entity_bodies.clear();
 
 	//updating the world
 	for (auto it : objects) {
@@ -488,8 +517,8 @@ GameResult World::update(Game::GameMode game_mode) {
 		//new position for sprite
 		float x_corr = it->getSize().x/2;
 		float y_corr = it->getSize().y/2;
-		float x = Game::TOPIXELS*it->getB2Body().GetPosition().x-x_corr;
-		float y = Game::TOPIXELS*it->getB2Body().GetPosition().y-y_corr;
+		float x = Game::TOPIXELS*it->getB2Body()->GetPosition().x-x_corr;
+		float y = Game::TOPIXELS*it->getB2Body()->GetPosition().y-y_corr;
 		sf::Vector2f newpos(x,y);
 		it->setPos(newpos);
 
@@ -498,8 +527,8 @@ GameResult World::update(Game::GameMode game_mode) {
 		for (auto b : bullets) {
 			float x_corr = b->getSize().x/2;
 			float y_corr = b->getSize().y/2;
-			float x = Game::TOPIXELS*b->getB2Body().GetPosition().x-x_corr;
-			float y = Game::TOPIXELS*b->getB2Body().GetPosition().y-y_corr;
+			float x = Game::TOPIXELS*b->getB2Body()->GetPosition().x-x_corr;
+			float y = Game::TOPIXELS*b->getB2Body()->GetPosition().y-y_corr;
 			sf::Vector2f newpos(x,y);
 			b->setPos(newpos);
 
@@ -516,8 +545,8 @@ GameResult World::update(Game::GameMode game_mode) {
 	for (auto it : player_planes) {
 		float x_corr = it->getSize().x/2;
 		float y_corr = it->getSize().y/2;
-		float x = Game::TOPIXELS*it->getB2Body().GetPosition().x-x_corr;
-		float y = Game::TOPIXELS*it->getB2Body().GetPosition().y-y_corr;
+		float x = Game::TOPIXELS*it->getB2Body()->GetPosition().x-x_corr;
+		float y = Game::TOPIXELS*it->getB2Body()->GetPosition().y-y_corr;
 		sf::Vector2f newpos(x,y);
 		it->setPos(newpos);
 
@@ -526,8 +555,8 @@ GameResult World::update(Game::GameMode game_mode) {
 		for (auto b : bullets) {
 			float x_corr = b->getSize().x/2;
 			float y_corr = b->getSize().y/2;
-			float x = Game::TOPIXELS*b->getB2Body().GetPosition().x-x_corr;
-			float y = Game::TOPIXELS*b->getB2Body().GetPosition().y-y_corr;
+			float x = Game::TOPIXELS*b->getB2Body()->GetPosition().x-x_corr;
+			float y = Game::TOPIXELS*b->getB2Body()->GetPosition().y-y_corr;
 			sf::Vector2f newpos(x,y);
 			b->setPos(newpos);
 
@@ -535,7 +564,7 @@ GameResult World::update(Game::GameMode game_mode) {
 		}
 
 		//set sfml sprite's angle from body's angle
-		it->setRot(it->getB2Body().GetAngle()*RADTODEG);
+		it->setRot(it->getB2Body()->GetAngle()*RADTODEG);
 
 		it->drawTo(window);
 	}
