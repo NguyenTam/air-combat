@@ -2,7 +2,7 @@
 #include "CommonDefinitions.hpp"
 #include <cmath>
 
-const int bullet_correction = 3;  // this is how many pixels away from the body bullet is created
+const int bullet_correction = 10;  // this is how many pixels away from the body bullet is created
 const float bullet_force = 1000;  // this is multiplier for impulse given to bullet
 
 //Note about the magical numbers
@@ -73,21 +73,20 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
 
           double x, y;
 
-          if (direction.x < 0) {
-            x = getPosition().x - (this->getSize().x)/2;
-            y = getPosition().y - (this->getSize().y)/2;
+          if (getFacing()) {
+            x = getPosition().x + (this->getSize().x)/2*cos(this->getB2Body()->GetAngle()) + 2;
+            y = getPosition().y + (this->getSize().y)/2*sin(this->getB2Body()->GetAngle());
           }
-
           else {
-            x = getPosition().x + (this->getSize().x)/2;
-            y = getPosition().y + (this->getSize().y)/2;
+            x = getPosition().x - (this->getSize().x)/2*cos(this->getB2Body()->GetAngle()) + 2;
+            y = getPosition().y - (this->getSize().y)/2*sin(this->getB2Body()->GetAngle());
           }
-
 
           sf::Texture &tex = resources.get(Textures::alphaTextures.at("Bullet"));
 
           b2BodyDef BodyDef;
           BodyDef.type = b2_dynamicBody;
+          /*
           std::cout << "Plane location X: " << x << " Y: " << y << " Size X: " << this->getSize().x << " Y: " << this->getSize().y << std::endl;
           if (direction.y < 0 && -(direction.y) >= std::abs(direction.x)) {  //shooting up
             if (direction.x > 0) {
@@ -124,7 +123,10 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
             BodyDef.position = b2Vec2((x-bullet_correction)/Game::TOPIXELS, (y+((this->getSize().y)/2))/Game::TOPIXELS);
             std::cout << "Bullet created left X: " << (x-bullet_correction) << " Y: " << (y+((this->getSize().y)/2)) << std::endl;
           }
+          
+          */
 
+          BodyDef.position = b2Vec2(x*Game::TOMETERS, y*Game::TOMETERS);
           BodyDef.bullet = true;
 
           b2Body* body = world.CreateBody(&BodyDef);

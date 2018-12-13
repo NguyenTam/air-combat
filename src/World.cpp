@@ -76,7 +76,7 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 				else {
 					//all ok
 					if (type == "InvisibleWall") {
-					        b2Body* body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::invisible_wall);
+					        b2Body* body = pworld.create_body_static(x+(width/2), y+(height/2), width, height, Game::TYPE_ID::invisible_wall);
 						std::shared_ptr<Entity> entity = std::make_shared<InvisibleWall>(*pworld.get_world(), body, resources.get(Textures::alphaTextures.at("InvisibleWall")), sf::Vector2f(x,y));
 						entity->setType(Textures::InvisibleWall_alpha);
 						body->SetUserData(entity.get());
@@ -84,8 +84,11 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 					}
 					try {
 						Textures::ID id = Textures::alphaTextures.at(type);
-						if (x+width < Game::WIDTH)
+						if (x+width < Game::WIDTH) {
+							x += width/2;
+							y += height/2;
 							create_entity(id, x, y, orientation, width, height, sf::Vector2f(1.0f, 0.0f), game_mode);
+						}
 
 					}
 					catch (const std::out_of_range& er) {
@@ -540,20 +543,16 @@ GameResult World::update(Game::GameMode game_mode) {
 
 		//2. update new positions
 		//new position for sprite
-		float x_corr = it->getSize().x/2;
-		float y_corr = it->getSize().y/2;
-		float x = Game::TOPIXELS*it->getB2Body()->GetPosition().x-x_corr;
-		float y = Game::TOPIXELS*it->getB2Body()->GetPosition().y-y_corr;
+		float x = Game::TOPIXELS*it->getB2Body()->GetPosition().x;
+		float y = Game::TOPIXELS*it->getB2Body()->GetPosition().y;
 		sf::Vector2f newpos(x,y);
 		it->setPos(newpos);
 
 		std::list<std::shared_ptr<Entity>> bullets = it->get_active_bullets();
 
 		for (auto b : bullets) {
-			float x_corr = b->getSize().x/2;
-			float y_corr = b->getSize().y/2;
-			float x = Game::TOPIXELS*b->getB2Body()->GetPosition().x-x_corr;
-			float y = Game::TOPIXELS*b->getB2Body()->GetPosition().y-y_corr;
+			float x = Game::TOPIXELS*b->getB2Body()->GetPosition().x;
+			float y = Game::TOPIXELS*b->getB2Body()->GetPosition().y;
 			sf::Vector2f newpos(x,y);
 			b->setPos(newpos);
 
@@ -568,28 +567,26 @@ GameResult World::update(Game::GameMode game_mode) {
 
 	// Draw player planes
 	for (auto it : player_planes) {
-		float x_corr = it->getSize().x/2;
-		float y_corr = it->getSize().y/2;
-		float x = Game::TOPIXELS*it->getB2Body()->GetPosition().x-x_corr;
-		float y = Game::TOPIXELS*it->getB2Body()->GetPosition().y-y_corr;
+		float x = Game::TOPIXELS*it->getB2Body()->GetPosition().x;
+		float y = Game::TOPIXELS*it->getB2Body()->GetPosition().y;
 		sf::Vector2f newpos(x,y);
 		it->setPos(newpos);
 
 		std::list<std::shared_ptr<Entity>> bullets = it->get_active_bullets();
 
 		for (auto b : bullets) {
-			float x_corr = b->getSize().x/2;
-			float y_corr = b->getSize().y/2;
-			float x = Game::TOPIXELS*b->getB2Body()->GetPosition().x-x_corr;
-			float y = Game::TOPIXELS*b->getB2Body()->GetPosition().y-y_corr;
+			float x = Game::TOPIXELS*b->getB2Body()->GetPosition().x;
+			float y = Game::TOPIXELS*b->getB2Body()->GetPosition().y;
 			sf::Vector2f newpos(x,y);
 			b->setPos(newpos);
 
 			b->drawTo(window);
 		}
 
+
 		//set sfml sprite's angle from body's angle
 		it->setRot(it->getB2Body()->GetAngle()*RADTODEG);
+
 
 		it->drawTo(window);
 	}
