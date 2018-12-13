@@ -6,7 +6,7 @@ const float bullet_force = 1000;  // this is multiplier for impulse given to bul
 
 //Note about the magical numbers
 //Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team)
-Plane::Plane(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team):Entity(w, b, t, position, 20, 400, 6, 20, 20, direct, team){
+Plane::Plane(b2World &w,  b2Body *b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team):Entity(w, b, t, position, 20, 400, 6, 20, 20, direct, team){
   typeId = Game::TYPE_ID::airplane;
   }
 
@@ -14,31 +14,31 @@ Plane::Plane(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &p
 
 void Plane::moveUp()
 {
-  b2Vec2 vel = b2body.GetLinearVelocity();
+  b2Vec2 vel = b2body->GetLinearVelocity();
   float force = 0;
   if( vel.y > - Game::Plane::MAX_VELOCITY )
     {
       force = - Game::Plane::MAX_FORCE;
     }
   direction.y = -1;
-  b2body.ApplyForce( b2Vec2(0,force), b2body.GetWorldCenter(), true );
+  b2body->ApplyForce( b2Vec2(0,force), b2body->GetWorldCenter(), true );
 }
 
 void Plane::moveDown()
 {
-  b2Vec2 vel = b2body.GetLinearVelocity();
+  b2Vec2 vel = b2body->GetLinearVelocity();
   float force = 0;
   if( vel.y < Game::Plane::MAX_VELOCITY )
     {
       force = Game::Plane::MAX_FORCE;
     }
   direction.y = 1;
-  b2body.ApplyForce( b2Vec2(0,force), b2body.GetWorldCenter(), true );
+  b2body->ApplyForce( b2Vec2(0,force), b2body->GetWorldCenter(), true );
 }
 
 void Plane::moveLeft()
 {
-  b2Vec2 vel = b2body.GetLinearVelocity();
+  b2Vec2 vel = b2body->GetLinearVelocity();
   float force = 1;
   if( vel.x > -Game::Plane::MAX_VELOCITY )
     {
@@ -46,12 +46,12 @@ void Plane::moveLeft()
     }
   faceLeft();
   direction.x = -1;
-  b2body.ApplyForce( b2Vec2(force,0), b2body.GetWorldCenter(), true );
+  b2body->ApplyForce( b2Vec2(force,0), b2body->GetWorldCenter(), true );
 }
 
 void Plane::moveRight()
 {
-  b2Vec2 vel = b2body.GetLinearVelocity();
+  b2Vec2 vel = b2body->GetLinearVelocity();
   float force = 0;
   if( vel.x < Game::Plane::MAX_VELOCITY )
     {
@@ -59,7 +59,7 @@ void Plane::moveRight()
     }
   faceRight();
   direction.x = 1;
-  b2body.ApplyForce( b2Vec2(force,0), b2body.GetWorldCenter(), true );
+  b2body->ApplyForce( b2Vec2(force,0), b2body->GetWorldCenter(), true );
 }
 
 
@@ -114,7 +114,7 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
           body->CreateFixture(&FixtureDef);
 
           sf::Vector2f pos(x,y);
-          std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(world, *body, tex, pos, sf::Vector2f(1.0f, 0.0f), this);
+          std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(world, body, tex, pos, sf::Vector2f(1.0f, 0.0f), this);
           bullet->setType(Textures::Bullet_alpha);
 
           body->SetGravityScale(0.5f);
@@ -127,7 +127,7 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
           //std::cout << "airplane shot" << std::endl;
           return true;
         }
-    }
+  }
   //fireCountDown-=1;
     return false;
 }

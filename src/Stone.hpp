@@ -23,5 +23,5 @@ class Stone : public Entity {
    *   @param t stones texture
    *   @param position Place as vector where stone is created
    */
-  Stone(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position);
+  Stone(b2World &w,  b2Body *b, const sf::Texture &t, const sf::Vector2f &position);
 };

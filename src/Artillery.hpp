@@ -24,7 +24,7 @@ class Artillery : public Entity {
    *   @param position Place as vector where artillery is created
    *   @param team Artillerys team
    */
-  Artillery(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, Game::TEAM_ID team);
+  Artillery(b2World &w,  b2Body *b, const sf::Texture &t, const sf::Vector2f &position, Game::TEAM_ID team);
 
     /**
      *   @brief give permission for object to shoot
@@ -32,4 +32,3 @@ class Artillery : public Entity {
      */
   virtual bool shoot(sf::Vector2f direction, ResourceManager& resources) override;
 };
-

@@ -23,6 +23,5 @@ class Tree : public Entity {
    *   @param t Trees texture
    *   @param position Place as vector where tree is created
    */
-  Tree(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position);
+  Tree(b2World &w,  b2Body *b, const sf::Texture &t, const sf::Vector2f &position);
 };
-

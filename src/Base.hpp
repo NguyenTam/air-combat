@@ -24,6 +24,5 @@ class Base : public Entity {
    *   @param position Place as vector where base is created
    *   @param team Bases team
    */
-  Base(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, Game::TEAM_ID team);
+  Base(b2World &w,  b2Body *b, const sf::Texture &t, const sf::Vector2f &position, Game::TEAM_ID team);
 };
-

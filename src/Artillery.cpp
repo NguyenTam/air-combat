@@ -6,7 +6,7 @@ const float bullet_force = 1000;  // this is multiplier for impulse given to bul
 
 //Note about the magical numbers
 //Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team)
-Artillery::Artillery(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position, Game::TEAM_ID team):Entity(w, b, t, position, 0.f, 1000, 0, 90, 30, sf::Vector2f(1.0f, 0.0f), team){
+Artillery::Artillery(b2World &w,  b2Body *b, const sf::Texture &t, const sf::Vector2f &position, Game::TEAM_ID team):Entity(w, b, t, position, 0.f, 1000, 0, 90, 30, sf::Vector2f(1.0f, 0.0f), team){
   typeId = Game::TYPE_ID::antiaircraft;
   }
 
@@ -55,7 +55,7 @@ bool Artillery::shoot(sf::Vector2f direction, ResourceManager& resources){
           body->CreateFixture(&FixtureDef);
 
           sf::Vector2f pos(x,y);
-          std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(world, *body, tex, pos, sf::Vector2f(1.0f, 0.0f), this);
+          std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(world, body, tex, pos, sf::Vector2f(1.0f, 0.0f), this);
           bullet->setType(Textures::Bullet_alpha);
 
           body->SetGravityScale(0.5f);

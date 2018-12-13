@@ -27,16 +27,16 @@ class Plane : public Entity {
    *   @param direct Direction where plane is headed
    *   @param team Team where plane belongs to
    */
-  Plane(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team);
+  Plane(b2World &w, b2Body *b, const sf::Texture &t, const sf::Vector2f &position, sf::Vector2f direct, Game::TEAM_ID team);
 
   virtual void moveUp() override;
 
   virtual void moveDown() override;
-  
+
   virtual void moveLeft() override;
-  
+
   virtual void moveRight() override;
-  
+
 
   /**
    *   @brief give permission for object to shoot

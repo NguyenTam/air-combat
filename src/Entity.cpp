@@ -2,7 +2,7 @@
 #include <iostream>
 #include <assert.h>
 
-Entity::Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team) : moveSpeed(speed), numberOfBullets(bullets), numberOfBombs(bombs), rateOfFire(firerate), fireCountDown(0), hitPoints(hp), direction(direct), teamId(team), world(w), b2body(b)
+Entity::Entity(b2World &w, b2Body *b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team) : moveSpeed(speed), numberOfBullets(bullets), numberOfBombs(bombs), rateOfFire(firerate), fireCountDown(0), hitPoints(hp), direction(direct), teamId(team), world(w), b2body(b)
 {
   entity.setTexture(t);
   entity.setPosition(position);
@@ -106,7 +106,7 @@ void Entity::setType(Textures::ID t){
 
 Textures::ID Entity::getType() {return type;}
 
-b2Body& Entity::getB2Body() {return b2body;}
+b2Body* Entity::getB2Body() {return b2body;}
 
 bool Entity::setScale(float width, float height) {
   if (width > 0) {

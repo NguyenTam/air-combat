@@ -33,7 +33,7 @@ public:
    *   @param direction Direction where entity is moving
    *   @param team The team entity belongs to: blue, red, obstacle or projectile
    */
-  Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position,  float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direction, Game::TEAM_ID team);
+  Entity(b2World &w, b2Body *b, const sf::Texture &t, const sf::Vector2f &position,  float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direction, Game::TEAM_ID team);
 
   //virtual ~Entity();
   /**
@@ -141,7 +141,7 @@ public:
    *   @brief Gives the body of entity
    *   @return Returns body of entity
    */
-  b2Body& getB2Body();
+  b2Body* getB2Body();
 
   /*
    *   @brief Scales a picture bigger or smaller
@@ -253,7 +253,7 @@ protected:
 
 
   b2World & world; /**< World where entity exists */
-  b2Body& b2body; /**< Entitys body */
+  b2Body* b2body; /**< Entitys body */
   Textures::ID type; /**< Textures file name without extension */
   std::list<Entity*> surrounding;
   std::list<std::shared_ptr<Entity>> active_bullets;

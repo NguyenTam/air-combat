@@ -23,5 +23,5 @@ class Ground : public Entity {
    *   @param t Grounds texture
    *   @param position Place as vector where Ground is created
    */
-  Ground(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position);
+  Ground(b2World &w,  b2Body *b, const sf::Texture &t, const sf::Vector2f &position);
 };

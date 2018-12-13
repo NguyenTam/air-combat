@@ -23,5 +23,5 @@ class InvisibleWall : public Entity {
    *   @param t InvisibleWall texture
    *   @param position Place as vector where InvisibleWall is created
    */
-  InvisibleWall(b2World &w,  b2Body &b, const sf::Texture &t, const sf::Vector2f &position);
+  InvisibleWall(b2World &w,  b2Body *b, const sf::Texture &t, const sf::Vector2f &position);
 };
