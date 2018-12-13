@@ -3,7 +3,7 @@
 #include <cmath>
 
 const int bullet_correction = 2;  // this is how many pixels away from the body bullet is created
-const float bullet_force = 1000;  // this is multiplier for impulse given to bullet
+const float bullet_force = 50;  // this is multiplier for impulse given to bullet
 
 //Note about the magical numbers
 //Entity(b2World &w, b2Body &b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team)
@@ -38,45 +38,38 @@ bool Infantry::shoot(sf::Vector2f direction, ResourceManager& resources){
   if (clock.getElapsedTime() > sf::seconds(1.f)) {
     if (numberOfBullets > 0) {
       double x, y;
-
+      y = getPosition().y;
       if (direction.x < 0) {
-        x = getPosition().x - (this->getSize().x)/2;
-        y = getPosition().y - (this->getSize().y)/2;
+        x = getPosition().x - (this->getSize().x);
       }
 
       else {
-        x = getPosition().x + (this->getSize().x)/2;
-        y = getPosition().y + (this->getSize().y)/2;
-      }
-
+        x = getPosition().x + (this->getSize().x);
+      }      
 
       sf::Texture &tex = resources.get(Textures::alphaTextures.at("Bullet"));
 
       b2BodyDef BodyDef;
       BodyDef.type = b2_dynamicBody;
-      //std::cout << "Infantry location X: " << x << " Y: " << y << " Size X: " << this->getSize().x << " Y: " << this->getSize().y << std::endl;
       if (-(direction.y) >= (std::abs(direction.x))) {  //shooting up
         if (direction.x < 0) {
           x += (this->getSize().x)/2;
           y += (this->getSize().y)/4;
 	}
-        BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y-bullet_correction)/Game::TOPIXELS);
-        //std::cout << "Bullet created up X: " << (x+((this->getSize().x)/2)) << " Y: " << (y-bullet_correction) << std::endl;
+        BodyDef.position = b2Vec2(x*Game::TOMETERS, (y-this->getSize().y/2)*Game::TOMETERS);
       }
       else if (direction.x < 0){                        //shooting left
-        BodyDef.position = b2Vec2((x-bullet_correction)/Game::TOPIXELS, (y+4+(this->getSize().y)/2)/Game::TOPIXELS);
-        //std::cout << "Bullet created left X: " << (x-bullet_correction) << " Y: " << y+(this->getSize().y)/2 << std::endl;
+        BodyDef.position = b2Vec2((x-bullet_correction)*Game::TOMETERS, (y-((this->getSize().y)/2))*Game::TOMETERS);
       }
       else {                                            //shooting right
-        BodyDef.position = b2Vec2((x+(this->getSize().x)+bullet_correction)/Game::TOPIXELS, (y-((this->getSize().y)/2))/Game::TOPIXELS);
-        //std::cout << "Bullet created right X: " << (x+(this->getSize().x)+bullet_correction) << " Y: " << (y-((this->getSize().y)/2)) << std::endl;
+        BodyDef.position = b2Vec2((x+(this->getSize().x)+bullet_correction)*Game::TOMETERS, (y-((this->getSize().y)/2))*Game::TOMETERS);
       }
       BodyDef.bullet = true;
 
       b2Body* body = world.CreateBody(&BodyDef);
 
       b2PolygonShape Shape;
-      Shape.SetAsBox(((this->getSize().x)/2)/Game::TOPIXELS, ((this->getSize().y)/2)/Game::TOPIXELS);
+      Shape.SetAsBox(((this->getSize().x)/2)*Game::TOMETERS, ((this->getSize().y)/2)*Game::TOMETERS);
 
       b2FixtureDef FixtureDef;
       FixtureDef.density = 0.f;
@@ -88,8 +81,7 @@ bool Infantry::shoot(sf::Vector2f direction, ResourceManager& resources){
       std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(world, body, tex, pos, sf::Vector2f(1.0f, 0.0f), this);
       bullet->setType(Textures::Bullet_alpha);
 
-      body->SetGravityScale(0.5f);
-      //std::cout << "Infantry fires, force of bullet: X: " << direction.x*bullet_force << ", Y: " << direction.y*bullet_force << std::endl;
+      body->SetGravityScale(0.f);
       body->ApplyLinearImpulse(b2Vec2(direction.x*bullet_force, direction.y*bullet_force), body->GetWorldCenter(), true);
       body->SetUserData(bullet.get());
       active_bullets.push_back(bullet);
