@@ -136,13 +136,13 @@ void GameEngine::playerMoveUp(int player_number)
 {
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
   Entity& player_entity = *planes[player_number];
-  b2Body& player_body = player_entity.getB2Body();
-  b2Vec2 vel1 = player_body.GetLinearVelocity();
+  b2Body* player_body = player_entity.getB2Body();
+  b2Vec2 vel1 = player_body->GetLinearVelocity();
 
   float force = 0;
   if (vel1.y > -Game::PlayerPlane::MAX_VELOCITY)
     force = -Game::PlayerPlane::MAX_FORCE;
-  player_body.ApplyForce(b2Vec2(0,Game::PlayerPlane::COEFFICIENT*force), player_body.GetWorldCenter(), true);
+  player_body->ApplyForce(b2Vec2(0,Game::PlayerPlane::COEFFICIENT*force), player_body->GetWorldCenter(), true);
 
 }
 
@@ -150,54 +150,54 @@ void GameEngine::playerMoveDown(int player_number)
 {
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
   Entity& player_entity = *planes[player_number];
-  b2Body& player_body = player_entity.getB2Body();
-  b2Vec2 vel1 = player_body.GetLinearVelocity();
+  b2Body* player_body = player_entity.getB2Body();
+  b2Vec2 vel1 = player_body->GetLinearVelocity();
 
   float force = 0;
   if (vel1.y < Game::PlayerPlane::MAX_VELOCITY)
     force = Game::PlayerPlane::MAX_FORCE;
-  player_body.ApplyForce(b2Vec2(0,Game::PlayerPlane::COEFFICIENT*force), player_body.GetWorldCenter(), true);
+  player_body->ApplyForce(b2Vec2(0,Game::PlayerPlane::COEFFICIENT*force), player_body->GetWorldCenter(), true);
 }
 
 void GameEngine::playerMoveLeft(int player_number)
 {
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
   Entity& player_entity = *planes[player_number];
-  b2Body& player_body = player_entity.getB2Body();
-  b2Vec2 vel1 = player_body.GetLinearVelocity();
+  b2Body* player_body = player_entity.getB2Body();
+  b2Vec2 vel1 = player_body->GetLinearVelocity();
 
   player_entity.faceLeft();
   float force = 0;
   if (vel1.x > -Game::PlayerPlane::MAX_VELOCITY)
     force = -Game::PlayerPlane::MAX_FORCE;
-  player_body.ApplyForce(b2Vec2(Game::PlayerPlane::COEFFICIENT*force,0), player_body.GetWorldCenter(), true);
+  player_body->ApplyForce(b2Vec2(Game::PlayerPlane::COEFFICIENT*force,0), player_body->GetWorldCenter(), true);
 }
 
 void GameEngine::playerMoveRight(int player_number)
 {
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
   Entity& player_entity = *planes[player_number];
-  b2Body& player_body = player_entity.getB2Body();
-  b2Vec2 vel1 = player_body.GetLinearVelocity();
+  b2Body* player_body = player_entity.getB2Body();
+  b2Vec2 vel1 = player_body->GetLinearVelocity();
 
   player_entity.faceRight();
   float force = 0;
   //player1_body.SetAngularVelocity(0);
   if (vel1.x < Game::PlayerPlane::MAX_VELOCITY)
     force = Game::PlayerPlane::MAX_FORCE;
-  player_body.ApplyForce(b2Vec2(Game::PlayerPlane::COEFFICIENT*force,0), player_body.GetWorldCenter(), true);
+  player_body->ApplyForce(b2Vec2(Game::PlayerPlane::COEFFICIENT*force,0), player_body->GetWorldCenter(), true);
 }
 
 void GameEngine::playerRotateCounterClockWise(int player_number)
 {
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
   Entity& player_entity = *planes[player_number];
-  b2Body& player_body = player_entity.getB2Body();
+  b2Body* player_body = player_entity.getB2Body();
 
   // rotate world player_planes[0] up
-  if (player_body.GetAngularVelocity() > 0) player_body.SetAngularVelocity(0);
-  if (player_body.GetAngularVelocity() > - Game::PlayerPlane::MAX_ANGULAR_VELOCITY) {
-    player_body.ApplyTorque((Game::PlayerPlane::MAX_ANGULAR_VELOCITY + player_body.GetAngularVelocity()) * (-Game::PlayerPlane::TORQUE), true);
+  if (player_body->GetAngularVelocity() > 0) player_body->SetAngularVelocity(0);
+  if (player_body->GetAngularVelocity() > - Game::PlayerPlane::MAX_ANGULAR_VELOCITY) {
+    player_body->ApplyTorque((Game::PlayerPlane::MAX_ANGULAR_VELOCITY + player_body->GetAngularVelocity()) * (-Game::PlayerPlane::TORQUE), true);
   }
 }
 
@@ -205,11 +205,11 @@ void GameEngine::playerRotateClockWise(int player_number)
 {
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
   Entity& player_entity = *planes[player_number];
-  b2Body& player_body = player_entity.getB2Body();
+  b2Body* player_body = player_entity.getB2Body();
 
-  if (player_body.GetAngularVelocity() < 0) player_body.SetAngularVelocity(0);
-  if (player_body.GetAngularVelocity() < Game::PlayerPlane::MAX_ANGULAR_VELOCITY) {
-    player_body.ApplyTorque((Game::PlayerPlane::MAX_ANGULAR_VELOCITY - player_body.GetAngularVelocity()) * Game::PlayerPlane::TORQUE, true);
+  if (player_body->GetAngularVelocity() < 0) player_body->SetAngularVelocity(0);
+  if (player_body->GetAngularVelocity() < Game::PlayerPlane::MAX_ANGULAR_VELOCITY) {
+    player_body->ApplyTorque((Game::PlayerPlane::MAX_ANGULAR_VELOCITY - player_body->GetAngularVelocity()) * Game::PlayerPlane::TORQUE, true);
   }
 }
 
@@ -217,16 +217,16 @@ void GameEngine::playerShoot(int player_number)
 {
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
   Entity& player_entity = *planes[player_number];
-  b2Body& player_body = player_entity.getB2Body();
-  b2Vec2 vel1 = player_body.GetLinearVelocity();
+  b2Body* player_body = player_entity.getB2Body();
+  b2Vec2 vel1 = player_body->GetLinearVelocity();
   if (player_entity.getFacing()) {
     // facing right, shoot right
-    sf::Vector2f vec(cos(player_body.GetAngle()), sin(player_body.GetAngle()));
+    sf::Vector2f vec(cos(player_body->GetAngle()), sin(player_body->GetAngle()));
     player_entity.shoot(vec, resources);
   }
   else {
     // facing left, shoot left
-    sf::Vector2f vec(- cos(player_body.GetAngle()), - sin(player_body.GetAngle()));
+    sf::Vector2f vec(- cos(player_body->GetAngle()), - sin(player_body->GetAngle()));
     player_entity.shoot(vec, resources);
   }
 
@@ -239,8 +239,9 @@ void GameEngine::update(sf::Time elapsedTime)
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
   if (planes.size() > 0) {
     Entity& player1_entity = *planes[0];
-    b2Body& player1_body = player1_entity.getB2Body();
-    b2Vec2 vel1 = player1_body.GetLinearVelocity();
+    b2Body* player1_body = player1_entity.getB2Body();
+    b2Body* player2_body = nullptr;
+    b2Vec2 vel1 = player1_body->GetLinearVelocity();
     bool player2_set = false;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -273,8 +274,8 @@ void GameEngine::update(sf::Time elapsedTime)
     if ((planes.size()==2) && (gameMode == Game::GameMode::Multiplayer)) {
       player2_set = true;
       Entity& player2_entity = *planes[1];
-      b2Body& player2_body = player2_entity.getB2Body();
-      b2Vec2 vel2 = player2_body.GetLinearVelocity();
+      b2Body* player2_body = player2_entity.getB2Body();
+      b2Vec2 vel2 = player2_body->GetLinearVelocity();
 
       if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
         // move world player_planes[1] up
@@ -308,13 +309,13 @@ void GameEngine::update(sf::Time elapsedTime)
       float forcey1 = vel1.y * -Game::PlayerPlane::MAX_FORCE;
       float forcex1 = vel1.x * -Game::PlayerPlane::MAX_FORCE;
 
-      player1_body.ApplyForce(b2Vec2(forcex1,forcey1), player1_body.GetWorldCenter(), true);
+      player1_body->ApplyForce(b2Vec2(forcex1,forcey1), player1_body->GetWorldCenter(), true);
 
-      if (player2_set) {
+      if (player2_set && player2_body != nullptr) {
         float forcey2 = vel1.y * -Game::PlayerPlane::MAX_FORCE;
         float forcex2 = vel1.x * -Game::PlayerPlane::MAX_FORCE;
 
-        player1_body.ApplyForce(b2Vec2(forcex2,forcey2), player1_body.GetWorldCenter(), true);
+        player2_body->ApplyForce(b2Vec2(forcex2,forcey2), player2_body->GetWorldCenter(), true);
 
       }
     }
