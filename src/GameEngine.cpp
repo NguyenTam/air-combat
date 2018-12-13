@@ -72,6 +72,7 @@ void GameEngine::run(std::string &level_file)
 
   sf::Time lastUpdateTime = sf::Time::Zero;
   sf::Clock clock;
+  score_clock = sf::Clock();
   while(renderWindow.isOpen())
   {
     /*restart function returns elapsed time and reset the clock to zero to get elapsed time of next iteration.*/
@@ -352,7 +353,7 @@ bool GameEngine::gameOverHandler(sf::Event &event, std::string &level_path)
     if (event.key.code == sf::Keyboard::Return) {
       // Exit to main menu
       if (gameMode == Game::GameMode::SinglePlayer) {
-        logStats(level_path, name_input.getInputText(), world.getScore());
+        logStats(level_path, name_input.getInputText(), score);
       }
       return true;
     }
@@ -409,6 +410,13 @@ void GameEngine::createGameOver(GameResult result)
     game_over_text.setPosition(Game::WIDTH / 2 - 200, 100);
     game_over_text.setColor(sf::Color::Green);
   }
+  // Update score
+  score = score_clock.getElapsedTime().asSeconds();
+  if (score > 0) {
+    // time based score and add world kill based score to it
+    score = 100000 / score + world.getScore();
+  }
+  else score = 0;
 
   GameOver = true;
 }
