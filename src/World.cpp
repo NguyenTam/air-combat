@@ -412,20 +412,23 @@ GameResult World::update(Game::GameMode game_mode) {
 					if (b_entity->getType() == Textures::Bullet_alpha) {
 						// remove both bullets
 						destroyed_bullet_bodies.push_back(b_body);
+						// remove a_entity which is a bullet
+						destroyed_bullet_bodies.push_back(a_body);
 					}
 					else if (a_entity->getOwner() != b_entity){
 						if (b_entity->damage(10)) {
 							destroyed_entity_bodies.push_back(b_body);
-							Entity* owner = a_entity->getOwner();
+							/*Entity* owner = a_entity->getOwner();
 							if ( owner->getTypeId() == Game::TYPE_ID::airplane)
 							{
 								Plane* owner_plane = dynamic_cast<Plane*>(owner);
 								owner_plane->addToKillList(b_entity);
-							}
+							}*/
 						}
+						// remove a_entity which is a bullet
+						destroyed_bullet_bodies.push_back(a_body);
 					}
-					// remove a_entity which is a bullet
-					destroyed_bullet_bodies.push_back(a_body);
+
 
 				}
 				else if (b_entity->getType() == Textures::Bullet_alpha) {
@@ -434,16 +437,17 @@ GameResult World::update(Game::GameMode game_mode) {
 						if (a_entity->damage(10)) {
 							destroyed_entity_bodies.push_back(a_body);
 							// A is killed by the owner of bullet B
-							Entity* owner = b_entity->getOwner();
+							/*Entity* owner = b_entity->getOwner();
 							if ( owner->getTypeId() == Game::TYPE_ID::airplane)
 							{
 								Plane* owner_plane = dynamic_cast<Plane*>(owner);
 								owner_plane->addToKillList(a_entity);
-							}
+							}*/
 						}
+						// remove b_entity which is a bullet
+						destroyed_bullet_bodies.push_back(b_body);
 					}
-					// remove b_entity which is a bullet
-					destroyed_bullet_bodies.push_back(b_body);
+
 
 				}
 				else if (a_entity->getTypeId() == Game::TYPE_ID::airplane) {
@@ -459,11 +463,11 @@ GameResult World::update(Game::GameMode game_mode) {
 						}
 						if (b_entity->damage(10)){
 							destroyed_entity_bodies.push_back(b_body);
-							(reinterpret_cast<Plane*> (a_entity))->addToKillList(b_entity);
+							//(reinterpret_cast<Plane*> (a_entity))->addToKillList(b_entity);
 						}
 					}
 					else if (b_entity->getTypeId() == Game::TYPE_ID::infantry) {
-                                          (reinterpret_cast<Plane*> (a_entity))->addToKillList(b_entity);
+              //(reinterpret_cast<Plane*> (a_entity))->addToKillList(b_entity);
 						// destroy infantry and damage plane
 						destroyed_entity_bodies.push_back(b_body);
 						if (a_entity->damage(10)) {
@@ -481,15 +485,15 @@ GameResult World::update(Game::GameMode game_mode) {
 						// damage both planes
 						if (b_entity->damage(10)) {
 							destroyed_entity_bodies.push_back(b_body);
-							(reinterpret_cast<Plane*> (a_entity))->addToKillList(b_entity);
+							//(reinterpret_cast<Plane*> (a_entity))->addToKillList(b_entity);
 						}
 						if (a_entity->damage(10)) {
 							destroyed_entity_bodies.push_back(a_body);
-							(reinterpret_cast<Plane*> (b_entity))->addToKillList(a_entity);
+							//(reinterpret_cast<Plane*> (b_entity))->addToKillList(a_entity);
 						}
 					}
 					else if (a_entity->getTypeId() == Game::TYPE_ID::infantry) {
-                                          (reinterpret_cast<Plane*> (b_entity))->addToKillList(a_entity);
+              //(reinterpret_cast<Plane*> (b_entity))->addToKillList(a_entity);
 						// destroy infantry and damage plane
 						destroyed_entity_bodies.push_back(a_body);
 						if (b_entity->damage(10)) {
