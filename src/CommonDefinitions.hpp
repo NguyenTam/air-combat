@@ -48,6 +48,7 @@ namespace Textures
       std_button,
       Tree_alpha,
       Tree,
+      InvisibleWall_alpha,
       id_end
     };
   extern std::vector<std::string> TextureFiles;
@@ -68,9 +69,9 @@ namespace Game
   extern const int LOWER_LIMIT;
 
 
-  namespace Infantry 
+  namespace Infantry
   {
-    extern const float VELOCITY;  
+    extern const float VELOCITY;
   }
   namespace Plane
   {
@@ -85,7 +86,7 @@ namespace Game
     extern const float TORQUE;
     extern const float MAX_ANGULAR_VELOCITY;
   }
-  
+
   enum TYPE_ID
     {
       airplane,

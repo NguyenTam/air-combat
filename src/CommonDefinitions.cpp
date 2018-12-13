@@ -20,7 +20,7 @@ namespace Game
   const int PlayerPlane::COEFFICIENT = 30;
   const float PlayerPlane::TORQUE = 5.f;
   const float PlayerPlane::MAX_ANGULAR_VELOCITY = 15.f;
-  
+
   std::map<ACTIONS, sf::Vector2f> actions_and_directions
     {
       { ACTIONS::move_left, sf::Vector2f(-1.f, 0.f)},
@@ -73,7 +73,7 @@ std::vector<std::string> Paths
       "../data/img/",
       "../data/level_files/",
       "../data/logs/" ,
-      "../data/misc/stats.txt"     
+      "../data/misc/stats.txt"
       };
 } // namespace Paths
 
@@ -113,7 +113,8 @@ std::vector<std::string> TextureFiles {
       "Rock.png",
       "std_button.png",
       "Tree_alpha.png",
-      "Tree.png"
+      "Tree.png",
+      "InvisibleWall_alpha.png"
 };
 
   std::map<std::string, Textures::ID> alphaTextures
@@ -131,7 +132,8 @@ std::vector<std::string> TextureFiles {
   { "RedHangar", RedHangar_alpha },
   { "RedInfantry", RedInfantry_alpha },
   { "Rock", Rock_alpha },
-  { "Tree", Tree_alpha }
+  { "Tree", Tree_alpha },
+  { "InvisibleWall", InvisibleWall_alpha }
 };
 } // namespace Textures
 
