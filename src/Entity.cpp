@@ -4,6 +4,7 @@
 
 Entity::Entity(b2World &w, b2Body *b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team) : moveSpeed(speed), numberOfBullets(bullets), numberOfBombs(bombs), rateOfFire(firerate), fireCountDown(0), hitPoints(hp), direction(direct), teamId(team), world(w), b2body(b)
 {
+  entity.setOrigin(sf::Vector2f(t.getSize().x, t.getSize().y) / 2.f);
   entity.setTexture(t);
   entity.setPosition(position);
 }
