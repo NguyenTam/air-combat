@@ -264,8 +264,13 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 			body->SetUserData(entity.get());
 			break;
 		}
+	        case Textures::InvisibleWall_alpha:
+		  {
+		    // created before. SKIP
+		    break;
+		  }
 		default:
-			std::cout << "id not found" << std::endl;
+		        std::cout << "id not found" << std::endl;
 			break;
 	}
 
