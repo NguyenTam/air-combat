@@ -386,24 +386,38 @@ GameResult World::update(Game::GameMode game_mode) {
 					else if (a_entity->getOwner() != b_entity){
 						//std::cout << "Hit by Bullet" << std::endl;
 						if (b_entity->damage(10)) {
-							pworld.remove_body(b_body);
-							remove_entity(b_entity);
+
+                                                  // B is killed by the owner of bullet A
+                                                  Entity* owner = a_entity->getOwner();
+                                                  if ( owner->getTypeId() == Game::TYPE_ID::airplane)
+                                                  {
+                                                    Plane* owner_plane = dynamic_cast<Plane*>(owner);
+                                                    owner_plane->addToKillList(b_entity);
+                                                  }
+
+                                                  pworld.remove_body(b_body);
+                                                  remove_entity(b_entity);
 						}
 					}
 					// remove a_entity which is a bullet
 					if (remove_bullet(a_entity, b_entity)) {
 						pworld.remove_body(a_body);
 					}
-
-
 				}
 				else if (b_entity->getType() == Textures::Bullet_alpha) {
 
 					if (b_entity->getOwner() != a_entity) {
 						//std::cout << "Hit by Bullet" << std::endl;
 						if (a_entity->damage(10)) {
-							pworld.remove_body(a_body);
-							remove_entity(a_entity);
+                                                  // A is killed by the owner of bullet B
+                                                  Entity* owner = b_entity->getOwner();
+                                                  if ( owner->getTypeId() == Game::TYPE_ID::airplane)
+                                                  {
+                                                    Plane* owner_plane = dynamic_cast<Plane*>(owner);
+                                                    owner_plane->addToKillList(a_entity);
+                                                  }
+                                                  pworld.remove_body(a_body);
+                                                  remove_entity(a_entity);
 						}
 					}
 					// remove b_entity which is a bullet
@@ -427,11 +441,13 @@ GameResult World::update(Game::GameMode game_mode) {
 							remove_entity(a_entity);
 						}
 						if (b_entity->damage(10)){
+                                                  (reinterpret_cast<Plane*> (a_entity))->addToKillList(b_entity);
 							pworld.remove_body(b_body);
 							remove_entity(b_entity);
 						}
 					}
 					else if (b_entity->getTypeId() == Game::TYPE_ID::infantry) {
+                                          (reinterpret_cast<Plane*> (a_entity))->addToKillList(b_entity);
 						// destroy infantry and damage plane
 						pworld.remove_body(b_body);
 						remove_entity(b_entity);
@@ -451,15 +467,18 @@ GameResult World::update(Game::GameMode game_mode) {
 					{
 						// damage both planes
 						if (b_entity->damage(10)){
+                                                  (reinterpret_cast<Plane*> (b_entity))->addToKillList(a_entity);
 							pworld.remove_body(a_body);
 							remove_entity(a_entity);
 						}
 						if (a_entity->damage(10)){
+                                                  (reinterpret_cast<Plane*> (b_entity))->addToKillList(a_entity);
 							pworld.remove_body(b_body);
 							remove_entity(b_entity);
 						}
 					}
 					else if (a_entity->getTypeId() == Game::TYPE_ID::infantry) {
+                                          (reinterpret_cast<Plane*> (b_entity))->addToKillList(a_entity);
 						// destroy infantry and damage plane
 						pworld.remove_body(a_body);
 						remove_entity(a_entity);
