@@ -1,5 +1,6 @@
 #include "Plane.hpp"
 #include "CommonDefinitions.hpp"
+#include <cmath>
 
 const int bullet_correction = 2;  // this is how many pixels away from the body bullet is created
 const float bullet_force = 1000;  // this is multiplier for impulse given to bullet
@@ -88,21 +89,21 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
           b2BodyDef BodyDef;
           BodyDef.type = b2_dynamicBody;
           std::cout << "Plane location X: " << x << " Y: " << y << " Size X: " << this->getSize().x << " Y: " << this->getSize().y << std::endl;
-          if (-(direction.y) >= direction.x) {  //shooting up
+          if (direction.y < 0 && -(direction.y) >= std::abs(direction.x)) {  //shooting up
             if (direction.x > 0) {
               x += (this->getSize().x)/4;
 	    }
             BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y-bullet_correction)/Game::TOPIXELS);
             std::cout << "Bullet created up X: " << (x+((this->getSize().x)/2)) << " Y: " << (y-bullet_correction) << std::endl;
           }
-          else if (direction.y >= direction.x){  //shooting down
+          else if (direction.y > 0 && direction.y >= std::abs(direction.x)){  //shooting down
             if (direction.x > 0) {
               x -= (this->getSize().x)/4;
 	    }
             BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y+(this->getSize().y)+bullet_correction)/Game::TOPIXELS);
             std::cout << "Bullet created down X: " << (x+((this->getSize().x)/2)) << " Y: " << (y+(this->getSize().y)+bullet_correction) << std::endl;
           }
-          else if (direction.x > direction.y){  //shooting right
+          else if (direction.x > 0 && direction.x >= std::abs(direction.y)){  //shooting right
             BodyDef.position = b2Vec2((x+(this->getSize().x)+bullet_correction+2)/Game::TOPIXELS, y+((this->getSize().y)/2)/Game::TOPIXELS);
             std::cout << "Bullet created right X: " << (x+(this->getSize().x)+bullet_correction) << " Y: " << (y-((this->getSize().y)/2)) << std::endl;
           }
