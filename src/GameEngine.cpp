@@ -330,13 +330,15 @@ void GameEngine::updateGameInfo()
   std::stringstream display_information;
   if ( planes.size() > 0 )
   {
-    Entity& player_entity = *planes[0];
-    display_information << "Player 1, hitpoints: " << player_entity.getHitPoints() << "\n";
+    std::shared_ptr<Plane> player_plane  = std::dynamic_pointer_cast<Plane>(planes[0]);
+    display_information << "Player 1 | hitpoints: " << player_plane->getHitPoints()
+                        << " | killed: " << player_plane->getGrandTotalKill() << "\n";
   }
   if ( planes.size() > 1 )
   {
-    Entity& player_entity = *planes[1];
-    display_information << "Player 2, hitpoints: " << player_entity.getHitPoints() << "\n";
+    std::shared_ptr<Plane> player_plane  = std::dynamic_pointer_cast<Plane>(planes[1]);
+    display_information << "Player 2 | hitpoints: " << player_plane->getHitPoints()
+                        << " | killed: " << player_plane->getGrandTotalKill() << "\n";
   }
   gameInfo.setString(display_information.str());
   renderWindow.draw(gameInfo);
