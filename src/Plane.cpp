@@ -103,7 +103,7 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
             std::cout << "Bullet created down X: " << (x+((this->getSize().x)/2)) << " Y: " << (y+(this->getSize().y)+bullet_correction) << std::endl;
           }
           else if (direction.x > direction.y){  //shooting right
-            BodyDef.position = b2Vec2((x+(this->getSize().x)+bullet_correction+200)/Game::TOPIXELS, y+((this->getSize().y)/2)/Game::TOPIXELS);
+            BodyDef.position = b2Vec2((x+(this->getSize().x)+bullet_correction+2)/Game::TOPIXELS, y+((this->getSize().y)/2)/Game::TOPIXELS);
             std::cout << "Bullet created right X: " << (x+(this->getSize().x)+bullet_correction) << " Y: " << (y-((this->getSize().y)/2)) << std::endl;
           }
           else {                                 //shooting left koodi ei koskaan mene tähän!!! LauriB hoitaa torstaina
