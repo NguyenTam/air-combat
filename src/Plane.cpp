@@ -146,3 +146,21 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
   //fireCountDown-=1;
     return false;
 }
+
+void Plane::addToKillList(Entity* killed_entity)
+{
+  if ( Entity::getTeamId() != killed_entity->getTeamId() )
+  {
+    kill_list[killed_entity->getTypeId()]++;
+  }
+}
+
+int Plane::getGrandTotalKill()
+{
+  int sum = 0;
+  for (auto const & entity : kill_list)
+  {
+    sum += entity.second;
+  }
+  return sum;
+}
