@@ -3,7 +3,7 @@ namespace Game
 {
   const int WIDTH = 1200;
   const int HEIGHT = 600;
-  const float GRAVITY = 0.1f;
+  const float GRAVITY = 2.f;
   constexpr float TOPIXELS = 5.f;
   constexpr float TOMETERS = 1/TOPIXELS;
   constexpr int LEFT_LIMIT = static_cast<int>(0.2*WIDTH);       //limit as percentage from the limits of the map.
