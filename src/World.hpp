@@ -122,10 +122,6 @@ public:
       */
         std::deque<std::shared_ptr<Entity>>& get_player_planes();
 
-/**
-      *   @return Returns list of all bullets
-      */
-        std::vector<std::shared_ptr<Entity>>& get_bullets();
 
         /**
           *   @brief Get score,
@@ -133,6 +129,13 @@ public:
           *   @return Returns score
           */
         int getScore();
+
+        /**
+          *   @brief Find Entity
+          *   @param Box2D body of the entity
+          *   @return Returns raw pointer to the entity
+          */
+        Entity* findEntity(b2Body *body);
 
 private:
 
@@ -147,7 +150,6 @@ private:
   ResourceManager &resources;
   sf::RenderWindow &window; /**< Window that is being used */
   std::vector<std::shared_ptr<Entity>> objects; /**< Contains all the entities added */
-  std::vector<std::shared_ptr<Entity>> bullets; /**< Contains all the bullets created */
   std::deque<std::shared_ptr<Entity>> player_planes; /**< Contains BlueAirplane and during multiplayer also one RedAirplane */
   std::list<b2Body*> destroyed_entity_bodies; /**< Destroyed entity bodies which should be removed from the world */
   std::list<b2Body*> destroyed_bullet_bodies; /**< Destroyed bullet bodies which should be removed from the world */

@@ -80,6 +80,7 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 						std::shared_ptr<Entity> entity = std::make_shared<InvisibleWall>(*pworld.get_world(), body, resources.get(Textures::alphaTextures.at("Ground")), sf::Vector2f(x,y));
 						entity->setType(Textures::Ground_alpha); //TODO Id for InvisibleWall
 						body->SetUserData(entity.get());
+						objects.push_back(entity);
 					}
 					try {
 						Textures::ID id = Textures::alphaTextures.at(type);
@@ -392,126 +393,127 @@ GameResult World::update(Game::GameMode game_mode) {
 			b2Body* a_body = a_fixture->GetBody();
 			b2Body* b_body = b_fixture->GetBody();
 
-			Entity* a_entity = static_cast<Entity*>(a_body->GetUserData());
-			Entity* b_entity = static_cast<Entity*>(b_body->GetUserData());
+			Entity* a_entity = findEntity(a_body);
+			Entity* b_entity = findEntity(b_body);
 
+			if (a_entity != nullptr && b_entity != nullptr) {
+				bool a_sensor = a_fixture->IsSensor();
+				bool b_sensor = b_fixture->IsSensor();
 
-			bool a_sensor = a_fixture->IsSensor();
-			bool b_sensor = b_fixture->IsSensor();
-
-			//only one was a sensor
-			if (a_sensor ^ b_sensor) {
-				if (a_sensor) {
-					a_entity->insert_surrounding(b_entity);
-				}
-
-				else if (b_sensor) {
-					b_entity->insert_surrounding(a_entity);
-				}
-			}
-
-			else if ((a_sensor == false) && (b_sensor == false)) {
-				if (a_entity->getType() == Textures::Bullet_alpha) {
-					if (b_entity->getType() == Textures::Bullet_alpha) {
-						// remove both bullets
-						destroyed_bullet_bodies.push_back(b_body);
-						// remove a_entity which is a bullet
-						destroyed_bullet_bodies.push_back(a_body);
+				//only one was a sensor
+				if (a_sensor ^ b_sensor) {
+					if (a_sensor) {
+						a_entity->insert_surrounding(b_entity);
 					}
-					else if (a_entity->getOwner() != b_entity){
-						if (b_entity->damage(10)) {
-							destroyed_entity_bodies.push_back(b_body);
-							/*Entity* owner = a_entity->getOwner();
-							if ( owner->getTypeId() == Game::TYPE_ID::airplane)
-							{
-								Plane* owner_plane = dynamic_cast<Plane*>(owner);
-								owner_plane->addToKillList(b_entity);
-							}*/
+
+					else if (b_sensor) {
+						b_entity->insert_surrounding(a_entity);
+					}
+				}
+
+				else if ((a_sensor == false) && (b_sensor == false)) {
+					if (a_entity->getType() == Textures::Bullet_alpha) {
+						if (b_entity->getType() == Textures::Bullet_alpha) {
+							// remove both bullets
+							destroyed_bullet_bodies.push_back(b_body);
+							// remove a_entity which is a bullet
+							destroyed_bullet_bodies.push_back(a_body);
 						}
-						// remove a_entity which is a bullet
-						destroyed_bullet_bodies.push_back(a_body);
-					}
-
-
-				}
-				else if (b_entity->getType() == Textures::Bullet_alpha) {
-
-					if (b_entity->getOwner() != a_entity) {
-						if (a_entity->damage(10)) {
-							destroyed_entity_bodies.push_back(a_body);
-							// A is killed by the owner of bullet B
-							/*Entity* owner = b_entity->getOwner();
-							if ( owner->getTypeId() == Game::TYPE_ID::airplane)
-							{
-								Plane* owner_plane = dynamic_cast<Plane*>(owner);
-								owner_plane->addToKillList(a_entity);
-							}*/
+						else if (a_entity->getOwner() != b_entity){
+							if (b_entity->damage(10)) {
+								Entity* owner = a_entity->getOwner();
+								if ( owner->getTypeId() == Game::TYPE_ID::airplane)
+								{
+									Plane* owner_plane = dynamic_cast<Plane*>(owner);
+									owner_plane->addToKillList(b_entity);
+								}
+								destroyed_entity_bodies.push_back(b_body);
+							}
+							// remove a_entity which is a bullet
+							destroyed_bullet_bodies.push_back(a_body);
 						}
-						// remove b_entity which is a bullet
-						destroyed_bullet_bodies.push_back(b_body);
-					}
 
 
-				}
-				else if (a_entity->getTypeId() == Game::TYPE_ID::airplane) {
-					if (b_entity->getTypeId() == Game::TYPE_ID::ground) {
-						// airplane destroyed
-						destroyed_entity_bodies.push_back(a_body);
 					}
-					else if (b_entity->getTypeId() == Game::TYPE_ID::airplane)
-					{
-						// damage both planes
-						if (a_entity->damage(10)){
+					else if (b_entity->getType() == Textures::Bullet_alpha) {
+
+						if (b_entity->getOwner() != a_entity) {
+							if (a_entity->damage(10)) {
+
+								// A is killed by the owner of bullet B
+								Entity* owner = b_entity->getOwner();
+								if ( owner->getTypeId() == Game::TYPE_ID::airplane)
+								{
+									Plane* owner_plane = dynamic_cast<Plane*>(owner);
+									owner_plane->addToKillList(a_entity);
+								}
+								destroyed_entity_bodies.push_back(a_body);
+							}
+							// remove b_entity which is a bullet
+							destroyed_bullet_bodies.push_back(b_body);
+						}
+
+
+					}
+					else if (a_entity->getTypeId() == Game::TYPE_ID::airplane) {
+						if (b_entity->getTypeId() == Game::TYPE_ID::ground) {
+							// airplane destroyed
 							destroyed_entity_bodies.push_back(a_body);
 						}
-						if (b_entity->damage(10)){
+						else if (b_entity->getTypeId() == Game::TYPE_ID::airplane)
+						{
+							// damage both planes
+							if (a_entity->damage(10)){
+								destroyed_entity_bodies.push_back(a_body);
+							}
+							if (b_entity->damage(10)){
+								destroyed_entity_bodies.push_back(b_body);
+							}
+						}
+						else if (b_entity->getTypeId() == Game::TYPE_ID::infantry) {
+							// destroy infantry and damage plane
 							destroyed_entity_bodies.push_back(b_body);
-							//(reinterpret_cast<Plane*> (a_entity))->addToKillList(b_entity);
+							if (a_entity->damage(10)) {
+								destroyed_entity_bodies.push_back(a_body);
+							}
 						}
 					}
-					else if (b_entity->getTypeId() == Game::TYPE_ID::infantry) {
-              //(reinterpret_cast<Plane*> (a_entity))->addToKillList(b_entity);
-						// destroy infantry and damage plane
-						destroyed_entity_bodies.push_back(b_body);
-						if (a_entity->damage(10)) {
+					else if (b_entity->getTypeId() == Game::TYPE_ID::airplane) {
+						if (a_entity->getTypeId() == Game::TYPE_ID::ground) {
+							// airplane destroyed
+							destroyed_entity_bodies.push_back(b_body);
+						}
+						else if (a_entity->getTypeId() == Game::TYPE_ID::airplane)
+						{
+							// damage both planes
+							if (b_entity->damage(10)) {
+								destroyed_entity_bodies.push_back(b_body);
+							}
+							if (a_entity->damage(10)) {
+								destroyed_entity_bodies.push_back(a_body);
+							}
+						}
+						else if (a_entity->getTypeId() == Game::TYPE_ID::infantry) {
+							// destroy infantry and damage plane
 							destroyed_entity_bodies.push_back(a_body);
+							if (b_entity->damage(10)) {
+								destroyed_entity_bodies.push_back(b_body);
+							}
 						}
 					}
-				}
-				else if (b_entity->getTypeId() == Game::TYPE_ID::airplane) {
-					if (a_entity->getTypeId() == Game::TYPE_ID::ground) {
-						// airplane destroyed
-						destroyed_entity_bodies.push_back(b_body);
-					}
-					else if (a_entity->getTypeId() == Game::TYPE_ID::airplane)
-					{
-						// damage both planes
-						if (b_entity->damage(10)) {
-							destroyed_entity_bodies.push_back(b_body);
-							//(reinterpret_cast<Plane*> (a_entity))->addToKillList(b_entity);
-						}
-						if (a_entity->damage(10)) {
-							destroyed_entity_bodies.push_back(a_body);
-							//(reinterpret_cast<Plane*> (b_entity))->addToKillList(a_entity);
-						}
-					}
-					else if (a_entity->getTypeId() == Game::TYPE_ID::infantry) {
-              //(reinterpret_cast<Plane*> (b_entity))->addToKillList(a_entity);
-						// destroy infantry and damage plane
-						destroyed_entity_bodies.push_back(a_body);
-						if (b_entity->damage(10)) {
-							destroyed_entity_bodies.push_back(b_body);
-						}
-					}
-				}
 
 
+
+				}
 
 			}
 
 		}
 
 	}
+
+
+
 	// remove destroyed_bodies from the world
 	// bullets must be removed first because they are stored within other entities
 
@@ -602,10 +604,7 @@ std::deque<std::shared_ptr<Entity>>& World::get_player_planes()
 	return player_planes;
 }
 
-std::vector<std::shared_ptr<Entity>>& World::get_bullets()
-{
-	return bullets;
-}
+
 
 GameResult World::checkGameStatus(Game::GameMode game_mode)
 {
@@ -646,4 +645,36 @@ GameResult World::checkGameStatus(Game::GameMode game_mode)
 int World::getScore()
 {
 	return score;
+}
+
+Entity* World::findEntity(b2Body *body)
+{
+	for (auto it = objects.begin(); it != objects.end(); it++) {
+		if ((*it)->getB2Body() == body) {
+			return it->get();
+		}
+		else {
+			std::list<std::shared_ptr<Entity>>& entitys_bullets = (*it)->get_active_bullets();
+			for (auto item = entitys_bullets.begin(); item != entitys_bullets.end(); item++) {
+				if ((*item)->getB2Body() == body) {
+					return item->get();
+				}
+			}
+		}
+	}
+	// Go through player_planes
+	for (auto plane = player_planes.begin(); plane != player_planes.end(); plane++) {
+		if ((*plane)->getB2Body() == body) {
+			return plane->get();
+		}
+		else {
+			std::list<std::shared_ptr<Entity>>& entitys_bullets = (*plane)->get_active_bullets();
+			for (auto item = entitys_bullets.begin(); item != entitys_bullets.end(); item++) {
+				if ((*item)->getB2Body() == body) {
+					return item->get();
+				}
+			}
+		}
+	}
+	return nullptr;
 }
