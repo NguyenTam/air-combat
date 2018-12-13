@@ -2,7 +2,7 @@
 #include "CommonDefinitions.hpp"
 #include <cmath>
 
-const int bullet_correction = 5;  // this is how many pixels away from the body bullet is created
+const int bullet_correction = 2;  // this is how many pixels away from the body bullet is created
 const float bullet_force = 1000;  // this is multiplier for impulse given to bullet
 
 //Note about the magical numbers
@@ -54,14 +54,22 @@ bool Infantry::shoot(sf::Vector2f direction, ResourceManager& resources){
 
       b2BodyDef BodyDef;
       BodyDef.type = b2_dynamicBody;
+      //std::cout << "Infantry location X: " << x << " Y: " << y << " Size X: " << this->getSize().x << " Y: " << this->getSize().y << std::endl;
       if (-(direction.y) >= (std::abs(direction.x))) {  //shooting up
+        if (direction.x < 0) {
+          x += (this->getSize().x)/2;
+          y += (this->getSize().y)/4;
+	}
         BodyDef.position = b2Vec2((x+((this->getSize().x)/2))/Game::TOPIXELS, (y-bullet_correction)/Game::TOPIXELS);
+        //std::cout << "Bullet created up X: " << (x+((this->getSize().x)/2)) << " Y: " << (y-bullet_correction) << std::endl;
       }
       else if (direction.x < 0){                        //shooting left
-        BodyDef.position = b2Vec2((x-bullet_correction)/Game::TOPIXELS, (y+((this->getSize().y)/2))/Game::TOPIXELS);
+        BodyDef.position = b2Vec2((x-bullet_correction)/Game::TOPIXELS, (y+4+(this->getSize().y)/2)/Game::TOPIXELS);
+        //std::cout << "Bullet created left X: " << (x-bullet_correction) << " Y: " << y+(this->getSize().y)/2 << std::endl;
       }
       else {                                            //shooting right
         BodyDef.position = b2Vec2((x+(this->getSize().x)+bullet_correction)/Game::TOPIXELS, (y-((this->getSize().y)/2))/Game::TOPIXELS);
+        //std::cout << "Bullet created right X: " << (x+(this->getSize().x)+bullet_correction) << " Y: " << (y-((this->getSize().y)/2)) << std::endl;
       }
       BodyDef.bullet = true;
 

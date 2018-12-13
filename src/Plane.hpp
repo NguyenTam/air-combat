@@ -43,4 +43,8 @@ class Plane : public Entity {
    *   @return Return true or false based on if the object can shoot or not
    */
   virtual bool shoot(sf::Vector2f direction, ResourceManager & resources) override;
+
+  void addToKillList(Entity* killed_entity);
+  int getGrandTotalKill();
+  std::map<Game::TYPE_ID, int> kill_list;
 };
