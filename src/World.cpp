@@ -77,8 +77,8 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 					//all ok
 					if (type == "InvisibleWall") {
 					        b2Body* body = pworld.create_body_static(x, y, width, height, Game::TYPE_ID::invisible_wall);
-						std::shared_ptr<Entity> entity = std::make_shared<InvisibleWall>(*pworld.get_world(), body, resources.get(Textures::alphaTextures.at("Ground")), sf::Vector2f(x,y));
-						entity->setType(Textures::Ground_alpha); //TODO Id for InvisibleWall
+						std::shared_ptr<Entity> entity = std::make_shared<InvisibleWall>(*pworld.get_world(), body, resources.get(Textures::alphaTextures.at("InvisibleWall")), sf::Vector2f(x,y));
+						entity->setType(Textures::InvisibleWall_alpha);
 						body->SetUserData(entity.get());
 						objects.push_back(entity);
 					}
