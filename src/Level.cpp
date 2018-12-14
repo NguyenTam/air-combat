@@ -28,7 +28,7 @@ const float Level::ground_height = 100.f;
 
 
 /* Constructor */
-Level::Level() : manager()
+Level::Level()  
 {
   // Constuct empty LevelEntity
   current_entity = std::make_shared<LevelEntity>();
@@ -46,16 +46,16 @@ bool Level::CheckPosition(float x, float y, float width, float height, LevelEnti
 {
   sf::Rect<float> cmp_rect = sf::Rect<float>(x, y, width, height);
   // Go through LevelEntities and check all four corners
-  for (auto it = level_entities.begin(); it != level_entities.end(); it++)
+  for (auto & level_entitie : level_entities)
   {
     // Remark many check are needed bacause entity sizes can be anything
     // Thus, entites can be partially or complitely inside each other
 
-    if ( it->get() != cmp)
+    if ( level_entitie.get() != cmp)
     {
-      float entity_width = (*it)->getWidth();
-      float entity_height = (*it)->getHeight();
-      sf::Vector2f entity_pos = (*it)->getPosition();
+      float entity_width = level_entitie->getWidth();
+      float entity_height = level_entitie->getHeight();
+      sf::Vector2f entity_pos = level_entitie->getPosition();
 
       // Check whether enity is inside cmp_rect
       if (cmp_rect.contains(entity_pos.x, entity_pos.y))
@@ -63,7 +63,7 @@ bool Level::CheckPosition(float x, float y, float width, float height, LevelEnti
         // Entity top left corner inside
         return false;
       }
-      else if (cmp_rect.contains(entity_pos.x + entity_width, entity_pos.y))
+      if (cmp_rect.contains(entity_pos.x + entity_width, entity_pos.y))
       {
         // Top right corner inside
         return false;
@@ -83,23 +83,23 @@ bool Level::CheckPosition(float x, float y, float width, float height, LevelEnti
         // Center inside (complitely inside cmp_rect)
         return false;
       }
-      if ( (*it)->isInside(x, y) )
+      if ( level_entitie->isInside(x, y) )
       {
         // Top left corner inside some other LevelEntity
         return false;
       }
-      else if ( (*it)->isInside(x + width, y) )
+      if ( level_entitie->isInside(x + width, y) )
       {
         // Right top corner inside some other LevelEntity
         return false;
 
       }
-      else if ( (*it)->isInside(x, y + height) )
+      else if ( level_entitie->isInside(x, y + height) )
       {
         // Left bottom corner inside some other LevelEntity
         return false;
       }
-      else if ( (*it)->isInside(x + width, y + height) )
+      else if ( level_entitie->isInside(x + width, y + height) )
       {
         // Right bottom corner inside some other LevelEntity
         return false;
@@ -230,7 +230,7 @@ void Level::AddEntity(float x, float y, int entity_type, float entity_width, flo
     y = 0;
   }
 
-  if ( current_entity->getType() == entity_type && current_entity->getPositioned() == false )
+  if ( current_entity->getType() == entity_type && !current_entity->getPositioned() )
   {
     // Try to position current_entity
     if ( CheckPosition(x, y, entity_width, entity_height, current_entity.get()) )
@@ -334,9 +334,9 @@ void Level::removeCurrent()
 void Level::drawLevel(sf::RenderWindow &window)
 {
   // Draw all LevelEntities
-  for (auto it = level_entities.begin(); it != level_entities.end(); it++)
+  for (auto & level_entitie : level_entities)
   {
-    window.draw( (**it) );
+    window.draw( (*level_entitie) );
   }
 }
 
@@ -344,20 +344,20 @@ void Level::drawLevel(sf::RenderWindow &window)
 void Level::drawTexture(sf::RenderTexture &texture)
 {
   // Draw all LevelEntities
-  for (auto it = level_entities.begin(); it != level_entities.end(); it++)
+  for (auto & level_entitie : level_entities)
   {
-    texture.draw( (**it) );
+    texture.draw( (*level_entitie) );
   }
 }
 
 /* Try to flip LevelEntity */
 void Level::flipEntity(float x, float y)
 {
-  for (auto it = level_entities.begin(); it != level_entities.end(); it++)
+  for (auto & level_entitie : level_entities)
   {
-    if ((*it)->isInside(x, y))
+    if (level_entitie->isInside(x, y))
     {
-      (*it)->flipLevelEntity();
+      level_entitie->flipLevelEntity();
       break;
     }
   }
@@ -367,9 +367,9 @@ void Level::flipEntity(float x, float y)
 std::ostream& operator<<(std::ostream &os, const Level &level)
 {
   // Output all LevelEntities in order
-  for (auto it = level.level_entities.begin(); it != level.level_entities.end(); it++)
+  for (const auto & level_entitie : level.level_entities)
   {
-    int type = (*it)->getType();
+    int type = level_entitie->getType();
     // First write entity type code
     switch (type)
     {
@@ -418,12 +418,12 @@ std::ostream& operator<<(std::ostream &os, const Level &level)
       // Add separator
       os << ";";
       // Write entity x and y positions with separator
-      sf::Vector2f pos = (*it)->getPosition();
+      sf::Vector2f pos = level_entitie->getPosition();
       os << pos.x << ";" << pos.y << ";";
       // Write orientation and add line feed
-      os << (*it)->getOrientation() << ";";
+      os << level_entitie->getOrientation() << ";";
       // Write width and height (only needed for Ground)
-      os << (*it)->getWidth() << ";" << (*it)->getHeight() << std::endl;
+      os << level_entitie->getWidth() << ";" << level_entitie->getHeight() << std::endl;
     }
   }
   // Now write InvisibleWalls to edges of the Level
@@ -442,7 +442,7 @@ std::ostream& operator<<(std::ostream &os, const Level &level)
 }
 
 /*  Save Level to file */
-int Level::saveToFile(std::string level_name, std::string description, bool truncate)
+int Level::saveToFile(const std::string& level_name, const std::string& description, bool truncate)
 {
   if (level_name.empty())
   {
@@ -559,9 +559,9 @@ bool Level::finishAddingGround()
   {
     current_entity->setFullyConstructed();
     // Update ground_level
-    unsigned x = (unsigned) current_entity->getX();
-    unsigned max_x = x + (unsigned) current_entity->getWidth();
-    unsigned y = (unsigned) current_entity->getY();
+    auto x = static_cast<unsigned>(current_entity->getX());
+    unsigned max_x = x + static_cast<unsigned>(current_entity->getWidth());
+    auto y = static_cast<unsigned>(current_entity->getY());
     UpdateGroundLevel(x, max_x, y);
 
     // Add to grounds
@@ -578,7 +578,7 @@ bool Level::finishAddingGround()
 unsigned Level::GetGroundLevel(float entity_x, float entity_width, float entity_height)
 {
   unsigned min_y = level_y_limit;
-  for (unsigned x = (unsigned) entity_x; x <= (unsigned) entity_x + entity_width; x++)
+  for (auto x = static_cast<unsigned>(entity_x); x <= static_cast<unsigned>(entity_x) + entity_width; x++)
   {
     // Get ground level
     auto it = ground_level.find(x);
@@ -595,16 +595,16 @@ unsigned Level::GetGroundLevel(float entity_x, float entity_width, float entity_
 
     }
   }
-  if ((unsigned)entity_height <= min_y)
+  if (static_cast<unsigned>(entity_height) <= min_y)
   {
     return min_y - entity_height;
   }
-  else
-  {
+  
+  
     // Entity cannot be placed correctly on the screen, just draw entity
     // on level low corner (probably best of the bad options)
     return level_y_limit - entity_height;
-  }
+  
 
 }
 
@@ -646,11 +646,11 @@ void Level::RemoveEntitiesBelow(float x, float y, float width, float height)
 }
 
 /*  Update ground_level */
-void Level::RemoveGround(std::shared_ptr<LevelEntity> ground)
+void Level::RemoveGround(const std::shared_ptr<LevelEntity>& ground)
 {
-  unsigned x = (unsigned) ground->getX();
-  unsigned y = (unsigned) ground->getY();
-  unsigned x_max = x + (unsigned) ground->getWidth();
+  auto x = static_cast<unsigned>(ground->getX());
+  auto y = static_cast<unsigned>(ground->getY());
+  unsigned x_max = x + static_cast<unsigned>(ground->getWidth());
   for (; x < x_max; x++)
   {
     auto it = ground_level.find(x);
@@ -677,21 +677,21 @@ void Level::RemoveGround(std::shared_ptr<LevelEntity> ground)
 }
 
 /* Get new ground level */
-unsigned Level::GetNewGroundLevel(unsigned x, std::shared_ptr<LevelEntity> ground)
+unsigned Level::GetNewGroundLevel(unsigned x, const std::shared_ptr<LevelEntity>& ground)
 {
   unsigned y_max = level_y_limit;
-  for (auto it = grounds.begin(); it != grounds.end(); it++)
+  for (auto & it : grounds)
   {
-    if ((*it) != ground)
+    if (it != ground)
     {
-      unsigned cmp_x = (unsigned) (*it)->getX();
-      unsigned cmp_x_max =  cmp_x + (unsigned) (*it)->getWidth();
+      auto cmp_x = static_cast<unsigned>(it->getX());
+      unsigned cmp_x_max =  cmp_x + static_cast<unsigned>(it->getWidth());
       if ( cmp_x <= x && cmp_x_max > x)
       {
-        if ((*it)->getY() < y_max)
+        if (it->getY() < y_max)
         {
           // New y_max
-          y_max = (*it)->getY();
+          y_max = it->getY();
         }
       }
     }
@@ -702,7 +702,7 @@ unsigned Level::GetNewGroundLevel(unsigned x, std::shared_ptr<LevelEntity> groun
 
 
 /*  Remove specific LevelEntities */
-void Level::RemoveSpecificEntities(int type, std::shared_ptr<LevelEntity> not_removed)
+void Level::RemoveSpecificEntities(int type, const std::shared_ptr<LevelEntity>& not_removed)
 {
   for (auto it = level_entities.begin(); it != level_entities.end();)
   {
@@ -721,9 +721,9 @@ void Level::RemoveSpecificEntities(int type, std::shared_ptr<LevelEntity> not_re
 float Level::getLevelWidth() const
 {
   float x_max = 0;
-  for (auto it = level_entities.begin(); it != level_entities.end(); it++)
+  for (const auto & level_entitie : level_entities)
   {
-    float x_tmp = (*it)->getX() + (*it)->getWidth();
+    float x_tmp = level_entitie->getX() + level_entitie->getWidth();
     if (x_tmp > x_max)
     {
       x_max = x_tmp;
@@ -806,8 +806,8 @@ bool Level::parseLevel(std::string& levelfile)
           clearAll();
           return false;
         }
-        else
-        {
+        
+        
           // Everything went ok, add new entity to Level
           if (entity_name == GROUND_ENTITY)
           {
@@ -836,13 +836,13 @@ bool Level::parseLevel(std::string& levelfile)
             // This calls AddEntity which locks entities the second time
             addEntity(x, y, entity_name);
             // Now set the correct orientation
-            if (! orientation)
+            if (orientation == 0)
             {
               current_entity->flipLevelEntity(); // current_entity is updated by AddEntity
             }
             addEntity(x, y, entity_name);
           }
-        }
+        
       }
     }
 
@@ -867,19 +867,20 @@ void Level::clearAll()
 /*  Convert str to Entity type */
 int Level::ConvertStrToType(std::string &str)
 {
-  if (str == "BlueAirplane") return FRIENDLY_PLANE;
-  else if (str == "RedAirplane") return HOSTILE_PLANE;
-  else if (str == "BlueInfantry") return FRIENDLY_INFANTRY;
-  else if (str == "RedInfantry") return HOSTILE_INFANTRY;
-  else if (str == "BlueAntiAircraft") return FRIENDLY_AA;
-  else if (str == "RedAntiAircraft") return HOSTILE_AA;
-  else if (str == "BlueHangar") return FRIENDLY_HANGAR;
-  else if (str == "RedHangar") return HOSTILE_HANGAR;
-  else if (str == "BlueBase") return FRIENDLY_BASE;
-  else if (str == "RedBase") return HOSTILE_BASE;
-  else if (str == "Tree") return TREE_ENTITY;
-  else if (str == "Rock") return ROCK_ENTITY;
-  else if (str == "Ground") return GROUND_ENTITY;
+  if (str == "BlueAirplane") { return FRIENDLY_PLANE;
+  } if (str == "RedAirplane") { return HOSTILE_PLANE;
+  } else if (str == "BlueInfantry") { return FRIENDLY_INFANTRY;
+  } else if (str == "RedInfantry") { return HOSTILE_INFANTRY;
+  } else if (str == "BlueAntiAircraft") { return FRIENDLY_AA;
+  } else if (str == "RedAntiAircraft") { return HOSTILE_AA;
+  } else if (str == "BlueHangar") { return FRIENDLY_HANGAR;
+  } else if (str == "RedHangar") { return HOSTILE_HANGAR;
+  } else if (str == "BlueBase") { return FRIENDLY_BASE;
+  } else if (str == "RedBase") { return HOSTILE_BASE;
+  } else if (str == "Tree") { return TREE_ENTITY;
+  } else if (str == "Rock") { return ROCK_ENTITY;
+  } else if (str == "Ground") { return GROUND_ENTITY;
+}
   return NO_ENTITY;
 }
 
@@ -887,7 +888,7 @@ int Level::ConvertStrToType(std::string &str)
 int Level::CountEntities(int entity_type)
 {
   int count = 0;
-  for (auto entity : level_entities)
+  for (const auto& entity : level_entities)
   {
     if (entity->getType() == entity_type)
     {

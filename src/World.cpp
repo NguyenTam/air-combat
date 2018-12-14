@@ -9,7 +9,7 @@
 
 /*  Constructor  */
 
-World::World(sf::RenderWindow &main_window, ResourceManager &_resources) : pworld(), resources(_resources), window(main_window) {}
+World::World(sf::RenderWindow &main_window, ResourceManager &_resources) :  resources(_resources), window(main_window) {}
 
 /*  Parse level .txt file and create world's entities  */
 
@@ -73,7 +73,7 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 					clear_all();
 					return false;
 				}
-				else {
+				
 					//all ok
 					if (type == "InvisibleWall") {
 					        b2Body* body = pworld.create_body_static(x+(width/2), y+(height/2), width, height, Game::TYPE_ID::invisible_wall);
@@ -94,7 +94,7 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 					catch (const std::out_of_range& er) {
 
 					}
-				}
+				
 			}
 		}
 	}
@@ -108,8 +108,9 @@ bool World::read_level(std::string& filename, Game::GameMode game_mode) {
 void World::clear_all() {
 	objects.clear();
 	player_planes.clear();
-	for (b2Body* b = pworld.get_world()->GetBodyList(); b; b = b->GetNext())
+	for (b2Body* b = pworld.get_world()->GetBodyList(); b != nullptr; b = b->GetNext()) {
 		pworld.get_world()->DestroyBody(b);
+}
 }
 
 /*  Create entity  */
@@ -205,7 +206,7 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 						player_planes.push_back(std::move(entity));
 					}
 				}
-				else if (player_planes.size() == 0) {
+				else if (player_planes.empty()) {
 
 				        body = pworld.create_body_dynamic(x, y, width, height,1 );
 					entity = std::make_shared<Plane>(*pworld.get_world(), body, tex, pos, direct, Game::TEAM_ID::red);
@@ -285,16 +286,16 @@ bool World::create_entity(Textures::ID id, double x, double y, int orientation, 
 	  return true;
 	}
 	//entity was already added
-	else {
+	
 		return false;
-		}
+		
 }
 
 /*  Remove entity  */
 
 bool World::remove_bullet(Entity *bullet, Entity *entity) {
-	for (auto it = objects.begin(); it != objects.end(); it++) {
-		std::list<std::shared_ptr<Entity>>& bullets_list = (*it)->get_active_bullets();
+	for (auto & object : objects) {
+		std::list<std::shared_ptr<Entity>>& bullets_list = object->get_active_bullets();
 		for (auto item = bullets_list.begin(); item != bullets_list.end(); item++) {
 			if ((item->get() == bullet) && (bullet->getOwner() != entity)) {
 				// raw pointers match, erase bullet
@@ -307,9 +308,9 @@ bool World::remove_bullet(Entity *bullet, Entity *entity) {
 			}
 		}
 	}
-	for (auto it = player_planes.begin(); it != player_planes.end(); it++) {
+	for (auto & player_plane : player_planes) {
 		// Check also player_planes bullets
-		std::list<std::shared_ptr<Entity>>& bullets_list = (*it)->get_active_bullets();
+		std::list<std::shared_ptr<Entity>>& bullets_list = player_plane->get_active_bullets();
 		for (auto item = bullets_list.begin(); item != bullets_list.end(); item++) {
 			if ((item->get() == bullet) && (bullet->getOwner() != entity)) {
 				// raw pointers match, erase bullet
@@ -390,7 +391,7 @@ GameResult World::update(Game::GameMode game_mode) {
 	}
 
 	//collision detection
-	for (b2Contact* contact = pworld.get_world()->GetContactList(); contact;  contact = contact->GetNext()) {
+	for (b2Contact* contact = pworld.get_world()->GetContactList(); contact != nullptr;  contact = contact->GetNext()) {
 		if (contact->IsTouching()){
 			b2Fixture* a_fixture = contact->GetFixtureA();
 			b2Fixture* b_fixture = contact->GetFixtureB();
@@ -416,7 +417,7 @@ GameResult World::update(Game::GameMode game_mode) {
 					}
 				}
 
-				else if ((a_sensor == false) && (b_sensor == false)) {
+				else if ((!a_sensor) && (!b_sensor)) {
 					if (a_entity->getType() == Textures::Bullet_alpha) {
 						if (b_entity->getType() == Textures::Bullet_alpha) {
 							// remove both bullets
@@ -429,7 +430,7 @@ GameResult World::update(Game::GameMode game_mode) {
 								Entity* owner = a_entity->getOwner();
 								if ( owner->getTypeId() == Game::TYPE_ID::airplane)
 								{
-									Plane* owner_plane = dynamic_cast<Plane*>(owner);
+									auto* owner_plane = dynamic_cast<Plane*>(owner);
 									owner_plane->addToKillList(b_entity);
 								}
 								destroyed_entity_bodies.push_back(b_body);
@@ -449,7 +450,7 @@ GameResult World::update(Game::GameMode game_mode) {
 								Entity* owner = b_entity->getOwner();
 								if ( owner->getTypeId() == Game::TYPE_ID::airplane)
 								{
-									Plane* owner_plane = dynamic_cast<Plane*>(owner);
+									auto* owner_plane = dynamic_cast<Plane*>(owner);
 									owner_plane->addToKillList(a_entity);
 								}
 								destroyed_entity_bodies.push_back(a_body);
@@ -526,7 +527,7 @@ GameResult World::update(Game::GameMode game_mode) {
 	destroyed_bullet_bodies.sort();
 	destroyed_bullet_bodies.unique();
 	for (auto it : destroyed_bullet_bodies) {
-		Entity* bullet = static_cast<Entity*>(it->GetUserData());
+		auto* bullet = static_cast<Entity*>(it->GetUserData());
 		remove_bullet(bullet, bullet);
 	}
 	// clear all old pointers which have been removed
@@ -535,13 +536,13 @@ GameResult World::update(Game::GameMode game_mode) {
 	destroyed_entity_bodies.sort();
 	destroyed_entity_bodies.unique();
 	for (auto it : destroyed_entity_bodies) {
-		Entity* entity = static_cast<Entity*>(it->GetUserData());
+		auto* entity = static_cast<Entity*>(it->GetUserData());
 		remove_entity(entity);
 	}
 	destroyed_entity_bodies.clear();
 
 	//updating the world
-	for (auto it : objects) {
+	for (const auto& it : objects) {
 		//1. send ai information
                 AI::get_action(*it, it->get_surroundings(), resources);
 		//do something with ai information
@@ -555,7 +556,7 @@ GameResult World::update(Game::GameMode game_mode) {
 
 		std::list<std::shared_ptr<Entity>> bullets = it->get_active_bullets();
 
-		for (auto b : bullets) {
+		for (const auto& b : bullets) {
 			float x = Game::TOPIXELS*b->getB2Body()->GetPosition().x;
 			float y = Game::TOPIXELS*b->getB2Body()->GetPosition().y;
 			sf::Vector2f newpos(x,y);
@@ -571,7 +572,7 @@ GameResult World::update(Game::GameMode game_mode) {
 	}
 
 	// Draw player planes
-	for (auto it : player_planes) {
+	for (const auto& it : player_planes) {
 		float x = Game::TOPIXELS*it->getB2Body()->GetPosition().x;
 		float y = Game::TOPIXELS*it->getB2Body()->GetPosition().y;
 		sf::Vector2f newpos(x,y);
@@ -579,7 +580,7 @@ GameResult World::update(Game::GameMode game_mode) {
 
 		std::list<std::shared_ptr<Entity>> bullets = it->get_active_bullets();
 
-		for (auto b : bullets) {
+		for (const auto& b : bullets) {
 			float x = Game::TOPIXELS*b->getB2Body()->GetPosition().x;
 			float y = Game::TOPIXELS*b->getB2Body()->GetPosition().y;
 			sf::Vector2f newpos(x,y);
@@ -618,12 +619,12 @@ GameResult World::checkGameStatus(Game::GameMode game_mode)
 {
 	if (game_mode == Game::GameMode::SinglePlayer) {
 		// Red team won if blue plane destroyed
-		if (player_planes.size() == 0) {
+		if (player_planes.empty()) {
 			return GameResult::RedWon;
 		}
-		else {
+		
 			// Blue team won if all red planes and bases destroyed
-			for (auto it : objects){
+			for (const auto& it : objects){
 				if ((it->getType() == Textures::RedBase_alpha )|| (it->getType() == Textures::RedAirplane_alpha)) {
 					// not all red planes and bases destroyed, game UnFinished
 					return GameResult::UnFinished;
@@ -631,7 +632,7 @@ GameResult World::checkGameStatus(Game::GameMode game_mode)
 			}
 			// All red planes and bases destroyed
 			return GameResult::BlueWon;
-		}
+		
 	}
 	else {
 		// Multiplayer is over when red or blue plane is destroyed
@@ -640,9 +641,11 @@ GameResult World::checkGameStatus(Game::GameMode game_mode)
 				if (player_planes[0]->getType() == Textures::RedAirplane_alpha) {
 					return GameResult::RedWon;
 				}
-				else return GameResult::BlueWon;
+				 {return GameResult::BlueWon;
+}
 			}
-			else return GameResult::TieGame;
+			else { return GameResult::TieGame;
+}
 
 		}
 		// both planes still active
@@ -657,32 +660,32 @@ int World::getScore()
 
 Entity* World::findEntity(b2Body *body)
 {
-	for (auto it = objects.begin(); it != objects.end(); it++) {
-		if ((*it)->getB2Body() == body) {
-			return it->get();
+	for (auto & object : objects) {
+		if (object->getB2Body() == body) {
+			return object.get();
 		}
-		else {
-			std::list<std::shared_ptr<Entity>>& entitys_bullets = (*it)->get_active_bullets();
-			for (auto item = entitys_bullets.begin(); item != entitys_bullets.end(); item++) {
-				if ((*item)->getB2Body() == body) {
-					return item->get();
+		
+			std::list<std::shared_ptr<Entity>>& entitys_bullets = object->get_active_bullets();
+			for (auto & entitys_bullet : entitys_bullets) {
+				if (entitys_bullet->getB2Body() == body) {
+					return entitys_bullet.get();
 				}
 			}
-		}
+		
 	}
 	// Go through player_planes
-	for (auto plane = player_planes.begin(); plane != player_planes.end(); plane++) {
-		if ((*plane)->getB2Body() == body) {
-			return plane->get();
+	for (auto & player_plane : player_planes) {
+		if (player_plane->getB2Body() == body) {
+			return player_plane.get();
 		}
-		else {
-			std::list<std::shared_ptr<Entity>>& entitys_bullets = (*plane)->get_active_bullets();
-			for (auto item = entitys_bullets.begin(); item != entitys_bullets.end(); item++) {
-				if ((*item)->getB2Body() == body) {
-					return item->get();
+		
+			std::list<std::shared_ptr<Entity>>& entitys_bullets = player_plane->get_active_bullets();
+			for (auto & entitys_bullet : entitys_bullets) {
+				if (entitys_bullet->getB2Body() == body) {
+					return entitys_bullet.get();
 				}
 			}
-		}
+		
 	}
 	return nullptr;
 }
@@ -692,8 +695,8 @@ void World::updateScore(Game::GameMode game_mode)
 	// init score
 	score = 0;
 	if (game_mode == Game::GameMode::SinglePlayer) {
-		if (player_planes.size() > 0) {
-			Plane* plane = dynamic_cast<Plane*> (player_planes[0].get());
+		if (!player_planes.empty()) {
+			auto* plane = dynamic_cast<Plane*> (player_planes[0].get());
 			score = plane->getGrandTotalKill() * 1000;
 		}
 		else {

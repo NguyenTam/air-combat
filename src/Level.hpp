@@ -150,7 +150,7 @@ class Level
       *   @return On success, returns 1. If file realated problem, returns -1
       *   and if level is missing planes, returns 0
       */
-    int saveToFile(std::string level_name, std::string description, bool truncate);
+    int saveToFile(const std::string& level_name, const std::string& description, bool truncate);
 
     /**
       *   @brief Finish adding ground entity
@@ -260,7 +260,7 @@ class Level
       *   @brief Remove Ground entity related ground_level entries
       *   @param ground Ground object pointer (entity must still exist)
       */
-    void RemoveGround(std::shared_ptr<LevelEntity> ground);
+    void RemoveGround(const std::shared_ptr<LevelEntity>& ground);
 
     /**
       *   @brief Get new ground level
@@ -269,7 +269,7 @@ class Level
       *   @param ground Ground enitity which isn't compared
       *   @remark Quite heavy operation, use sparingly
       */
-    unsigned GetNewGroundLevel(unsigned x, std::shared_ptr<LevelEntity> ground);
+    unsigned GetNewGroundLevel(unsigned x, const std::shared_ptr<LevelEntity>& ground);
 
     /**
       *   @brief Remove specific type entities from level_entities
@@ -277,7 +277,7 @@ class Level
       *   @param entity_type LevelEntity type which are removed
       *   @param not_removed LevelEntity which isn't removed
       */
-    void RemoveSpecificEntities(int entity_type, std::shared_ptr<LevelEntity> not_removed);
+    void RemoveSpecificEntities(int type, const std::shared_ptr<LevelEntity>& not_removed);
 
     /**
       *   @brief Convert string to LevelEntity type

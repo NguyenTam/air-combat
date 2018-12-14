@@ -31,7 +31,7 @@ LevelEntity::LevelEntity(float x, float y, float width, float height, sf::Textur
   StoreOriginalValues();
   rect = sf::Rect<float>(x, y, width, height);
   // Create sprite from texture
-  sprite = sf::Sprite(texture, sf::Rect<int>(0, 0, (int) width, (int) height));
+  sprite = sf::Sprite(texture, sf::Rect<int>(0, 0, static_cast<int>(width), static_cast<int>(height)));
   sprite.setPosition(x, y);
   this->type = type;
 
@@ -40,7 +40,7 @@ LevelEntity::LevelEntity(float x, float y, float width, float height, sf::Textur
 /*  Set texture */
 void LevelEntity::setTexture(const sf::Texture &texture)
 {
-  sprite = sf::Sprite(texture, sf::Rect<int>(0, 0, (int) width, (int) height));
+  sprite = sf::Sprite(texture, sf::Rect<int>(0, 0, static_cast<int>(width), static_cast<int>(height)));
 }
 
 /* Copy constructor */
