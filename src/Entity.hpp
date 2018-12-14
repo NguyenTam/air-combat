@@ -32,7 +32,7 @@ public:
    *   @param bombs Number of bombs this entity can drop
    *   @param firerate How many frames does it take for the entity to shoot again, so 60 would mean shooting once per second.
    *   @param hp Hitpoint of this entity
-   *   @param direction Direction where entity is moving
+   *   @param direct Direction where entity is moving
    *   @param team The team entity belongs to: blue, red, obstacle or projectile
    */
   Entity(b2World &w, b2Body *b, const sf::Texture &t, const sf::Vector2f &position,  float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team);
