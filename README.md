@@ -1,29 +1,30 @@
-# Sample README file for C++ programming project
 
-This is an initial git repository for your programming project.
-It contains an initial directory structure that we wish you could
-use as follows:
+  * `plan/` -- Contains the project plan and couple text files which were created during essential implementations, level
+    format and main, were planned.
 
-  * `plan/` -- Here is your project plan. You may use different sources,
-    but we hope to get the pan **also as pdf file**.
+  * `doc/` -- Contains the project documentation. 
 
-  * `doc/` -- here are the documentation sources related to your project.
-    You may use different tools for documentation (e.g. latex),
-    but we hope to get the final version of the document
-    **also as pdf file**.
+  * `src/` -- Source folder contains all source code and headers implemented apart from files that are used purely for testing.
+    During compilation object files and the main executable game is build to src.
 
-  * `src/` -- here are the C++ source files. You can have subfolders as needed.
+  * `test/` -- Contains unit test mains for the project. These file were used during testing phases of the project. 
+    Test executables and objects are build to this folder by make test.
 
-  * `README.md` -- This file that you should modify to represent
-    your project.
+  * `data/` -- Contains subfolders for data related files. Fonts are stored in fonts. All game entity and button related 
+    images are in img and one music file is in music. logs contains spdlog generated run logs (one for each run). 
+    level_files contains game levels which are created by ingame level editor and level_img auto-generated images matching 
+    levels. misc contains all miscellaneous data files which don’t fit to any other subfolder (i.e. files used to generate 
+    help screens and stats view)
 
-You may also add other new directories as needed, for example
-for testing tools.
-
+  * `./` -- Root of the repository contains Makefile which is used to compile the project binaries. It also contains
+    Doxyfile for generating Doxygen documentation of the project.
 
 Requirements: *libsfml-dev*, *libspdlog-dev*, *doxygen*.
-These libraries are in Maari A, B and in CS-building Panic
+These libraries are in Maari A, B and in CS-building Panic.
 
+SFML Version: 2.3.2+dfsg-1
+libspdlog-dev Version: 1.6-1
+Doxygen Version: 1.8.11-1
 
 | Command             | Description                                                          |
 |---------------------|----------------------------------------------------------------------|
