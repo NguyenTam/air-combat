@@ -12,8 +12,8 @@ namespace Game
   constexpr int LOWER_LIMIT = static_cast<int>((1-0.4)*HEIGHT);      //LOWER_LIMIT should be atleast 0.3.
 
   const float Infantry::VELOCITY = 20.f;
-  const float Plane::MAX_FORCE = 30.f;
-  const float Plane::MAX_VELOCITY = 10.f;
+  const float Plane::MAX_FORCE = 60.f;
+  const float Plane::MAX_VELOCITY = 20.f;
 
   const float PlayerPlane::MAX_FORCE = 80.f;
   const float PlayerPlane::MAX_VELOCITY = 20.f;
