@@ -28,9 +28,7 @@ We have compiled with following versions:
 * Spdlog Version: 1.6-1
 * Doxygen Version: 1.8.11-1
 
-
-#Available commands
-
+# Available commands
 
 | Command             | Description                                                          |
 |---------------------|----------------------------------------------------------------------|
