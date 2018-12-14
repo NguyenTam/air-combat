@@ -1,6 +1,6 @@
 #include "PhysicsWorld.hpp"
 PhysicsWorld::PhysicsWorld() {
-        b2Vec2 gvector(0.0f, Game::GRAVITY);
+    b2Vec2 gvector(0.0f, Game::GRAVITY);
 	World = new b2World(gvector);
 }
 
@@ -21,7 +21,7 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 	b2FixtureDef FixtureDef;
 	FixtureDef.shape = &boxShape;
 	FixtureDef.density = density; //mass of the body is AREA * density
-	FixtureDef.filter.categoryBits = 0x0004;
+	FixtureDef.filter.categoryBits = 0x0004; //id of dynamic body
 	Body->CreateFixture(&FixtureDef);
 
 	//sensor
@@ -30,7 +30,7 @@ b2Body* PhysicsWorld::create_body_dynamic(double x, double y, double width, doub
 	radarshape.m_radius = 20; //radius of the sensor
 	radar.shape = &radarshape;
 	radar.isSensor = true;
-	radar.filter.categoryBits = 0x0002; //id for dynamic body
+	radar.filter.categoryBits = 0x0002; //id for sensors
 	radar.filter.maskBits = 0x0004; //make radar only detect dynamic bodies
 
 	Body->CreateFixture(&radar);
