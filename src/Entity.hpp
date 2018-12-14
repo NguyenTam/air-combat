@@ -35,7 +35,7 @@ public:
    *   @param direction Direction where entity is moving
    *   @param team The team entity belongs to: blue, red, obstacle or projectile
    */
-  Entity(b2World &w, b2Body *b, const sf::Texture &t, const sf::Vector2f &position,  float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direction, Game::TEAM_ID team);
+  Entity(b2World &w, b2Body *b, const sf::Texture &t, const sf::Vector2f &position,  float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team);
 
   //virtual ~Entity();
   /**
@@ -48,7 +48,7 @@ public:
    *   @brief Move entity
    *   @param Distance Direction as vector where to move entity
    */
-  void move(sf::Vector2f distance);
+  void move(sf::Vector2f direction);
 
   /*
    *   @brief Assign a position for entity
@@ -131,7 +131,7 @@ public:
   /*
    *   @brief Gives a type for entity
    */
-  void setType(Textures::ID type);
+  void setType(Textures::ID t);
 
   /*
    *   @brief Gives the type of entity
