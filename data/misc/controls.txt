@@ -5,8 +5,8 @@ Single Player / Multiplayer Player1
   - A : Blue plane left
   - D : Blue plane right
 
-  - Q : Blue plane rotate upwards
-  - E : Blue plane rotate downwards
+  - Q : Blue plane rotate counterclockwise
+  - E : Blue plane rotate clockwise
 
   - Z : Blue plane shoot bullet
 
@@ -17,11 +17,21 @@ Multiplayer Player2
   - J : Red plane left
   - L : Red plane right
 
-  - U : Red plane rotate upwards
-  - E : Red plane rotate downwards
+  - U : Red plane rotate counterclockwise
+  - O : Red plane rotate clockwise
 
   - M : Red plane shoot bullet
 
-  
+
+Winning & Losing
+
+  Single Player:
+   - Destroy Red planes and Bases
+   - Score is awarded from kills and time (try to be as fast as possible)
+   - Game lost if Blue Plane gets destroyed
+
+  Multiplayer:
+   - Destroy enemy plane
+   - No score is awarded
 
 Esc: Return to main menu / exit (from main menu)

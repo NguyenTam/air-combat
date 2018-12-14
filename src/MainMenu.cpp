@@ -183,7 +183,7 @@ void MainMenu::CreateMainMenu()
                                     sf::Color::Blue, width, height);
   std::shared_ptr<Button> start_stats = std::make_shared<Button>("Stats",
                                     sf::Color::Blue, width, height);
-  std::shared_ptr<Button> controls = std::make_shared<Button>("Controls",
+  std::shared_ptr<Button> controls = std::make_shared<Button>("Help",
                                     sf::Color::Blue, width, height);
   std::shared_ptr<Button> quit = std::make_shared<Button>("Quit",
                                     sf::Color::Blue, width, height);
@@ -274,9 +274,9 @@ void MainMenu::start_stats_action()
 void MainMenu::controls_action()
 {
   // Create and activate help window
-  help_window.create(sf::VideoMode(400, 500), "Help", sf::Style::Close);
+  help_window.create(sf::VideoMode(450, 600), "Help", sf::Style::Close);
   help_font.loadFromFile(FONT_ARIAL);
-  help_title = sf::Text("Controls" , help_font, 30);
+  help_title = sf::Text("Controls & Basics" , help_font, 30);
   help_title.setStyle(sf::Text::Bold | sf::Text::Underlined);
   help_title.setPosition(100, 20);
   help_title.setColor(sf::Color::Blue);
@@ -299,14 +299,14 @@ void MainMenu::controls_action()
     }
     help_text.setString(help_content);
   }
-  // Set control buttons non-active (otherwise remains active)
+  /* Set control buttons non-active (otherwise remains active)
   for (auto it : buttons)
   {
-    if (it->getText().getString() == "Controls")
+    if (it->getText().getString() == "Help")
     {
       it->activate(false);
     }
-  }
+  }*/
 
   help_active = true;
 
