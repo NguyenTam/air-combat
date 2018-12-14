@@ -96,7 +96,7 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
           b2FixtureDef FixtureDef;
           FixtureDef.density = 0.f;
           FixtureDef.shape = &Shape;
-          FixtureDef.filter.categoryBits = 0x0002;
+          FixtureDef.filter.categoryBits = 0x0008;
           body->CreateFixture(&FixtureDef);
 
           sf::Vector2f pos(x,y);
