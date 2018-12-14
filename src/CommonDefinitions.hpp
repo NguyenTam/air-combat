@@ -11,6 +11,10 @@
 #include <map>
 #include <SFML/Graphics.hpp>
 
+/**
+  *   @namespace Textures
+  *   @brief Holds all textures related types and containers to access textures
+  */
 namespace Textures
 {
   enum ID
@@ -55,7 +59,10 @@ namespace Textures
   extern std::map<std::string, Textures::ID> alphaTextures;
 }
 
-
+/**
+  *   @namespace Game
+  *   @brief Holds all the base game related types and constants
+  */
 namespace Game
 {
   extern const int WIDTH;
@@ -68,16 +75,29 @@ namespace Game
   extern const int UPPER_LIMIT;
   extern const int LOWER_LIMIT;
 
-
+  /**
+    *   @namespace Infantry
+    *   @brief Contains Infantry velocity
+    */
   namespace Infantry
   {
     extern const float VELOCITY;
   }
+
+  /**
+    *   @namespace Plane
+    *   @brief Contains AI Plane related constants
+    */
   namespace Plane
   {
     extern const float MAX_FORCE;
     extern const float MAX_VELOCITY;
   }
+
+  /**
+    *   @namespace PlayerPlane
+    *   @brief Contains player controlled Plane related constants
+    */
   namespace PlayerPlane
   {
     extern const float MAX_FORCE;
@@ -133,6 +153,10 @@ namespace Game
   };
 }
 
+/**
+  *   @namespace Paths
+  *   @brief Contains the most important paths within air combat directory
+  */
 namespace Paths
 {
   enum PATHS
@@ -148,6 +172,10 @@ namespace Paths
 
 }
 
+/**
+  *   @namespace Fonts
+  *   @brief Contains different fonts and a font map
+  */
 namespace Fonts
 {
   enum FONTS

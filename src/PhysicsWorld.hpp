@@ -11,6 +11,7 @@
 
 /**
   *   @class PhysicsWorld
+	*		@brief Class which handles Box2D world
   */
 
 class PhysicsWorld {
@@ -32,6 +33,7 @@ public:
    *   @param y Y-position where new body is created
    *   @param width Width of the body
    *   @param height Height of the body
+	 *   @param density Density of the body (affects mass of the body)
    *   @return Created body
    */
        b2Body* create_body_dynamic(double x, double y, double width, double height, int density);
@@ -42,6 +44,7 @@ public:
    *   @param y Y-position where new body is created
    *   @param width Width of the body
    *   @param height Height of the body
+	 *   @param type Static body type @see CommonDefinitions
    *   @return Created body
    */
         b2Body* create_body_static(double x, double y, double width, double height, Game::TYPE_ID type);
@@ -72,7 +75,7 @@ public:
    *   @brief Move function, this is done elsewhere now
    */
 	void move();
-	
+
 private:
 	b2World* World; /**< World of PhysicsWorld */
 };

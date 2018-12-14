@@ -13,6 +13,10 @@
 #include "Bullet.hpp"
 /**
   *   @class Plane
+  *   @brief Entity based planes
+  *   @details Planes can eiher be player controlled or AI controlled. They are the
+  *   most important entities within air combat game: in both single player and multiplayer goal is
+  *   to destroy enemy planes
   */
 
 class Plane : public Entity {

@@ -11,6 +11,8 @@
 #include "Bullet.hpp"
 /**
   *   @class Artillery
+  *   @brief Entity based Artillery objects
+  *   @details Artillerys can shoot while they remain static
   */
 
 class Artillery : public Entity {

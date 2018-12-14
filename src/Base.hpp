@@ -11,6 +11,9 @@
 
 /**
   *   @class Base
+  *   @brief Entity based Bases
+  *   @details Bases have a special purpose in the air combat: during single player
+  *   mode goal is to destroy all enemy Bases and Planes
   */
 
 class Base : public Entity {

@@ -70,7 +70,7 @@ struct HorizontalToolbar
 };
 
 /**
-  *   @struct SaveLevel
+  *   @struct SaveLevelUI
   *   @brief Defines UI for save level
   */
 struct SaveLevelUI

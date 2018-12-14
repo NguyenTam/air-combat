@@ -11,6 +11,7 @@
 
 /**
   *   @class Hangar
+  *   @brief Entity based Hangar objects 
   */
 
 class Hangar : public Entity {

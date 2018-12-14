@@ -8,6 +8,14 @@
 #include "World.hpp"
 #include "ResourceManager.hpp"
 #include "TextInput.hpp"
+
+/**
+  *   @class GameEngine
+  *   @brief Integrates World and user input
+  *   @details This is the class responsible to update the base game based on user
+  *   inputs and AI
+  */
+
 class GameEngine : private sf::NonCopyable
 {
  public:
@@ -70,7 +78,7 @@ class GameEngine : private sf::NonCopyable
 
    /**
     *   @brief Create window for game over
-    *   @param GameResult @see world.hpp
+    *   @param result GameResult @see world.hpp
     *   @details Creates user_input if single_player has ended
     */
    void createGameOver(GameResult result);

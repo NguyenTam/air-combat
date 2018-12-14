@@ -11,6 +11,8 @@
 
 /**
   *   @class InvisibleWall
+  *   @brief Entity based InvisibleWall objects
+  *   @details These objects are used to create invisble walls at the edges of a level
   */
 
 class InvisibleWall : public Entity {

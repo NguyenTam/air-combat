@@ -11,6 +11,8 @@
 
 /**
   *   @class Tree
+  *   @brief Entity based trees
+  *   @details Used to block movement of the ground troops. Can be destroyed
   */
 
 class Tree : public Entity {

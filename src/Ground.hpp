@@ -11,6 +11,7 @@
 
 /**
   *   @class Ground
+  *   @brief Entity based Ground objects
   */
 
 class Ground : public Entity {

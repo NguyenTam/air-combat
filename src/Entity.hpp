@@ -14,6 +14,8 @@
 
 /**
   *   @class Entity
+  *   @brief Base Class for all Entities
+  *   @details Contains many virtual functions which are implemented in the lower classes
   */
 
 class Entity {

@@ -11,18 +11,24 @@
 #include <SFML/Graphics.hpp>
 #include "CommonDefinitions.hpp"
 
+/**
+  *   @class ResourceManager
+  *   @brief Class used to handle shared resources
+  *   @details Textures are loaded through this class
+  */
+
 class ResourceManager{
 public:
   ResourceManager();
   /**
    * @brief get a texture based on texture ID.
-   * @param id, resource enum id.
+   * @param id resource enum id.
    * @return a texture reference from the resource map.
    */
   sf::Texture & get(Textures::ID id);
   /**
    * @brief get a texture based on texture ID.
-   * @param id, resource enum id.
+   * @param id resource enum id.
    * @return a texture reference from the resource map.
    */
   const sf::Texture & get(Textures::ID id) const;
@@ -36,11 +42,11 @@ private:
 
   /**
    * @brief try load a texture from a filename to resource map. This function use @see insertResource()
-   * @param id, resource enum id.
-   * @param filename, file path to resource
+   * @param id resource enum id.
+   * @param filename file path to resource
    */
   void load(Textures::ID id, const std::string& filename);
 
   std::map<Textures::ID,std::unique_ptr<sf::Texture>> resourceMap; /**< A map containing Texture ID as a key and SFML texture as a value is pointer to texture. Map is used over vector, because */
-  
+
 };

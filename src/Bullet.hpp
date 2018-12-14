@@ -11,7 +11,9 @@
 #include <SFML/Graphics.hpp>
 
 /**
-  *   @class Button
+  *   @class Bullet
+  *   @brief Entity based Bullets
+  *   @details Bullets are shoot to other entities to cause damage and destroy those
   */
 
 class Bullet : public Entity {

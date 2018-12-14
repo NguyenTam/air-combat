@@ -81,13 +81,20 @@ public:
       */
 	bool create_entity(Textures::ID id, double x, double y, int orientation, double width, double height, sf::Vector2f direct, Game::GameMode game_mode);
 
-  bool remove_bullet(Entity *bullet, Entity *entity);
-	/**
-      *   @brief Removes given entity from the game
-      *   @param entity Raw pointer to the entity that is being removed
-      *   @param bullet Pass true if bullet is to be removed, false otherwise
+  /**
+      *   @brief Removes given bullet from the game
+      *   @param bullet Raw pointer to the bullet entity that is being removed
+      *   @param entity If this matches to the owner of the Bullet, Bullet isn't removed (this is a leftover from legacy implementation)
       *   @return Returns true if succesful, false if not
       */
+  bool remove_bullet(Entity *bullet, Entity *entity);
+
+  /**
+      *   @brief Remove entity
+      *   @remark Don't use this to remove Bullets
+      *   @param entity Entity to be removed
+      */
+
 	bool remove_entity(Entity *entity);
 
 	/**
@@ -132,7 +139,7 @@ public:
 
         /**
           *   @brief Find Entity
-          *   @param Box2D body of the entity
+          *   @param body Box2D body of the entity
           *   @return Returns raw pointer to the entity
           */
         Entity* findEntity(b2Body *body);

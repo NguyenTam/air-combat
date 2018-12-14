@@ -11,6 +11,9 @@
 #include "Bullet.hpp"
 /**
   *   @class Infantry
+  *   @brief Entity based Infantry objects
+  *   @details These objects are controlled by AI and their goal is to cause damage
+  *   to hostile troops
   */
 
 class Infantry : public Entity {

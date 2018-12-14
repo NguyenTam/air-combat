@@ -11,6 +11,8 @@
 
 /**
   *   @class Stone
+  *   @brief Entity based stones
+  *   @details Used to block movement of the ground troops. Can be destroyed
   */
 
 class Stone : public Entity {

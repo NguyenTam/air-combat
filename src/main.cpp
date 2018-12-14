@@ -2,8 +2,10 @@
   *   @file main.cpp
   *   @brief Contains main for Air combat game
   * @mainpage Welcome to mainpage
-  * @brief Main menu will open users.
-  * @detail 
+  * @brief Here you find Doxygen generated docs for air combat
+  * @details @see Classes for all classes used
+  * @see Files for Header file code and file members
+  * @see NameSpaces for different namespaces used 
   */
 
 #include "UI.hpp"
@@ -39,7 +41,7 @@ int main()
 {
   // random seed
   std::srand(std::time(nullptr));
-  
+
   // Create empty RenderWindows
   sf::RenderWindow window;
   sf::RenderWindow dialog_window;
