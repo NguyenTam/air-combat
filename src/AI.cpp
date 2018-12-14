@@ -54,22 +54,18 @@ void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 	if ( my_position.x < Game::LEFT_LIMIT )
 	  {	    
 	    me.moveRight();
-            me.moveRight();
 	  }
 	if ( my_position.x > Game::RIGHT_LIMIT )
 	  {
 	    me.moveLeft();
-            me.moveLeft();
 	  }
 	if ( my_position.y < Game::LOWER_LIMIT )
 	  {
 	    me.moveDown();
-            me.moveDown();
 	  }
 	if ( my_position.y > Game::UPPER_LIMIT )
 	  {	   
 	    me.moveUp();
-            me.moveUp();
 	  }
 	move_to_direction(me);
       }
