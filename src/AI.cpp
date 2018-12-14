@@ -48,9 +48,7 @@ void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
     sf::Vector2f current_worse_enemy = {-1.f,-1.f};
     int current_worse_enemy_priority = -1;
     sf::Vector2f my_position = me.getPosition();
-    //std::cout << "Surroundings size: " << surroundings.size() << std::endl;
     set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
-    //std::cout << " ########################" << std::endl;
     if( my_position.x < Game::LEFT_LIMIT || my_position.x > Game::RIGHT_LIMIT || my_position.y < Game::LOWER_LIMIT || my_position.x > Game::UPPER_LIMIT )
       {
 	if ( my_position.x < Game::LEFT_LIMIT )
@@ -74,31 +72,22 @@ void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
             me.moveUp();
 	  }
 	move_to_direction(me);
-	 /*
-	else
-	  {	    
-	    if (me.getDirection().x > 0)
-	      me.moveLeft();
-	    else me.moveRight();
-	  }
-	 */
       }
     // If worse enemy is visible
     if (current_worse_enemy.x > 0)
       {	  
-	//std::cout << "Target found at at (x,y): " << current_worse_enemy.x << ", " << current_worse_enemy.y << std::endl;
 	if (current_worse_enemy_priority > 0)
 	  {
 	    switch (current_worse_enemy_priority)
 	      {
-	      case 10:
+                //can not use case priority_list[Game::TYPE_ID::airplane]:  TODO: change to if-else.
+                case 10:
 		{
 		  sf::Vector2f direction = current_worse_enemy - my_position;
                   float scale = sqrt(pow(std::abs(direction.x),2)+pow(std::abs(direction.y),2));
                   direction.x = direction.x/scale;
                   direction.y = direction.y/scale;
 		  me.shoot(direction, resources);
-		  //std::cout << "shot direction (x,y): " << direction.x << ", " << direction.y << std::endl;
 		  return;
 		}
 	      default:
@@ -110,8 +99,6 @@ void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 	  }
 	else if ( current_worse_enemy_priority < 0 )
 	  {
-	    //std::cout << "friendly entity detected. avoid it. " << std::endl;
-
             if (current_worse_enemy.y <= my_position.y)
             {
               me.moveDown();
@@ -128,20 +115,6 @@ void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
             {
               me.moveLeft();
             }
-                
-            /*
-	    switch (std::rand()%2)
-	      {
-	      case 0:
-		{
-		  me.moveDown();
-		  me.moveDown();
-		}
-	      default:
-		me.moveUp();
-		me.moveDown();
-	      }
-            */
 	  }
 	else move_to_direction(me);
       }
@@ -154,10 +127,18 @@ void get_airplane_action(Entity& me, std::list<Entity*> &surroundings, ResourceM
 void get_antiaircraft_action(Entity& me, std::list<Entity*> &surroundings, ResourceManager & resources)
   {
     sf::Vector2f current_worse_enemy =  {-1.0f,-1.0};
-    int current_worse_enemy_priority = -1;
     sf::Vector2f my_position = me.getPosition();
-    set_target(me, surroundings, current_worse_enemy, current_worse_enemy_priority);
-    if (current_worse_enemy_priority == priority_list[Game::TYPE_ID::airplane])
+    bool is_enemy_airplane = false;
+    for ( Entity * e: surroundings )
+    {
+      if ( (e->getTypeId() == Game::TYPE_ID::airplane) && (e->getTeamId() != me.getTeamId()))
+      {
+        current_worse_enemy = e->getPosition();
+        is_enemy_airplane = true;
+        break;
+      }
+    }
+    if (is_enemy_airplane)
       {
 	sf::Vector2f direction = current_worse_enemy - my_position;
         float scale = sqrt(pow(std::abs(direction.x),2)+pow(std::abs(direction.y),2));
