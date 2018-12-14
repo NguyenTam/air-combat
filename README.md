@@ -1,4 +1,4 @@
-
+# Folder descriptions
   * `plan/` -- Contains the project plan and couple text files which were created during essential implementations, level
     format and main, were planned.
 
@@ -19,12 +19,16 @@
   * `./` -- Root of the repository contains Makefile which is used to compile the project binaries. It also contains
     Doxyfile for generating Doxygen documentation of the project.
 
-Requirements: *libsfml-dev*, *libspdlog-dev*, *doxygen*.
+# Libraries requirements
+*libsfml-dev*, *libspdlog-dev*, *doxygen*.
 These libraries are in Maari A, B and in CS-building Panic.
 
-SFML Version: 2.3.2+dfsg-1
-libspdlog-dev Version: 1.6-1
-Doxygen Version: 1.8.11-1
+We have compiled with following versions:
+* SFML Version: 2.3.2+dfsg-1
+* Spdlog Version: 1.6-1
+* Doxygen Version: 1.8.11-1
+
+# Available commands
 
 | Command             | Description                                                          |
 |---------------------|----------------------------------------------------------------------|
