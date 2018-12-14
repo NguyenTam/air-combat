@@ -1,0 +1,32 @@
+DestroyBase
+/* Destroy enemy base on   
+the hill and 2 red      
+planes. */
+Ground;3;561;1;1196;39
+Ground;960;463;1;239;97
+Rock;967;442;1;25;20
+Tree;696;524;1;27;36
+Tree;661;524;1;27;36
+Tree;625;524;1;27;36
+Tree;589;524;1;27;36
+Tree;556;524;1;27;36
+Tree;527;524;1;27;36
+Tree;495;524;1;27;36
+Tree;466;524;1;27;36
+Tree;433;524;1;27;36
+RedBase;1099;399;1;76;63
+BlueBase;25;497;1;76;63
+BlueHangar;112;534;1;28;26
+RedAntiAircraft;1001;431;0;36;31
+RedAirplane;1113;44;0;38;18
+RedAirplane;912;187;0;38;18
+RedInfantry;747;528;0;19;32
+RedInfantry;804;528;0;19;32
+RedInfantry;910;528;0;19;32
+BlueAirplane;74;451;1;38;18
+BlueInfantry;362;528;1;19;32
+BlueInfantry;281;528;1;19;32
+InvisibleWall;0;0;1;1200;1
+InvisibleWall;0;600;1;1200;1
+InvisibleWall;0;0;1;1;600
+InvisibleWall;1200;0;1;1;600
