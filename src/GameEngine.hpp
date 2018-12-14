@@ -96,7 +96,7 @@ class GameEngine : private sf::NonCopyable
     *   @param score Player score
     *   @remark This should be only called when single_player has ended
     */
-   void logStats(std::string level_path, std::string user_name, int score);
+   void logStats(std::string level_path, const std::string& user_name, int score);
 
 
   void playerMoveUp(int player_number);

@@ -12,12 +12,12 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <cstdlib>
+#include <ctime>
+#include <fstream>
 #include <iostream>
 #include <math.h>
-#include <sstream>
-#include <fstream>
-#include <ctime>
 #include <math.h>
+#include <sstream>
 #include <sstream>
 
 
@@ -141,8 +141,9 @@ void GameEngine::playerMoveUp(int player_number)
   b2Vec2 vel1 = player_body->GetLinearVelocity();
 
   float force = 0;
-  if (vel1.y > -Game::PlayerPlane::MAX_VELOCITY)
+  if (vel1.y > -Game::PlayerPlane::MAX_VELOCITY) {
     force = -Game::PlayerPlane::MAX_FORCE;
+}
   player_body->ApplyForce(b2Vec2(0,Game::PlayerPlane::COEFFICIENT*force), player_body->GetWorldCenter(), true);
 
 }
@@ -155,8 +156,9 @@ void GameEngine::playerMoveDown(int player_number)
   b2Vec2 vel1 = player_body->GetLinearVelocity();
 
   float force = 0;
-  if (vel1.y < Game::PlayerPlane::MAX_VELOCITY)
+  if (vel1.y < Game::PlayerPlane::MAX_VELOCITY) {
     force = Game::PlayerPlane::MAX_FORCE;
+}
   player_body->ApplyForce(b2Vec2(0,Game::PlayerPlane::COEFFICIENT*force), player_body->GetWorldCenter(), true);
 }
 
@@ -169,8 +171,9 @@ void GameEngine::playerMoveLeft(int player_number)
 
   player_entity.faceLeft();
   float force = 0;
-  if (vel1.x > -Game::PlayerPlane::MAX_VELOCITY)
+  if (vel1.x > -Game::PlayerPlane::MAX_VELOCITY) {
     force = -Game::PlayerPlane::MAX_FORCE;
+}
   player_body->ApplyForce(b2Vec2(Game::PlayerPlane::COEFFICIENT*force,0), player_body->GetWorldCenter(), true);
 }
 
@@ -184,8 +187,9 @@ void GameEngine::playerMoveRight(int player_number)
   player_entity.faceRight();
   float force = 0;
   //player1_body.SetAngularVelocity(0);
-  if (vel1.x < Game::PlayerPlane::MAX_VELOCITY)
+  if (vel1.x < Game::PlayerPlane::MAX_VELOCITY) {
     force = Game::PlayerPlane::MAX_FORCE;
+}
   player_body->ApplyForce(b2Vec2(Game::PlayerPlane::COEFFICIENT*force,0), player_body->GetWorldCenter(), true);
 }
 
@@ -196,7 +200,8 @@ void GameEngine::playerRotateCounterClockWise(int player_number)
   b2Body* player_body = player_entity.getB2Body();
 
   // rotate world player_planes[0] up
-  if (player_body->GetAngularVelocity() > 0) player_body->SetAngularVelocity(0);
+  if (player_body->GetAngularVelocity() > 0) { player_body->SetAngularVelocity(0);
+}
   if (player_body->GetAngularVelocity() > - Game::PlayerPlane::MAX_ANGULAR_VELOCITY) {
     player_body->ApplyTorque((Game::PlayerPlane::MAX_ANGULAR_VELOCITY + player_body->GetAngularVelocity()) * (-Game::PlayerPlane::TORQUE), true);
   }
@@ -208,7 +213,8 @@ void GameEngine::playerRotateClockWise(int player_number)
   Entity& player_entity = *planes[player_number];
   b2Body* player_body = player_entity.getB2Body();
 
-  if (player_body->GetAngularVelocity() < 0) player_body->SetAngularVelocity(0);
+  if (player_body->GetAngularVelocity() < 0) { player_body->SetAngularVelocity(0);
+}
   if (player_body->GetAngularVelocity() < Game::PlayerPlane::MAX_ANGULAR_VELOCITY) {
     player_body->ApplyTorque((Game::PlayerPlane::MAX_ANGULAR_VELOCITY - player_body->GetAngularVelocity()) * Game::PlayerPlane::TORQUE, true);
   }
@@ -235,10 +241,10 @@ void GameEngine::playerShoot(int player_number)
 
 
 /* Sum all inputs (movements and rotations) and set new position and orientation in two function call: move and rotate. */
-void GameEngine::update(sf::Time elapsedTime)
+void GameEngine::update(sf::Time  /*elapsedTime*/)
 {
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
-  if (planes.size() > 0) {
+  if (!planes.empty()) {
     Entity& player1_entity = *planes[0];
     b2Body* player1_body = player1_entity.getB2Body();
     b2Body* player2_body = nullptr;
@@ -330,7 +336,7 @@ void GameEngine::updateGameInfo()
 
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
   std::stringstream display_information;
-  if ( planes.size() > 0 )
+  if ( !planes.empty() )
   {
     std::shared_ptr<Plane> player_plane  = std::dynamic_pointer_cast<Plane>(planes[0]);
     display_information << "Player 1 | hitpoints: " << player_plane->getHitPoints()
@@ -419,10 +425,12 @@ void GameEngine::createGameOver(GameResult result)
     if (world_kill_score > 0) {
       score = 100000 / score + world_kill_score;
     }
-    else score = 0; // player lost
+    else { score = 0; // player lost
+}
 
   }
-  else score = 0;
+  else { score = 0;
+}
 
   GameOver = true;
 }
@@ -438,7 +446,7 @@ void GameEngine::drawGameOver()
   renderWindow.draw(name_input_info);
 }
 
-void GameEngine::logStats(std::string level_path, std::string user_name, int score)
+void GameEngine::logStats(std::string level_path, const std::string& user_name, int score)
 {
   // Get level name from level_path
   const std::string cmp1 = "../data/level_files/";
