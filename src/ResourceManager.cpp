@@ -49,4 +49,5 @@ void ResourceManager::insertResource(Textures::ID id, std::unique_ptr<sf::Textur
   // Insert and check success
   auto inserted = resourceMap.insert(std::make_pair(id, std::move(resource)));
   assert(inserted.second);
+  (void)inserted;
 }
