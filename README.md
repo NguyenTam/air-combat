@@ -34,6 +34,6 @@ We have compiled with following versions:
 |---------------------|----------------------------------------------------------------------|
 | `make main`         | Build `src/`                                                         |
 | `make test`         | Build `test/`                                                        |
-| `make run-main`     | Build `src/` and run an application                                  |
+| `make run`     | Build `src/` and run an application                                  |
 | `make clean`        | Remove compiled objects and executable files from `src/` and `test/` |
 | `doxygen`           | Generate documents of `src/`                                         |
