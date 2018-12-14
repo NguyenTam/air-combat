@@ -1,6 +1,6 @@
 #include "Entity.hpp"
-#include <iostream>
 #include <assert.h>
+#include <iostream>
 
 Entity::Entity(b2World &w, b2Body *b, const sf::Texture &t, const sf::Vector2f &position, float speed, int bullets, int bombs, int firerate, int hp, sf::Vector2f direct, Game::TEAM_ID team) : moveSpeed(speed), numberOfBullets(bullets), numberOfBombs(bombs), rateOfFire(firerate), fireCountDown(0), hitPoints(hp), direction(direct), teamId(team), world(w), b2body(b)
 {
@@ -142,10 +142,7 @@ Game::TYPE_ID Entity::getTypeId(){
 bool Entity::damage(int damage){
 
   hitPoints -= damage;
-  if (hitPoints <= 0) {
-    return true;
-  }
-  return false;
+  return hitPoints <= 0;
 }
 
 void Entity::insert_surrounding(Entity* entity) {
