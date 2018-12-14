@@ -112,7 +112,6 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
           return true;
         }
   }
-  //fireCountDown-=1;
     return false;
 }
 
