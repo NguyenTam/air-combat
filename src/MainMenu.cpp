@@ -299,14 +299,14 @@ void MainMenu::controls_action()
     }
     help_text.setString(help_content);
   }
-  // Set control buttons non-active (otherwise remains active)
+  /* Set control buttons non-active (otherwise remains active)
   for (auto it : buttons)
   {
     if (it->getText().getString() == "Help")
     {
       it->activate(false);
     }
-  }
+  }*/
 
   help_active = true;
 
