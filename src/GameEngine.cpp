@@ -414,7 +414,13 @@ void GameEngine::createGameOver(GameResult result)
   score = score_clock.getElapsedTime().asSeconds();
   if (score > 0) {
     // time based score and add world kill based score to it
-    score = 100000 / score + world.getScore();
+    // if world score is 0, player lost
+    int world_kill_score = world.getScore();
+    if (world_kill_score > 0) {
+      score = 100000 / score + world_kill_score;
+    }
+    else score = 0; // player lost
+
   }
   else score = 0;
 

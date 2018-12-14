@@ -596,6 +596,9 @@ GameResult World::update(Game::GameMode game_mode) {
 		it->drawTo(window);
 	}
 
+	// update the score
+	updateScore(game_mode);
+
 	return checkGameStatus(game_mode);
 }
 
@@ -682,4 +685,20 @@ Entity* World::findEntity(b2Body *body)
 		}
 	}
 	return nullptr;
+}
+
+void World::updateScore(Game::GameMode game_mode)
+{
+	// init score
+	score = 0;
+	if (game_mode == Game::GameMode::SinglePlayer) {
+		if (player_planes.size() > 0) {
+			Plane* plane = dynamic_cast<Plane*> (player_planes[0].get());
+			score = plane->getGrandTotalKill() * 1000;
+		}
+		else {
+			// player dead -> score 0
+			score = 0;
+		}
+	}
 }

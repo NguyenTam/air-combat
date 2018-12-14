@@ -140,11 +140,17 @@ public:
 private:
 
   /**
-    *   @brif Check game status
+    *   @brief Check game status
     *   @return Returns correct GameResult
     *   @param game_mode Current Game::GameMode
     */
   GameResult checkGameStatus(Game::GameMode game_mode);
+
+  /**
+    *   @brief Update score during singleplayer
+    *   @param game_mode Current GameMode
+    */
+  void updateScore(Game::GameMode game_mode);
 
   PhysicsWorld pworld;
   ResourceManager &resources;
