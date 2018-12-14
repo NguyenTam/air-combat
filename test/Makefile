@@ -1,6 +1,6 @@
 # Simple Makefile for test files
 
-# About automatic variables $^ and $@. $^ equals to target name. $@ equals to list of dependency.
+# About automatic variables $^ and $@. $@ equals to target name. $^ equals to list of dependency.
 # Example:
 # output_test: foo1.o foo2.o foo3_test.cpp
 # => $^ is "foo1.o foo2.o foo3_test.cpp"
