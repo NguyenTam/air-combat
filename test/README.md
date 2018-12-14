@@ -1,7 +1,6 @@
 # Building And Running Tests
 
-This Makefile can generate test files (executable files): `Menu_test`, `Editor_test`, `LevelEntity_test` and `ResourceManager_test`.
-
+This Makefile can generate test files (executable files): `World_test`, `Menu_test`, `Editor_test`, `LevelEntity_test`, `ResourceManager_test`, `GameEngine_test` and `Stats_test`.
 
 
 | Command             | Description                                                          |

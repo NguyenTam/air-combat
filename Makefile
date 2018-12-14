@@ -15,5 +15,5 @@ clean:
 	$(MAKE) -C $(MAIN_DIR) clean
 	$(MAKE) -C $(TEST_DIR) clean
 
-run-game:
+run:
 	$(MAKE) -C $(MAIN_DIR) run
