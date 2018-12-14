@@ -1,0 +1,29 @@
+AChallenge
+/* Enemy base is heavily   
+defended */
+Ground;1;570;1;1197;30
+RedBase;944;506;1;76;63
+BlueBase;5;506;1;76;63
+BlueHangar;90;543;1;28;26
+RedHangar;1096;543;1;28;26
+RedAntiAircraft;1043;538;1;36;31
+RedAntiAircraft;1148;538;1;36;31
+RedAntiAircraft;883;538;1;36;31
+RedAntiAircraft;827;538;1;36;31
+RedInfantry;669;537;1;19;32
+RedInfantry;586;537;1;19;32
+BlueInfantry;278;537;1;19;32
+BlueInfantry;181;537;1;19;32
+BlueAirplane;60;387;1;38;18
+RedAirplane;856;470;0;38;18
+RedAirplane;1092;460;0;38;18
+RedAirplane;1079;51;0;38;18
+RedAirplane;848;52;0;38;18
+Rock;365;549;1;25;20
+Rock;410;549;1;25;20
+Tree;460;533;1;27;36
+Tree;507;533;1;27;36
+InvisibleWall;0;0;1;1199;1
+InvisibleWall;0;600;1;1199;1
+InvisibleWall;0;0;1;1;600
+InvisibleWall;1200;0;1;1;600
