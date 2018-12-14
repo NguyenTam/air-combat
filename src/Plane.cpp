@@ -78,7 +78,7 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
             y = getPosition().y + (this->getSize().y)/2*sin(this->getB2Body()->GetAngle());
           }
           else {
-            x = getPosition().x - (this->getSize().x)/2*cos(this->getB2Body()->GetAngle()) + 5;
+            x = getPosition().x - (this->getSize().x)/2*cos(this->getB2Body()->GetAngle()) - 5;
             y = getPosition().y - (this->getSize().y)/2*sin(this->getB2Body()->GetAngle());
           }
 
@@ -86,6 +86,7 @@ bool Plane::shoot(sf::Vector2f direction, ResourceManager & resources){
 
           b2BodyDef BodyDef;
           BodyDef.type = b2_dynamicBody;
+          
           /*
           std::cout << "Plane location X: " << x << " Y: " << y << " Size X: " << this->getSize().x << " Y: " << this->getSize().y << std::endl;
           if (direction.y < 0 && -(direction.y) >= std::abs(direction.x)) {  //shooting up
