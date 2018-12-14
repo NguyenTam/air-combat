@@ -116,8 +116,6 @@ void GameEngine::run(std::string &level_file)
 void GameEngine::render()
 {
   renderWindow.clear(sf::Color(150,200,255));
-  //renderWindow.draw(playerSprite);
-  //renderWindow.draw(gameInfo);
   if (GameOver) {
     // Draw only gameover screen
     drawGameOver();
@@ -225,7 +223,7 @@ void GameEngine::playerShoot(int player_number)
   std::deque<std::shared_ptr<Entity>> planes = world.get_player_planes();
   Entity& player_entity = *planes[player_number];
   b2Body* player_body = player_entity.getB2Body();
-  b2Vec2 vel1 = player_body->GetLinearVelocity();
+
   if (player_entity.getFacing()) {
     // facing right, shoot right
     sf::Vector2f vec(cos(player_body->GetAngle()), sin(player_body->GetAngle()));
@@ -280,9 +278,6 @@ void GameEngine::update(sf::Time  /*elapsedTime*/)
 
     if ((planes.size()==2) && (gameMode == Game::GameMode::Multiplayer)) {
       player2_set = true;
-      Entity& player2_entity = *planes[1];
-      b2Body* player2_body = player2_entity.getB2Body();
-      b2Vec2 vel2 = player2_body->GetLinearVelocity();
 
       if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
         // move world player_planes[1] up
