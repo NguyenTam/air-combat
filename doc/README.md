@@ -50,12 +50,6 @@ Everyone contributed everywhere in source code. However, here are their main rol
 ## Technologies Used
 We use following tools to make this game possible: bash, box2D, c+\+17, doxygen, g++, gdb, gimp, git, make, sfml and valgrind.
 
-Building require follow packages:
-|package | version (used for building) |
-|:------:|:-------:|
-|libbox2d-dev| 2.3.1+ds-4|
-|libsfml-dev| 2.4.1+dfsg-3|
-
 ## Repository Content
 ### ./
 Root of the repository contains Makefile which is used to compile the project binaries.
