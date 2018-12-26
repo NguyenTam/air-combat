@@ -256,7 +256,7 @@ void UI::HandleResize(sf::Event event)
    messagebox.message.setPosition(30, 20);
    messagebox.button.setPosition(x - (button_width + 30), y - (button_height + 10));
 
-   messagebox.message.setColor(sf::Color::Black);
+   messagebox.message.setFillColor(sf::Color::Black);
 
    // Change dialog_window status
    dialog_active = true;
@@ -334,11 +334,11 @@ void UI::HandleResize(sf::Event event)
    level_select.level_name = sf::Text();
    level_select.description = sf::Text();
    level_select.level_name.setFont(level_select.font);
-   level_select.level_name.setColor(sf::Color::Blue);
+   level_select.level_name.setFillColor(sf::Color::Blue);
    level_select.level_name.setStyle(sf::Text::Bold);
    level_select.level_name.setCharacterSize(30);
    level_select.description.setFont(level_select.font);
-   level_select.description.setColor(sf::Color::Blue);
+   level_select.description.setFillColor(sf::Color::Blue);
    level_select.description.setCharacterSize(14);
    level_select.level_name.setPosition(300, 30);
    level_select.description.setPosition(50, 150);

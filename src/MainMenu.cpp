@@ -279,11 +279,11 @@ void MainMenu::controls_action()
   help_title = sf::Text("Controls & Basics" , help_font, 30);
   help_title.setStyle(sf::Text::Bold | sf::Text::Underlined);
   help_title.setPosition(100, 20);
-  help_title.setColor(sf::Color::Blue);
+  help_title.setFillColor(sf::Color::Blue);
 
   help_text = sf::Text("Sorry, Controls unavailable", help_font, 12);
   help_text.setPosition(50, 70);
-  help_text.setColor(sf::Color::Black);
+  help_text.setFillColor(sf::Color::Black);
 
   // Load text from file
   std::string help_content;

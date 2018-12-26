@@ -508,11 +508,11 @@ void LevelEditor::help_button_action()
   help_title = sf::Text("Help" , help_font, 30);
   help_title.setStyle(sf::Text::Bold | sf::Text::Underlined);
   help_title.setPosition(100, 20);
-  help_title.setColor(sf::Color::Blue);
+  help_title.setFillColor(sf::Color::Blue);
 
   help_text = sf::Text("Sorry, Help unavailable", help_font, 12);
   help_text.setPosition(50, 70);
-  help_text.setColor(sf::Color::Black);
+  help_text.setFillColor(sf::Color::Black);
 
   // Load text from file
   std::string help_content;
@@ -725,7 +725,7 @@ void LevelEditor::CreateHorizontalToolbar(unsigned window_width)
   horizontal_toolbar.info_font.loadFromFile(FONT_ARIAL);
   horizontal_toolbar.info_text.setFont(horizontal_toolbar.info_font);
   horizontal_toolbar.info_text.setCharacterSize(14);
-  horizontal_toolbar.info_text.setColor(sf::Color(50, 50, 50, 180));
+  horizontal_toolbar.info_text.setFillColor(sf::Color(50, 50, 50, 180));
 }
 
 void LevelEditor::DrawHorizontalToolbar()
@@ -974,11 +974,11 @@ void LevelEditor::SaveLevel()
 
   saveUI.font.loadFromFile(FONT_ARIAL);
   saveUI.name = sf::Text("Level Name:", saveUI.font, 24);
-  saveUI.name.setColor(sf::Color::Blue);
+  saveUI.name.setFillColor(sf::Color::Blue);
   saveUI.name.setStyle(sf::Text::Bold);
   saveUI.name.setPosition(50, 50);
   saveUI.fail_text = sf::Text("Level saving failed: incorrect level name", saveUI.font, 16);
-  saveUI.fail_text.setColor(sf::Color::Red);
+  saveUI.fail_text.setFillColor(sf::Color::Red);
   saveUI.fail_text.setPosition(50, 20);
 
   saveUI.name_input = TextInput(250, 60, 150, 20);
@@ -986,7 +986,7 @@ void LevelEditor::SaveLevel()
   saveUI.name_input.enableStrictSanitization(true);
 
   saveUI.description = sf::Text("Description:", saveUI.font, 24);
-  saveUI.description.setColor(sf::Color::Blue);
+  saveUI.description.setFillColor(sf::Color::Blue);
   saveUI.description.setStyle(sf::Text::Bold);
   saveUI.description.setPosition(50, 160);
 

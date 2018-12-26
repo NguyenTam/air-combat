@@ -20,7 +20,7 @@ TextInput::TextInput(): sf::Drawable()
   input = "";
   font.loadFromFile("../data/fonts/Courier.ttf");
   text = sf::Text(input, font, font_size);
-  text.setColor(text_color);
+  text.setFillColor(text_color);
   active_color = sf::Color(200, 200, 200);
   std_color = sf::Color::White;
   CreateSanitizationSet();
@@ -39,7 +39,7 @@ TextInput::TextInput(float x, float y, float width, float height): sf::Drawable(
   input = "";
   font.loadFromFile("../data/fonts/Courier.ttf");
   text = sf::Text(input, font, font_size);
-  text.setColor(text_color);
+  text.setFillColor(text_color);
   text.setPosition(x, y);
   frame.setOutlineColor(sf::Color::Black);
   active_color = sf::Color(200, 200, 200);
@@ -71,7 +71,7 @@ TextInput::TextInput(const TextInput &text_input)
   }
   text_color = text_input.text_color;
   text = sf::Text(input, font, font_size);
-  text.setColor(text_color);
+  text.setFillColor(text_color);
   active_color = text_input.active_color;
   std_color = text_input.std_color;
   highlight = sf::RectangleShape(sf::Vector2f(0.6 * (float) font_size, font_size));
@@ -100,7 +100,7 @@ TextInput& TextInput::operator=(const TextInput &text_input)
   }
   text_color = text_input.text_color;
   text = sf::Text(input, font, font_size);
-  text.setColor(text_color);
+  text.setFillColor(text_color);
   text.setPosition(x, y);
   active_color = text_input.active_color;
   std_color = text_input.std_color;
@@ -236,7 +236,7 @@ void TextInput::setOutline(sf::Color color, float thickness)
 void TextInput::setTextColor(sf::Color color)
 {
   text_color = color;
-  text.setColor(text_color);
+  text.setFillColor(text_color);
 }
 
 

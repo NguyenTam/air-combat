@@ -106,7 +106,7 @@ void Button::SetUp(sf::Color color)
     // TODO error handling
   }
   text = sf::Text(name, font, font_size);
-  text.setColor(sf::Color::Red);
+  text.setFillColor(sf::Color::Red);
   text.setStyle(sf::Text::Bold);
 
   // Set button_rect matching button
@@ -319,7 +319,7 @@ void Button::setActiveColor(sf::Color color)
 /* Set text color */
 void Button::setTextColor(sf::Color color)
 {
-  text.setColor(color);
+  text.setFillColor(color);
 }
 
 /* Set outline for Button */
@@ -335,7 +335,7 @@ void Button::setTextStyle(unsigned style, unsigned font_size, sf::Color text_col
 {
   this->font_size = font_size;
   text = sf::Text(name, font, font_size);
-  text.setColor(text_color);
+  text.setFillColor(text_color);
   text.setStyle(style);
 
   // Correct text position

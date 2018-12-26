@@ -332,13 +332,13 @@ void Stats::CreateText(std::string name, std::string score, std::string level, s
   // Set correct positions for the texts
   auto &new_entry = texts.front();
   std::get<0>(new_entry)->setPosition(button_dist, button_dist + 40 * (texts.size() - 1));
-  std::get<0>(new_entry)->setColor(sf::Color::Red);
+  std::get<0>(new_entry)->setFillColor(sf::Color::Red);
   std::get<1>(new_entry)->setPosition(button_dist * 2 + button_width, button_dist + 40 * (texts.size() - 1));
-  std::get<1>(new_entry)->setColor(sf::Color::Red);
+  std::get<1>(new_entry)->setFillColor(sf::Color::Red);
   std::get<2>(new_entry)->setPosition(button_dist * 3 + button_width * 2, button_dist + 40 * (texts.size() - 1));
-  std::get<2>(new_entry)->setColor(sf::Color::Red);
+  std::get<2>(new_entry)->setFillColor(sf::Color::Red);
   std::get<3>(new_entry)->setPosition(button_dist * 4 + button_width * 3, button_dist + 40 * (texts.size() - 1));
-  std::get<3>(new_entry)->setColor(sf::Color::Red);
+  std::get<3>(new_entry)->setFillColor(sf::Color::Red);
 }
 
 /*  Update Texts positions */

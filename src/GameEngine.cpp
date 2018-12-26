@@ -375,24 +375,24 @@ void GameEngine::createGameOver(GameResult result)
     name_input_info = sf::Text("Press Enter to return Main Menu", gameFont, 20);
   }
   name_input_info.setPosition(Game::WIDTH / 2 - 110, Game::HEIGHT / 2 - 50);
-  name_input_info.setColor(sf::Color::Black);
+  name_input_info.setFillColor(sf::Color::Black);
 
   if (result == GameResult::BlueWon) {
     // Blue team won
     game_over_text = sf::Text("Game Over: Blue Team Won", gameFont, 30);
     game_over_text.setPosition(Game::WIDTH / 2 - 200, 100);
-    game_over_text.setColor(sf::Color::Blue);
+    game_over_text.setFillColor(sf::Color::Blue);
   }
   else if (result == GameResult::RedWon){
     // Red team won
     game_over_text = sf::Text("Game Over: Red Team Won", gameFont, 30);
     game_over_text.setPosition(Game::WIDTH / 2 - 200, 100);
-    game_over_text.setColor(sf::Color::Red);
+    game_over_text.setFillColor(sf::Color::Red);
   }
   else {
     game_over_text = sf::Text("Game Over: Tie", gameFont, 30);
     game_over_text.setPosition(Game::WIDTH / 2 - 200, 100);
-    game_over_text.setColor(sf::Color::Green);
+    game_over_text.setFillColor(sf::Color::Green);
   }
   // Update score
   score = score_clock.getElapsedTime().asSeconds();

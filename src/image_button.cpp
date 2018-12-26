@@ -36,7 +36,7 @@ void ImageButton::ConstructImageButton()
 {
   // Set correct text style and font size
   text.setStyle(sf::Text::Regular);
-  text.setColor(sf::Color::Black);
+  text.setFillColor(sf::Color::Black);
   text.setCharacterSize(text_size);
   // Set correct outline style for ImageButton
   button_rect.setOutlineThickness(1);
