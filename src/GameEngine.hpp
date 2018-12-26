@@ -3,7 +3,6 @@
  * @brief Header for GameEngine class
  */
 #pragma once
-#include <spdlog/spdlog.h>
 #include <SFML/Graphics.hpp>
 #include "World.hpp"
 #include "ResourceManager.hpp"
@@ -116,7 +115,6 @@ class GameEngine : private sf::NonCopyable
   sf::Text gameInfo; /**< To write game info on screen.*/
 
   bool isGameEngineReady; /**< Is the game ended*/
-  std::shared_ptr<spdlog::logger> gameEngineLogger; /**< Game engine logger. Logs are written to data folder.*/
   World world;
 
   bool GameOver; /**< Game over -> show TextInput */

@@ -31,14 +31,6 @@ const float GameEngine::PLAYER_ROTATION_DEGREE = 5.f;
 GameEngine::GameEngine(sf::RenderWindow &rw)
     : renderWindow(rw), world(rw, resources) {
 
-  /* Try spdlogger */
-    try
-    {
-      /* Construct spdloggers */
-      gameEngineLogger =spdlog::daily_logger_st("async_file_logger", Paths::Paths[Paths::PATHS::logs]+ "game-engine-log");
-
-      /*Try to load texture from file*/
-
         playerSprite.setTexture(resources.get(Textures::ID::BlueAirplane_alpha));
         playerSprite.setPosition(100.f,100.f);
 
@@ -49,13 +41,6 @@ GameEngine::GameEngine(sf::RenderWindow &rw)
 
         isGameEngineReady = true;
         GameOver = false;
-    }
-    /* spdlog constructor threw an exception.*/
-    catch(const spdlog::spdlog_ex &ex)
-    {
-      std::cout << "Log init failed!" << ex.what() << std::endl;
-      isGameEngineReady = false;
-    }
 }
 
 
@@ -92,7 +77,6 @@ void GameEngine::run(std::string &level_file)
           if (gameOverHandler(event, level_file))
           {
             // Return to MainMenu
-            gameEngineLogger->info("Closing Game Engine");
             return;
           }
         }
@@ -101,7 +85,6 @@ void GameEngine::run(std::string &level_file)
         {
           if(event.key.code == sf::Keyboard::Escape)
           {
-            gameEngineLogger->info("Closing Game Engine");
             return;
           }
         }
