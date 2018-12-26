@@ -1,11 +1,10 @@
 # Libraries requirements
 *libsfml-dev*, *libspdlog-dev*, *doxygen*.
-These libraries are in Maari A, B and in CS-building Panic.
 
 We have compiled with following versions:
+* Box2D Version: 2.3.1+ds-4
 * SFML Version: 2.3.2+dfsg-1
-* Spdlog Version: 1.6-1
-* Doxygen Version: 1.8.11-1
+* Doxygen Version: 1.8.13-4+b1
 
 # Available Commands
 |Command | Description|
