@@ -1,3 +1,6 @@
+# Tutorial
+See this [demo video](https://www.youtube.com/watch?v=rs8zUxrQ0Xw)
+
 # Folder descriptions
   * `plan/` -- Contains the project plan and couple text files which were created during essential implementations, level
     format and main, were planned.
