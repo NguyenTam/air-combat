@@ -96,6 +96,7 @@ void Stats::update()
         case sf::Event::Closed:
           // Exit whole game
           Exit();
+          break;
 
         case sf::Event::MouseButtonPressed:
           HandleMousePress(event);
@@ -287,7 +288,7 @@ void Stats::sortByScore()
   {
     try {
       return std::stoi(std::get<1>(tuple1)->getString().toAnsiString()) > std::stoi(std::get<1>(tuple2)->getString().toAnsiString());
-    } catch (std::invalid_argument) {
+    } catch (std::invalid_argument &e) {
       return true;
     }
   });
@@ -313,7 +314,7 @@ void Stats::sortByLevel()
       // Sort by score (same names)
       try {
         return std::stoi(std::get<1>(tuple1)->getString().toAnsiString()) > std::stoi(std::get<1>(tuple2)->getString().toAnsiString());
-      } catch (std::invalid_argument) {
+      } catch (std::invalid_argument &e) {
         return true;
       }
     }
