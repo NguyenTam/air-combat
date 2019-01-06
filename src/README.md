@@ -1,5 +1,5 @@
 # Libraries requirements
-*libsfml-dev*, *libspdlog-dev*, *doxygen*.
+*libsfml-dev*, *libbox2d-dev*, *doxygen*.
 
 We have compiled with following versions:
 * Box2D Version: 2.3.1+ds-4
@@ -12,4 +12,3 @@ We have compiled with following versions:
 | `make` | build air combat game.|
 | `make clean`| remove object and executable files.|
 | `make run` | build and run air combat game.|
-
